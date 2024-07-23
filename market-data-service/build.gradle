@@ -1,0 +1,67 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.3.1'
+	id 'io.spring.dependency-management' version '1.1.5'
+}
+
+group = 'com.mms'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.flywaydb:flyway-core'
+	implementation 'org.flywaydb:flyway-database-postgresql'
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
+	implementation 'redis.clients:jedis'
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'com.redislabs:jrejson:1.5.0'
+	implementation 'com.redislabs:spring-redisearch:3.1.2'
+	implementation 'com.redislabs:jredisgraph:2.6.0-rc3'
+	implementation 'com.redislabs:lettusearch:3.1.2'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
+	implementation 'jakarta.validation:jakarta.validation-api:3.1.0'
+	implementation 'org.hibernate.validator:hibernate-validator:8.0.1.Final'
+	implementation 'com.google.code.gson:gson:2.10.1'
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.17.2'
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
+	implementation 'org.glassfish.tyrus:tyrus-client:1.17'
+	implementation 'org.glassfish.tyrus:tyrus-container-grizzly-client:1.17'
+	implementation group: 'io.github.cdimascio', name: 'dotenv-java', version: '3.0.0'
+	compileOnly 'org.projectlombok:lombok'
+	compileOnly 'javax:javaee-api:8.0.1'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	runtimeOnly 'org.postgresql:postgresql'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test:3.3.2'
+	testImplementation 'org.springframework.boot:spring-boot-testcontainers'
+	testImplementation 'org.testcontainers:junit-jupiter'
+	testImplementation 'org.testcontainers:postgresql'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	implementation 'org.springframework.kafka:spring-kafka'
+	testImplementation 'org.springframework.kafka:spring-kafka-test'
+	implementation group: 'io.lettuce', name: 'lettuce-core', version: '6.3.2.RELEASE'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

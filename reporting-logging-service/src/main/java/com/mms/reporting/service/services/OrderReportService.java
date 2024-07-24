@@ -5,6 +5,7 @@ import com.mms.reporting.service.dtos.CreateOrderReportDto;
 import com.mms.reporting.service.dtos.ExecutionDto;
 import com.mms.reporting.service.dtos.OrderActivityDto;
 import com.mms.reporting.service.dtos.OrderReportResponseDto;
+import com.mms.reporting.service.enums.SearchFieldDataType;
 import com.mms.reporting.service.helper.*;
 import com.mms.reporting.service.models.Execution;
 import com.mms.reporting.service.models.OrderActivity;
@@ -169,10 +170,10 @@ public class OrderReportService {
         }
     }
 
-    public IApiResponse<List<OrderReportResponseDto>> orderReportSearch(String field, String value) {
+    public IApiResponse<List<OrderReportResponseDto>> orderReportSearch(String field, Object value, SearchFieldDataType type) {
         try {
 
-            List<OrderReport> orderReports = orderReportRepository.findByFields(field, value);
+            List<OrderReport> orderReports = orderReportRepository.findByFields(field, value, type);
 
             List<OrderReportResponseDto> response = orderReports.stream()
                     .map(DtosUtil::orderReportToOrderReportResponseDto)

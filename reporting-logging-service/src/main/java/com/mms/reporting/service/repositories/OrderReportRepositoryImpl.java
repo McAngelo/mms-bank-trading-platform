@@ -1,5 +1,6 @@
 package com.mms.reporting.service.repositories;
 
+import com.mms.reporting.service.enums.SearchFieldDataType;
 import com.mms.reporting.service.models.OrderReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,12 +21,37 @@ public class OrderReportRepositoryImpl implements OrderReportRepositoryCustom {
     }
 
     @Override
-    public List<OrderReport> findByFields(String field, String value) {
-        Criteria criteria = Criteria.where(field).is(value);
-        Query query = Query.query(criteria);
-        query.fields().include("orderId").include("status"); // Projection to include specific fields
-        query.skip(0); // Consider parameterizing these values
-        query.limit(10);
+    public List<OrderReport> findByFields(String field, Object value, SearchFieldDataType type) {
+
+        Query query = new Query();
+        query.fields().include("orderId")
+                .include("user")
+                .include("order")
+                .include("orderActivities")
+                .include("executions"); // Projection to include specific fields
+
+//        query.skip(0); // Consider parameterizing these values
+//        query.limit(10);
+
+        switch (type){
+            case STRING:
+                query.addCriteria(Criteria.where(field).regex(value.toString()));
+                break;
+            case INT:
+                query.addCriteria(Criteria.where(field).is(Integer.parseInt(value.toString())));
+                break;
+            case LONG:
+                query.addCriteria(Criteria.where(field).is(Long.parseLong(value.toString())));
+                break;
+            case BOOLEAN:
+                query.addCriteria(Criteria.where(field).is(Boolean.parseBoolean(value.toString())));
+                break;
+            case DATE:
+                query.addCriteria(Criteria.where(field).is(value));
+                break;
+            default:
+                break;
+        }
 
         // Debugging: Log the query to be executed
         logger.debug("Executing query: {}", query.toString());

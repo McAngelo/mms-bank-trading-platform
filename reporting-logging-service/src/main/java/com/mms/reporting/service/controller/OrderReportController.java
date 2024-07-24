@@ -5,6 +5,7 @@ import com.mms.reporting.service.dtos.CreateOrderReportDto;
 import com.mms.reporting.service.dtos.ExecutionDto;
 import com.mms.reporting.service.dtos.OrderActivityDto;
 import com.mms.reporting.service.dtos.OrderReportResponseDto;
+import com.mms.reporting.service.enums.SearchFieldDataType;
 import com.mms.reporting.service.helper.BaseFilter;
 import com.mms.reporting.service.helper.IApiResponse;
 import com.mms.reporting.service.helper.PagedList;
@@ -37,8 +38,8 @@ public class OrderReportController {
     }
 
     @GetMapping(value = "/search", produces = "application/json", headers = {"X-API-VERSION=1"})
-    public IApiResponse<List<OrderReportResponseDto>> orderReportSearch(@RequestParam String field, @RequestParam String value) {
-        return orderReportService.orderReportSearch(field, value);
+    public IApiResponse<List<OrderReportResponseDto>> orderReportSearch(@RequestParam String field, @RequestParam Object value, @RequestParam SearchFieldDataType type) {
+        return orderReportService.orderReportSearch(field, value, type);
     }
 
     @GetMapping(value = "all", produces = "application/json", headers = {"X-API-VERSION=1"})

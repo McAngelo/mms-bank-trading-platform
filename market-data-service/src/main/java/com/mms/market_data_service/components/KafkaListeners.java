@@ -3,7 +3,9 @@ package com.mms.market_data_service.components;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mms.market_data_service.models.StreamOrder;
 import com.mms.market_data_service.services.interfaces.DataService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -14,6 +16,8 @@ import java.util.Optional;
 
 @Component
 @Slf4j
+@Getter
+@Setter
 @RequiredArgsConstructor
 public class KafkaListeners {
     private final DataService dataService;

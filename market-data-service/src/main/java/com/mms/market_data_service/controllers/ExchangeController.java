@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 
@@ -24,6 +25,8 @@ public class ExchangeController {
     private static final Logger logger = LoggerFactory.getLogger(ExchangeController.class);
     private final AppProperties appProperties;
     private final Gson gson = new Gson();
+
+    RestTemplate restTemplate; // we can use this to make http requests
 
     @Autowired
     private MarketFeedRepository marketFeedRepository;

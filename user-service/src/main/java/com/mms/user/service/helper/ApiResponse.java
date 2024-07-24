@@ -1,64 +1,37 @@
 package com.mms.user.service.helper;
 
-public class ApiResponse<T> {
-    private T data;
-    private int status;
-    private String message;
-    private ErrorDetails error;
+import java.util.List;
 
-    // Getters and setters
-    public T getData() {
-        return data;
-    }
+public class ApiResponse<T> implements IApiResponse<T> {
+    private final String message;
+    private final int status;
+    private final T data;
+    private final List<Error> errors;
 
-    public void setData(T data) {
-        this.data = data;
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
+    public ApiResponse(String message, int status, T data, List<Error> errors) {
+        this.message = message;
         this.status = status;
+        this.data = data;
+        this.errors = errors;
     }
 
+    @Override
     public String getMessage() {
         return message;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    @Override
+    public int getStatus() {
+        return status;
     }
 
-    public ErrorDetails getError() {
-        return error;
+    @Override
+    public T getData() {
+        return data;
     }
 
-    public void setError(ErrorDetails error) {
-        this.error = error;
-    }
-
-    // Inner class for error details
-    public static class ErrorDetails {
-        private String issue;
-        private String message;
-
-        // Getters and setters
-        public String getIssue() {
-            return issue;
-        }
-
-        public void setIssue(String issue) {
-            this.issue = issue;
-        }
-
-        public String getMessage() {
-            return message;
-        }
-
-        public void setMessage(String message) {
-            this.message = message;
-        }
+    @Override
+    public List<Error> getErrors() {
+        return errors;
     }
 }

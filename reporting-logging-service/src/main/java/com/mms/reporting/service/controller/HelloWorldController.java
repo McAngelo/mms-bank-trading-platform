@@ -5,8 +5,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 public class HelloWorldController {
     ApiResponse<String> apiResponse = new ApiResponse<>();
+
     @GetMapping("/hello")
-    public String seyHello(){
+    public String seyHello() {
         apiResponse.setMessage("Hello World");
 //        apiResponse.setStatus(200);
         return apiResponse.toString();

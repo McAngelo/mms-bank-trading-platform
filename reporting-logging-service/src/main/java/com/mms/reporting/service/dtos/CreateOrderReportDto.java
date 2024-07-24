@@ -2,7 +2,8 @@ package com.mms.reporting.service.dtos;
 
 import java.util.List;
 
-public record CreateOrderReportDto(long orderId, UserDto user, OrderDto order, List<OrderActivityDto> orderActivities, List<ExecutionDto> executions) {
+public record CreateOrderReportDto(long orderId, UserDto user, OrderDto order, List<OrderActivityDto> orderActivities,
+                                   List<ExecutionDto> executions) {
 
     public CreateOrderReportDto(UserDto user, OrderDto order, List<OrderActivityDto> orderActivities, List<ExecutionDto> executions) {
         this(order.id(), user, order, orderActivities, executions);

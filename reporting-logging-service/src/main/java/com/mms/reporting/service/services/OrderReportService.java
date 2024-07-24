@@ -40,7 +40,7 @@ public class OrderReportService {
 
             OrderReportResponseDto response = DtosUtil.orderReportToOrderReportResponseDto(savedOrderReport);
 
-            return ApiResponseUtil.toOkApiResponse(response);
+            return ApiResponseUtil.toCreatedApiResponse(response);
         } catch (DuplicateKeyException ex) {
             List<ErrorDetails> errors = List.of(new ErrorDetails("orderId", "OrderReport with id '" + request.orderId() + "' already exists"));
             return ApiResponseUtil.toBadRequestApiResponse(errors);

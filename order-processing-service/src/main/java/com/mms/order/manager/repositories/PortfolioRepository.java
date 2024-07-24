@@ -1,3 +1,4 @@
+/*
 package com.mms.order.manager.repositories;
 
 import com.mms.order.manager.models.Portfolio;
@@ -10,3 +11,4 @@ import java.util.List;
 public interface PortfolioRepository extends JpaRepository<Portfolio, Long> {
     List<Portfolio> findByUserId(long userId);
 }
+*/

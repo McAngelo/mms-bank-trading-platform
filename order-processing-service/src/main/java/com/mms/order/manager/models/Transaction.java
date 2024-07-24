@@ -1,3 +1,4 @@
+/*
 package com.mms.order.manager.models;
 
 import com.mms.order.manager.enums.TransactionType;
@@ -33,3 +34,4 @@ public class Transaction {
 
     private BigDecimal balance;
 }
+*/

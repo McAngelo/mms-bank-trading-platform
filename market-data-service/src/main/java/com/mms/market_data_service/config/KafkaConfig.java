@@ -1,5 +1,7 @@
 package com.mms.market_data_service.config;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +15,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
+@Getter
+@Setter
 @EnableKafka
 public class KafkaConfig {
 

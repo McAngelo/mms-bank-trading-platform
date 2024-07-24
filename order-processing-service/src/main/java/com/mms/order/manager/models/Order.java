@@ -1,3 +1,4 @@
+/*
 package com.mms.order.manager.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -88,3 +89,4 @@ public class Order {
         return priceDifference.compareTo(acceptableDifference) <= 0;
     }
 }
+*/

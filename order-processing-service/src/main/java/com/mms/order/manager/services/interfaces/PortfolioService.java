@@ -1,3 +1,4 @@
+/*
 package com.mms.order.manager.services.interfaces;
 
 public interface PortfolioService {
@@ -5,3 +6,4 @@ public interface PortfolioService {
 
     boolean userOwnsProduct(long userId, String product, int quantity);
 }
+*/

@@ -1,3 +1,4 @@
+/*
 package com.mms.order.manager.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -32,3 +33,4 @@ public class Wallet {
     private BigDecimal balance;
     private boolean isActive;
 }
+*/

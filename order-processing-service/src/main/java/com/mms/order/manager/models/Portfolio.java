@@ -1,3 +1,4 @@
+/*
 package com.mms.order.manager.models;
 
 import jakarta.persistence.*;
@@ -35,3 +36,4 @@ public class Portfolio {
     private LocalDate createdAt;
     private LocalDate updatedAt;
 }
+*/

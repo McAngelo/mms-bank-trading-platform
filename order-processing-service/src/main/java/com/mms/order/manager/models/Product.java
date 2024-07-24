@@ -1,3 +1,4 @@
+/*
 package com.mms.order.manager.models;
 
 import jakarta.persistence.*;
@@ -26,3 +27,4 @@ public class Product {
 
 
 }
+*/

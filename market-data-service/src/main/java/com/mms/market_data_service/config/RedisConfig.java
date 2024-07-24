@@ -17,6 +17,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Configuration
+@Getter
+@Setter
 public class RedisConfig {
     @Value("${spring.redis.host}")
     private String REDIS_HOST;

@@ -1,3 +1,4 @@
+/*
 package com.mms.order.manager.services.interfaces;
 
 import java.math.BigDecimal;
@@ -18,3 +19,4 @@ public interface WalletService {
 
     boolean disableWallet(long walletId);
 }
+*/

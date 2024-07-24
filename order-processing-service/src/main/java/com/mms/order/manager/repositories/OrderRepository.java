@@ -1,3 +1,4 @@
+/*
 package com.mms.order.manager.repositories;
 
 import com.mms.order.manager.enums.OrderStatus;
@@ -11,3 +12,4 @@ import java.util.List;
 public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findByPortfolioIdAndStatus(long portfolioId, OrderStatus status);
 }
+*/

@@ -1,3 +1,4 @@
+/*
 package com.mms.order.manager.services.interfaces;
 
 import com.mms.order.manager.dtos.requests.CreateOrderDto;
@@ -10,3 +11,4 @@ public interface OrderService {
     Optional<GetOrderDto> getOrder(long orderId);
     boolean cancelOrder(long orderId);
 }
+*/

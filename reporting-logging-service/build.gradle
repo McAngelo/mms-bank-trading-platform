@@ -43,6 +43,9 @@ dependencies {
 
     // for spring webflux
     implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.6.0")
+
+    // for bean validation
+    implementation 'io.springfox:springfox-bean-validators:3.0.0'
 }
 
 tasks.named('test') {

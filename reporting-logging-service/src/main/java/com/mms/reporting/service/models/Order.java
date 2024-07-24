@@ -2,7 +2,8 @@ package com.mms.reporting.service.models;
 
 import com.mms.reporting.service.enums.OrderSide;
 import com.mms.reporting.service.enums.OrderStatus;
-import jakarta.persistence.*;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

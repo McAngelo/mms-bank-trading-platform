@@ -1,7 +1,12 @@
 package com.mms.market_data_service.helper;
 
+import lombok.Builder;
+import lombok.Getter;
+
 import java.util.List;
 
+@Getter
+@Builder
 public class ApiResponse<T> implements IApiResponse<T> {
     private final String message;
     private final int status;
@@ -13,26 +18,6 @@ public class ApiResponse<T> implements IApiResponse<T> {
         this.status = status;
         this.data = data;
         this.errors = errors;
-    }
-
-    @Override
-    public String getMessage() {
-        return message;
-    }
-
-    @Override
-    public int getStatus() {
-        return status;
-    }
-
-    @Override
-    public T getData() {
-        return data;
-    }
-
-    @Override
-    public List<Error> getErrors() {
-        return errors;
     }
 }
 

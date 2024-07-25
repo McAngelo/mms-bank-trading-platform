@@ -1,6 +1,6 @@
 package com.mms.market_data_service.services.impl;
 
-import com.mms.market_data_service.models.StreamOrder;
+import com.mms.market_data_service.dtos.responses.StreamOrder;
 import com.mms.market_data_service.services.interfaces.DataService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;

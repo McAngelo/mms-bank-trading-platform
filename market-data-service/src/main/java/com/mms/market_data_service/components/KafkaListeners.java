@@ -1,7 +1,7 @@
 package com.mms.market_data_service.components;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mms.market_data_service.models.StreamOrder;
+import com.mms.market_data_service.dtos.responses.StreamOrder;
 import com.mms.market_data_service.services.interfaces.DataService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

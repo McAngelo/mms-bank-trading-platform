@@ -9,17 +9,10 @@ import lombok.Value;
 
 import java.math.BigDecimal;
 
-@Builder
-@Value
-public class CreateOrderDto {
-    long userId;
-    long productId;
-    String product;
-    long portfolioId;
-    int quantity;
-    BigDecimal price;
-    OrderSide side;
-    OrderStatus orderStatus;
-    OrderType type;
-    Portfolio portfolio;
-}
+public record CreateOrderDto(
+    String product,
+    int quantity,
+    BigDecimal price,
+    OrderSide side,
+    OrderType type
+) { }

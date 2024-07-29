@@ -7,6 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -26,6 +27,17 @@ public class GlobalEntityExceptionHandler extends ResponseEntityExceptionHandler
         ex.getFieldErrors().forEach(e -> errors.add(new ErrorDetails(e.getField(), e.getDefaultMessage())));
 
         IApiResponse<Object> response = ApiResponseUtil.toBadRequestApiResponse(errors);
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        pageNotFoundLogger.warn(ex.getMessage());
+
+        IApiResponse<Object> response = ApiResponseUtil.toNotFoundApiResponse();
+
+        response.setMessage("resource not found\nHere is a list of supported methods: " + ex.getSupportedHttpMethods());
 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }

@@ -1,4 +1,4 @@
-package com.mms.reporting.service.dtos;
+package com.mms.reporting.service.dtos.orderreport;
 
 import com.mongodb.lang.Nullable;
 

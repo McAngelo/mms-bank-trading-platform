@@ -1,7 +1,7 @@
 package com.mms.reporting.service.controller;
 
 
-import com.mms.reporting.service.dtos.*;
+import com.mms.reporting.service.dtos.orderreport.*;
 import com.mms.reporting.service.enums.SearchFieldDataType;
 import com.mms.reporting.service.helper.BaseFilter;
 import com.mms.reporting.service.helper.IApiResponse;

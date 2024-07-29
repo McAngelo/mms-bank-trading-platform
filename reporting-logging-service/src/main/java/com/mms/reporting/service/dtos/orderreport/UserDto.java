@@ -1,4 +1,4 @@
-package com.mms.reporting.service.dtos;
+package com.mms.reporting.service.dtos.orderreport;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;

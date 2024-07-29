@@ -1,7 +1,7 @@
 package com.mms.reporting.service.repositories;
 
-import com.mms.reporting.service.dtos.SearchQueryDto;
-import com.mms.reporting.service.dtos.SearchRequest;
+import com.mms.reporting.service.dtos.orderreport.SearchQueryDto;
+import com.mms.reporting.service.dtos.orderreport.SearchRequest;
 import com.mms.reporting.service.enums.SearchFieldDataType;
 import com.mms.reporting.service.models.OrderReport;
 

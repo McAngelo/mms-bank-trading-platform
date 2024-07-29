@@ -1,4 +1,3 @@
-/*
 package com.mms.order.manager.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -40,4 +39,3 @@ public class User {
     private LocalDate createdAt;
     private LocalDate updateAt;
 }
-*/

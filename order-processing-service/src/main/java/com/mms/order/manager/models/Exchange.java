@@ -1,4 +1,3 @@
-/*
 package com.mms.order.manager.models;
 
 import jakarta.persistence.*;
@@ -30,4 +29,3 @@ public class Exchange {
 
     private boolean isActive;
 }
-*/

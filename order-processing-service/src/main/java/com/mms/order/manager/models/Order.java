@@ -1,4 +1,3 @@
-/*
 package com.mms.order.manager.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -68,4 +67,3 @@ public class Order {
     private int quantity;
     private BigDecimal price;
 }
-*/

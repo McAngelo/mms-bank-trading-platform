@@ -1,4 +1,3 @@
-/*
 package com.mms.order.manager.services.interfaces;
 
 import com.mms.order.manager.models.Transaction;
@@ -10,4 +9,3 @@ public interface TransactionService {
     List<Transaction> getWalletTransactions(long walletId);
     Optional<Transaction> getWalletTransaction(long transactionId);
 }
-*/

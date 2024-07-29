@@ -15,37 +15,22 @@ import org.springframework.data.redis.repository.configuration.EnableRedisReposi
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.serializer.GenericToStringSerializer;
 
 @Configuration
 @Getter
 @Setter
 public class RedisConfig {
-    @Value("${spring.redis.host}")
-    private String REDIS_HOST;
-
-    @Value("${spring.redis.port}")
-    private int REDIS_PORT;
-
-    @Value("${spring.redis.password}")
-    private String REDIS_TOKEN;
-
     @Bean
     JedisConnectionFactory jedisConnectionFactory() {
-        JedisConnectionFactory factory = new JedisConnectionFactory();
-        factory.setHostName(REDIS_HOST);
-        factory.setPort(REDIS_PORT);
-        factory.setPassword(REDIS_TOKEN);
-        factory.getPoolConfig().setMaxIdle(30);
-        factory.getPoolConfig().setMinIdle(10);
-        factory.setUsePool(true);
-        return factory;
+        return new JedisConnectionFactory();
     }
 
     @Bean
-    public RedisTemplate<?, ?> redisTemplate() {
-        RedisTemplate<?, ?> template = new RedisTemplate<>();
+    public RedisTemplate<String, Object> redisTemplate() {
+        var template = new RedisTemplate<String, Object>();
         template.setConnectionFactory(jedisConnectionFactory());
-        template.setEnableTransactionSupport(true);
+        template.setValueSerializer(new GenericToStringSerializer<>(Object.class));
         return template;
     }
 

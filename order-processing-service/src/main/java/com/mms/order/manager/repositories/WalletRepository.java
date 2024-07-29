@@ -1,4 +1,3 @@
-/*
 package com.mms.order.manager.repositories;
 
 import com.mms.order.manager.models.Wallet;
@@ -9,4 +8,3 @@ import java.util.Optional;
 public interface WalletRepository extends JpaRepository<Wallet, Long> {
     Optional<Wallet> findByUserId(Long userId);
 }
-*/

@@ -1,4 +1,3 @@
-/*
 package com.mms.order.manager.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -9,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -33,5 +33,6 @@ public class Execution {
 
     private BigDecimal price;
     private int quantity;
+    private LocalDateTime dateTime;
 }
-*/
+

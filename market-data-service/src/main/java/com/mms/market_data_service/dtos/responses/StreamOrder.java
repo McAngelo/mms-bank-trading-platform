@@ -1,4 +1,4 @@
-package com.mms.market_data_service.models;
+package com.mms.market_data_service.dtos.responses;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

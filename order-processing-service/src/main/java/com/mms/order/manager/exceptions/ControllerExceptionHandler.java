@@ -1,6 +1,6 @@
-package com.mms.market_data_service.exceptions;
+package com.mms.order.manager.exceptions;
 
-import com.mms.market_data_service.helper.ApiResponse;
+import com.mms.order.manager.helpers.ApiResponse;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -20,8 +20,18 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
         );
     }
 
-    @ExceptionHandler(ExchangeException.class)
-    protected ResponseEntity<ApiResponse<Object>> handleExchangeException(ExchangeException ex) {
+    @ExceptionHandler(OrderException.class)
+    protected ResponseEntity<ApiResponse<Object>> handleExchangeException(OrderException ex) {
+        var apiResponse = ApiResponse.builder()
+                .message(ex.getMessage())
+                .status(HttpStatus.BAD_REQUEST.value())
+                .build();
+
+        return buildResponseEntity(apiResponse);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    protected ResponseEntity<ApiResponse<Object>> handleExchangeException(IllegalArgumentException ex) {
         var apiResponse = ApiResponse.builder()
                 .message(ex.getMessage())
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
@@ -29,4 +39,6 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
         return buildResponseEntity(apiResponse);
     }
+
+
 }

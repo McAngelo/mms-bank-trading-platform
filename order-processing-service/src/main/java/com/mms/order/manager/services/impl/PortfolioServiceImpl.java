@@ -36,6 +36,11 @@ public class PortfolioServiceImpl implements PortfolioService {
         return true;
     }
 
+    @Override
+    public Optional<Portfolio> findById(long portfolioId) {
+        return portfolioRepository.findById(portfolioId);
+    }
+
     public List<PortfolioDto> getPortfolios(Long userId) {
         var portfolios = portfolioRepository.findByUserId(userId);
 
@@ -44,14 +49,8 @@ public class PortfolioServiceImpl implements PortfolioService {
                 .toList();
     }
 
-//    public PortfolioDto getUserPortfolio(Long portfolioId) {
-//        var portfolioItems = orderRepository.findById(portfolioId);
-//
-//
-//    }
-
     @Override
-    public boolean userOwnsProduct(long userId, String product, int quantity) {
+    public boolean userOwnsProduct(long userId, String productSlug, int quantity) {
         return false;
     }
 }

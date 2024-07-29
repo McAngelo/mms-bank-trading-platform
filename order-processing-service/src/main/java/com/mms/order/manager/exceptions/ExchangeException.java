@@ -1,4 +1,4 @@
-package com.mms.market_data_service.exceptions;
+package com.mms.order.manager.exceptions;
 
 import lombok.extern.slf4j.Slf4j;
 

@@ -1,9 +1,7 @@
 package com.mms.order.manager.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
@@ -11,6 +9,8 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 public class Exchange {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,6 +19,13 @@ public class Exchange {
     @OneToMany(mappedBy = "exchange")
     private List<Execution> executions;
 
+    private String privateKey;
+
     private String name;
+
+    private String slug;
+
     private String baseUrl;
+
+    private boolean isActive;
 }

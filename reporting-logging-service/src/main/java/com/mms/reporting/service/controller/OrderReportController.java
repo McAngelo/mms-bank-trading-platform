@@ -65,6 +65,17 @@ public class OrderReportController {
         return bd.body(result);
     }
 
+    @Operation(summary = "Search for order report(s)", description = "Get an order report(s) by specified fields and values", tags = {"Order Report"})
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Successfully retrieved order report by the field and value provided", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = com.mms.reporting.service.helper.ApiResponse.class))})})
+    @PostMapping(value = "/query", produces = "application/json", headers = {"X-API-VERSION=1"})
+    public ResponseEntity<IApiResponse<PagedList<OrderReportResponseDto>>> orderReportSearch_v2(@RequestParam int page, @RequestParam int pageSize, @RequestParam(required = false) LocalDateTime fromDate, @RequestParam(required = false) LocalDateTime toDate, @RequestBody List<SearchRequest> searchRequests) {
+
+        BaseFilter filter = new BaseFilter(page, pageSize, fromDate, toDate, null);
+        var result = orderReportService.orderReportSearch(searchRequests, filter);
+        ResponseEntity.BodyBuilder bd = ResponseEntity.status(result.getStatus());
+        return bd.body(result);
+    }
+
 
     @Operation(summary = "Search for order reports", description = "Get paginated list of order reports", tags = {"Order Report"})
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Successfully retrieves paginated list of order reports", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = com.mms.reporting.service.helper.ApiResponse.class))})})

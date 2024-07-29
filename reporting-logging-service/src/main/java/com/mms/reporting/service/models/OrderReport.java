@@ -15,14 +15,14 @@ import java.util.List;
 @EqualsAndHashCode
 public class OrderReport implements Comparable<OrderReport> {
 
-    LocalDateTime createdAt;
-    LocalDateTime updatedAt;
     @Id
     private long orderId;
     private User user;
     private Order order;
     private List<OrderActivity> orderActivities;
     private List<Execution> executions;
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
 
     public void init() {
         this.createdAt = LocalDateTime.now();

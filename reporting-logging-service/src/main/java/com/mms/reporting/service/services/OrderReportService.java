@@ -201,4 +201,24 @@ public class OrderReportService {
             return ApiResponseUtil.toInternalServerErrorApiResponse(null);
         }
     }
+
+    public IApiResponse<PagedList<OrderReportResponseDto>> orderReportSearch(SearchQueryDto filter) {
+        try {
+
+            var result = orderReportRepository.findByFields(filter);
+            List<OrderReport> orderReports = result.values().stream().flatMap(List::stream).toList();
+
+            List<OrderReportResponseDto> dtos = orderReports.stream()
+                    .map(DtosUtil::orderReportToOrderReportResponseDto)
+                    .collect(Collectors.toList());
+
+            int totalCount = result.keySet().stream().findFirst().orElse(0);
+
+            PagedList<OrderReportResponseDto> pagedList = new PagedList<>(dtos, filter.page(), filter.pageSize(), totalCount);
+
+            return ApiResponseUtil.toOkApiResponse(pagedList);
+        } catch (Exception ex) {
+            return ApiResponseUtil.toInternalServerErrorApiResponse(null);
+        }
+    }
 }

@@ -1,5 +1,6 @@
 package com.mms.reporting.service.repositories;
 
+import com.mms.reporting.service.dtos.SearchQueryDto;
 import com.mms.reporting.service.dtos.SearchRequest;
 import com.mms.reporting.service.enums.SearchFieldDataType;
 import com.mms.reporting.service.models.OrderReport;
@@ -113,6 +114,60 @@ public class OrderReportRepositoryImpl implements OrderReportRepositoryCustom {
 
         query.skip(skip);
         query.limit(limit);
+
+        return Map.of(totalCount, mongoTemplate.find(query, OrderReport.class));
+    }
+
+    @Override
+    public Map<Integer, List<OrderReport>> findByFields(SearchQueryDto filter) {
+        Query query = new Query();
+        query.fields().include("orderId")
+                .include("user")
+                .include("order")
+                .include("orderActivities")
+                .include("executions")
+                .include("createdAt"); // Projection to include specific fields
+
+        if(filter.portfolioId() != null) {
+            query.addCriteria(Criteria.where("order.portfolioId").is(filter.portfolioId()));
+        }
+
+        if(filter.stock() != null) {
+            query.addCriteria(Criteria.where("order.productId").is(filter.stock()));
+        }
+
+        if(filter.orderType() != null) {
+            query.addCriteria(Criteria.where("orderType").is(filter.orderType()));
+        }
+
+        if(filter.tradeType() != null) {
+            query.addCriteria(Criteria.where("order.side").is(filter.tradeType()));
+        }
+
+        if(filter.status() != null) {
+            query.addCriteria(Criteria.where("order.status").is(filter.status()));
+        }
+
+        if(filter.quantity() != 0) {
+            query.addCriteria(Criteria.where("order.quantity").is(filter.quantity()));
+        }
+
+        if(filter.price() != null) {
+            query.addCriteria(Criteria.where("order.price").is(filter.price()));
+        }
+
+        if(filter.fromDate() != null && filter.toDate() != null) {
+            query.addCriteria(Criteria.where("createdAt").gte(LocalDateTime.parse(filter.fromDate())).lte(LocalDateTime.parse(filter.toDate())));
+        } else if(filter.fromDate() != null) {
+            query.addCriteria(Criteria.where("createdAt").gte(LocalDateTime.parse(filter.fromDate())));
+        } else if(filter.toDate() != null) {
+            query.addCriteria(Criteria.where("createdAt").lte(LocalDateTime.parse(filter.toDate())));
+        }
+
+        var totalCount = (int)mongoTemplate.count(query, OrderReport.class);
+
+        query.skip(filter.getOffset());
+        query.limit(filter.getLimit());
 
         return Map.of(totalCount, mongoTemplate.find(query, OrderReport.class));
     }

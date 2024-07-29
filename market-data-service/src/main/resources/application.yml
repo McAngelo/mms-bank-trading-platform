@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: market.data.service
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration,org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+  data:
+    redis:
+      host: redis
+      port: 6379
+      password: admin
+
+server:
+  port: 8082
+
+springdoc:
+  swagger-ui:
+    path: /doc
+
+external:
+  exchange1:
+    base-url: https://exchange.matraining.com
+  exchange2:
+    base-url: https://exchange2.matraining.com
+

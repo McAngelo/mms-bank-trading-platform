@@ -1,9 +1,12 @@
 package com.mms.reporting.service.utils;
 
-import com.mms.reporting.service.dtos.*;
+import com.mms.reporting.service.dtos.auditrail.AuditResponseDto;
+import com.mms.reporting.service.dtos.auditrail.CreateAuditDto;
+import com.mms.reporting.service.dtos.orderreport.*;
 import com.mms.reporting.service.models.*;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class DtosUtil {
@@ -72,5 +75,25 @@ public class DtosUtil {
                 orderReport.getCreatedAt(),
                 orderReport.getUpdatedAt()
         );
+    }
+
+    public static AuditTrail createAuditTDtoToAuditTrail(CreateAuditDto auditTrailDto) {
+        User user = new User(auditTrailDto.user().id(), auditTrailDto.user().roleId(), auditTrailDto.user().email(), auditTrailDto.user().fullName(), auditTrailDto.user().dob());
+
+        var actionDateTime = LocalDateTime.now();
+
+        return AuditTrail.builder()
+                .id(System.currentTimeMillis())
+                .user(user)
+                .action(auditTrailDto.action())
+                .narration(user.getFullName() + " performed '" + auditTrailDto.action() + "' at " + actionDateTime.format(DateTimeFormatter.ofPattern("HH:mm EEE. dd MMM, yyyy")))
+                .actionDateTime(actionDateTime)
+                .build();
+    }
+
+    public static AuditResponseDto auditTrailToAuditResponseDto(AuditTrail auditTrail) {
+        UserDto user = new UserDto(auditTrail.getUser().getId(), auditTrail.getUser().getRoleId(), auditTrail.getUser().getEmail(), auditTrail.getUser().getFullName(), auditTrail.getUser().getDob());
+
+        return new AuditResponseDto(auditTrail.getId(), user, auditTrail.getAction(), auditTrail.getNarration(), auditTrail.getActionDateTime());
     }
 }

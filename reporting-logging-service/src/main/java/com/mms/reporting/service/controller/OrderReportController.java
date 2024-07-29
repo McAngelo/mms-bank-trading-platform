@@ -1,7 +1,7 @@
 package com.mms.reporting.service.controller;
 
 
-import com.mms.reporting.service.dtos.*;
+import com.mms.reporting.service.dtos.orderreport.*;
 import com.mms.reporting.service.enums.SearchFieldDataType;
 import com.mms.reporting.service.helper.BaseFilter;
 import com.mms.reporting.service.helper.IApiResponse;
@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -61,6 +62,26 @@ public class OrderReportController {
     public ResponseEntity<IApiResponse<List<OrderReportResponseDto>>> orderReportSearch(@RequestParam String field, @RequestParam Object value, @RequestParam SearchFieldDataType type) {
 
         var result = orderReportService.orderReportSearch(field, value, type);
+        ResponseEntity.BodyBuilder bd = ResponseEntity.status(result.getStatus());
+        return bd.body(result);
+    }
+
+    @Operation(summary = "Search for order report(s)", description = "Get an order report(s) by specified fields and values", tags = {"Order Report"})
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Successfully retrieved order report by the field and value provided", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = com.mms.reporting.service.helper.ApiResponse.class))})})
+    @PostMapping(value = "/query", produces = "application/json", headers = {"X-API-VERSION=1"})
+    public ResponseEntity<IApiResponse<PagedList<OrderReportResponseDto>>> orderReportSearch_v2(@RequestParam int page, @RequestParam int pageSize, @RequestParam(required = false) LocalDateTime fromDate, @RequestParam(required = false) LocalDateTime toDate, @RequestBody List<SearchRequest> searchRequests) {
+
+        BaseFilter filter = new BaseFilter(page, pageSize, fromDate, toDate, null);
+        var result = orderReportService.orderReportSearch(searchRequests, filter);
+        ResponseEntity.BodyBuilder bd = ResponseEntity.status(result.getStatus());
+        return bd.body(result);
+    }
+
+    @Operation(summary = "Search for order report(s)", description = "Get an order report(s) by specified fields and values", tags = {"Order Report"})
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Successfully retrieved order report by the field and value provided", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = com.mms.reporting.service.helper.ApiResponse.class))})})
+    @GetMapping(value = "search/query", produces = "application/json", headers = {"X-API-VERSION=1"})
+    public ResponseEntity<IApiResponse<PagedList<OrderReportResponseDto>>> orderReportSearch_v3(@ParameterObject SearchQueryDto filter) {
+        var result = orderReportService.orderReportSearch(filter);
         ResponseEntity.BodyBuilder bd = ResponseEntity.status(result.getStatus());
         return bd.body(result);
     }

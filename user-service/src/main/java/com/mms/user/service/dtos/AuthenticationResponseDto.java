@@ -9,4 +9,5 @@ import lombok.Setter;
 @Builder
 public class AuthenticationResponseDto {
     private String token;
+    private RegistrationResponseDto user;
 }

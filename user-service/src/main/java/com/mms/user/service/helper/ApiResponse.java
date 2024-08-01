@@ -16,12 +16,12 @@ public class ApiResponse<T> implements IApiResponse<T> {
         this.errors = errors;
     }
 
-    public ApiResponse() {
+    /*public ApiResponse() {
         this.message = null;
         this.status = 0;
         this.data = null;
         this.errors = null;
-    }
+    }*/
 
     @Override
     public String getMessage() {

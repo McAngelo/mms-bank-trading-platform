@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 
-@Service
+/*@Service
 public class AuthService {
     private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
 
@@ -90,4 +90,4 @@ public class AuthService {
             return ApiResponseUtil.toBadRequestApiResponse(null, "Error", error);
         }
     }
-}
+}*/

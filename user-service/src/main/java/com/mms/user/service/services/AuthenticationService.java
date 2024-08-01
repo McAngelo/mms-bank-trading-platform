@@ -42,7 +42,7 @@ public class AuthenticationService {
     @Value("${application.mailing.frontend.activation-url}")
     private String activationUrl;
 
-    public IApiResponse<RegistrationResponseDto> register(RegistrationRequestDto request) throws MessagingException {
+    public IApiResponse<?> register(RegistrationRequestDto request) throws MessagingException {
         var userRole = roleRepository.findByName("USER")
                 .orElseThrow(() -> new IllegalStateException("ROLE USER was not initiated"));
         var user = User.builder()
@@ -55,14 +55,12 @@ public class AuthenticationService {
                 .roles(List.of(userRole))
                 .build();
         var responseRaw = userRepository.save(user);
-        //sendValidationEmail(user);
+
         RegistrationResponseDto response = new RegistrationResponseDto();
-        response.name = responseRaw.getFullName();
-        response.email = responseRaw.getEmail();
         return ApiResponseUtil.toOkApiResponse(response, "Successful");
     }
 
-    public AuthenticationResponseDto authenticate(AuthenticationRequestDto request) {
+    public IApiResponse<?> authenticate(AuthenticationRequestDto request) {
         var auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
@@ -74,10 +72,16 @@ public class AuthenticationService {
         var user = ((User) auth.getPrincipal());
         claims.put("fullName", user.getFullName());
 
+        RegistrationResponseDto authUser = new RegistrationResponseDto();
+        authUser.name = user.getFullName();
+        authUser.email = user.getEmail();
+
         var jwtToken = jwtService.generateToken(claims, (User) auth.getPrincipal());
-        return AuthenticationResponseDto.builder()
+        var response = AuthenticationResponseDto.builder()
                 .token(jwtToken)
+                .user(authUser)
                 .build();
+        return ApiResponseUtil.toOkApiResponse(response, "Successful");
     }
 
     @Transactional

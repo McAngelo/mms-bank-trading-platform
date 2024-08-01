@@ -1,9 +1,8 @@
 package com.mms.user.service.services;
 
-import com.mms.user.service.dtos.RegistrationRequestDto;
-import com.mms.user.service.dtos.UserResponseDto;
-import com.mms.user.service.dtos.VerificationDto;
+import com.mms.user.service.dtos.*;
 import com.mms.user.service.helper.*;
+import com.mms.user.service.model.Book;
 import com.mms.user.service.model.User;
 import com.mms.user.service.model.mappers.UserMapper;
 import com.mms.user.service.repositories.UserRepository;
@@ -37,7 +36,6 @@ public class UserService {
     public IApiResponse<?> processGetAllUsers(int page, int size){
         try {
             logger.info("Get all users");
-            //User user = ((User) connectedUser.getPrincipal());
             Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
             var users = userRepository.findAll(pageable);
             logger.info("Users {}", users);
@@ -62,7 +60,7 @@ public class UserService {
         }
     }
 
-    public ApiResponse processGetOneUser(int userId){
+    public IApiResponse<?> processGetOneUser(int userId){
         try {
             logger.info("Get one user by Id");
             var user = userRepository.findById(userId)
@@ -84,26 +82,40 @@ public class UserService {
         }
     }
 
-    public ApiResponse processUserSearch(VerificationDto verificationDto){
+    /*public IApiResponse<?> processUserSearch(int page, int size, UserSearchDto userSearchDto){
         try {
-            logger.info("Processing login authentication");
-            //TODO: process the password
-            logger.info("login process response: ");
-            return ApiResponseUtil.toOkApiResponse(verificationDto, "Successful Subscription to the first exchange");
+            logger.info("Search all users");
+            Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
+            var users = userRepository.findAllUsers(pageable, userSearchDto.getFullName(), userSearchDto.getEmail(), userSearchDto.getRole(), userSearchDto.isAccountLocked(), userSearchDto.isEnabled());
+            logger.info("Users {}", users);
+            List<UserResponseDto> usersResponse = users.stream()
+                    .map(userMapper::toUserResponse)
+                    .toList();
+            var pagedRes = new PageResponse<>(
+                    usersResponse,
+                    users.getNumber(),
+                    users.getSize(),
+                    users.getTotalElements(),
+                    users.getTotalPages(),
+                    users.isFirst(),
+                    users.isLast());
+            logger.info("registration process response");
+            return ApiResponseUtil.toOkApiResponse(pagedRes, "Successful");
         }catch(Exception exception){
-            logger.error("error while processing login: {}", exception);
+            logger.error("error while retrieving users", exception);
             ArrayList<ErrorDetails> error = new ArrayList<>();
             error.add(new ErrorDetails(exception.getMessage(), exception.toString()));
             return ApiResponseUtil.toBadRequestApiResponse("Error", error);
         }
-    }
+    }*/
 
-    public ApiResponse processUserCreation(RegistrationRequestDto registrationDto){
+    public IApiResponse<?> processUserCreation(UserRequestDto registrationDto){
         try {
             logger.info("Processing login authentication");
-            //TODO: process the password
+            User user = userMapper.toUserRequest(registrationDto);
+            var response = userRepository.save(user).getId();
             logger.info("login process response: ");
-            return ApiResponseUtil.toOkApiResponse(registrationDto, "Successful Subscription to the first exchange");
+            return ApiResponseUtil.toOkApiResponse(response, "User created successfully");
         }catch(Exception exception){
             logger.error("error while processing login: {}", exception);
             ArrayList<ErrorDetails> error = new ArrayList<>();

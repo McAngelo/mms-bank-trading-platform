@@ -1,3 +1,4 @@
+/*
 package com.mms.user.service.controllers;
 
 import com.mms.user.service.dtos.RegistrationRequestDto;
@@ -45,3 +46,4 @@ public class ExchangeSubscriptionController {
         return userService.processGetOneUser(id);
     }
 }
+*/

@@ -1,6 +1,8 @@
 package com.mms.user.service.controllers;
 
 import com.mms.user.service.dtos.RegistrationRequestDto;
+import com.mms.user.service.dtos.UserRequestDto;
+import com.mms.user.service.dtos.UserSearchDto;
 import com.mms.user.service.helper.ApiResponse;
 import com.mms.user.service.services.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,23 +30,35 @@ public class UsersController {
         return bd.body(result);
     }
 
+    /*@GetMapping("")
+    public ResponseEntity<?> searchUser(@RequestParam(name = "page", defaultValue = "0", required = false) int page,
+                                        @RequestParam(name = "size", defaultValue = "10", required = false) int size,
+                                        @RequestParam() UserSearchDto userSearch){
+        var result = userService.processUserSearch(page, size, userSearch);
+        ResponseEntity.BodyBuilder bd = ResponseEntity.status(result.getStatus());
+        return bd.body(result);
+    }*/
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getUserById(@PathVariable("id") int id){
         var result = userService.processGetOneUser(id);
-
         ResponseEntity.BodyBuilder bd = ResponseEntity.status(result.getStatus());
         return bd.body(result);
     }
 
     @PostMapping
-    public ApiResponse<String> addUser(@RequestBody RegistrationRequestDto registrationDto){
-        return userService.processUserCreation(registrationDto);
+    public ResponseEntity<?> addUser(@RequestBody UserRequestDto registrationDto){
+        var result =  userService.processUserCreation(registrationDto);
+        ResponseEntity.BodyBuilder bd = ResponseEntity.status(result.getStatus());
+        return bd.body(result);
     }
 
     @PutMapping("{id}")
-    public ApiResponse<String> updateUser(@PathVariable("id") String id, @RequestBody RegistrationRequestDto registrationDto){
-        return userService.processUpdateUser(id, registrationDto);
+    public ResponseEntity<?> updateUser(@PathVariable("id") String id, @RequestBody RegistrationRequestDto registrationDto){
+
+        var result =  userService.processUpdateUser(id, registrationDto);
+        ResponseEntity.BodyBuilder bd = ResponseEntity.status(result.getStatus());
+        return bd.body(result);
     }
 
     @PutMapping("/change-account-status/{id}")
@@ -52,8 +66,8 @@ public class UsersController {
         return userService.processAccountStatusChange(id, status);
     }
 
-    @DeleteMapping("{id}")
-    public ApiResponse<String> deleteUser(@PathVariable("id") int id){
-        return userService.processGetOneUser(id);
-    }
+/*/    @DeleteMapping("{id}")
+//    public ApiResponse<String> deleteUser(@PathVariable("id") int id){
+//        return userService.processGetOneUser(id);
+//    }*/
 }

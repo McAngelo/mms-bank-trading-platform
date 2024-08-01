@@ -14,16 +14,16 @@ import static jakarta.persistence.FetchType.EAGER;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserResponseDto {
-    private Integer id;
-    @Getter
+public class UserRequestDto {
     private String fullName;
     @Column(unique = true)
     private String email;
     private boolean accountLocked;
     private boolean enabled;
     @ManyToMany(fetch = EAGER)
-    private List<Role> roles;
+    private int role;
+
+    public String fullName() {
+        return fullName;
+    }
 }
-
-

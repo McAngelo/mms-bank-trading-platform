@@ -14,7 +14,7 @@ import static jakarta.persistence.FetchType.EAGER;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserResponseDto {
+public class UserSearchDto {
     private Integer id;
     @Getter
     private String fullName;
@@ -23,7 +23,5 @@ public class UserResponseDto {
     private boolean accountLocked;
     private boolean enabled;
     @ManyToMany(fetch = EAGER)
-    private List<Role> roles;
+    private Role role;
 }
-
-

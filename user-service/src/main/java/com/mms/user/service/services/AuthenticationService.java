@@ -56,8 +56,8 @@ public class AuthenticationService {
                 .build();
         var responseRaw = userRepository.save(user);
 
-        RegistrationResponseDto response = new RegistrationResponseDto();
-        return ApiResponseUtil.toOkApiResponse(response, "Successful");
+        //RegistrationResponseDto response = new RegistrationResponseDto();
+        return ApiResponseUtil.toOkApiResponse(responseRaw, "Successful");
     }
 
     public IApiResponse<?> authenticate(AuthenticationRequestDto request) {

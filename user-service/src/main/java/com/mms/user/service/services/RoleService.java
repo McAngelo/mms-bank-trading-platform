@@ -30,7 +30,7 @@ public class RoleService {
             logger.error("error while processing registration", exception);
             ArrayList<ErrorDetails> error = new ArrayList<>();
             error.add(new ErrorDetails(exception.getMessage(), exception.toString()));
-            return ApiResponseUtil.toBadRequestApiResponse(null, "Error", error);
+            return ApiResponseUtil.toBadRequestApiResponse("Error", error);
         }
     }
 
@@ -44,7 +44,7 @@ public class RoleService {
             logger.error("error while processing login: {}", exception);
             ArrayList<ErrorDetails> error = new ArrayList<>();
             error.add(new ErrorDetails(exception.getMessage(), exception.toString()));
-            return ApiResponseUtil.toBadRequestApiResponse(null, "Error", error);
+            return ApiResponseUtil.toBadRequestApiResponse("Error", error);
         }
     }
 
@@ -58,7 +58,7 @@ public class RoleService {
             logger.error("error while processing login: {}", exception);
             ArrayList<ErrorDetails> error = new ArrayList<>();
             error.add(new ErrorDetails(exception.getMessage(), exception.toString()));
-            return ApiResponseUtil.toBadRequestApiResponse(null, "Error", error);
+            return ApiResponseUtil.toBadRequestApiResponse("Error", error);
         }
     }
 
@@ -72,7 +72,7 @@ public class RoleService {
             logger.error("error while processing login: {}", exception);
             ArrayList<ErrorDetails> error = new ArrayList<>();
             error.add(new ErrorDetails(exception.getMessage(), exception.toString()));
-            return ApiResponseUtil.toBadRequestApiResponse(null, "Error", error);
+            return ApiResponseUtil.toBadRequestApiResponse("Error", error);
         }
     }
 
@@ -86,7 +86,7 @@ public class RoleService {
             logger.error("error while processing login: {}", exception);
             ArrayList<ErrorDetails> error = new ArrayList<>();
             error.add(new ErrorDetails(exception.getMessage(), exception.toString()));
-            return ApiResponseUtil.toBadRequestApiResponse(null, "Error", error);
+            return ApiResponseUtil.toBadRequestApiResponse("Error", error);
         }
     }
 }

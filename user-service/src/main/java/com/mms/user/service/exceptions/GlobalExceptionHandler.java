@@ -1,5 +1,7 @@
 package com.mms.user.service.exceptions;
 
+import com.mms.user.service.helper.ApiResponseUtil;
+import com.mms.user.service.helper.ErrorDetails;
 import jakarta.mail.MessagingException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,108 +25,87 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(LockedException.class)
-    public ResponseEntity<ExceptionResponse> handleException(LockedException exp) {
-        return ResponseEntity
-                .status(UNAUTHORIZED)
-                .body(
-                        ExceptionResponse.builder()
-                                .businessErrorCode(ACCOUNT_LOCKED.getCode())
-                                .businessErrorDescription(ACCOUNT_LOCKED.getDescription())
-                                .error(exp.getMessage())
-                                .build()
-                );
+    public ResponseEntity<?> handleException(LockedException exp) {
+
+        ArrayList<ErrorDetails> error = new ArrayList<>();
+        error.add(new ErrorDetails(String.valueOf(ACCOUNT_LOCKED.getCode()), exp.getMessage()));
+
+        var response = ApiResponseUtil.toUnAthorizedApiResponse(ACCOUNT_LOCKED.getDescription(), error);
+        ResponseEntity.BodyBuilder bd = ResponseEntity.status(response.getStatus());
+        return bd.body(response);
     }
 
     @ExceptionHandler(DisabledException.class)
-    public ResponseEntity<ExceptionResponse> handleException(DisabledException exp) {
-        return ResponseEntity
-                .status(UNAUTHORIZED)
-                .body(
-                        ExceptionResponse.builder()
-                                .businessErrorCode(ACCOUNT_DISABLED.getCode())
-                                .businessErrorDescription(ACCOUNT_DISABLED.getDescription())
-                                .error(exp.getMessage())
-                                .build()
-                );
+    public ResponseEntity<?> handleException(DisabledException exp) {
+        ArrayList<ErrorDetails> error = new ArrayList<>();
+        error.add(new ErrorDetails(String.valueOf(ACCOUNT_DISABLED.getCode()), exp.getMessage()));
+
+        var response = ApiResponseUtil.toUnAthorizedApiResponse(ACCOUNT_DISABLED.getDescription(), error);
+        ResponseEntity.BodyBuilder bd = ResponseEntity.status(response.getStatus());
+        return bd.body(response);
     }
 
-
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<ExceptionResponse> handleException() {
-        return ResponseEntity
-                .status(UNAUTHORIZED)
-                .body(
-                        ExceptionResponse.builder()
-                                .businessErrorCode(BAD_CREDENTIALS.getCode())
-                                .businessErrorDescription(BAD_CREDENTIALS.getDescription())
-                                .error("Login and / or Password is incorrect")
-                                .build()
-                );
+    public ResponseEntity<?> handleException() {
+        ArrayList<ErrorDetails> error = new ArrayList<>();
+        error.add(new ErrorDetails(String.valueOf(BAD_CREDENTIALS.getCode()), "Login and / or Password is incorrect"));
+
+        var response = ApiResponseUtil.toUnAthorizedApiResponse(BAD_CREDENTIALS.getDescription(), error);
+        ResponseEntity.BodyBuilder bd = ResponseEntity.status(response.getStatus());
+        return bd.body(response);
     }
 
     @ExceptionHandler(MessagingException.class)
-    public ResponseEntity<ExceptionResponse> handleException(MessagingException exp) {
-        return ResponseEntity
-                .status(INTERNAL_SERVER_ERROR)
-                .body(
-                        ExceptionResponse.builder()
-                                .error(exp.getMessage())
-                                .build()
-                );
+    public ResponseEntity<?> handleException(MessagingException exp) {
+        ArrayList<ErrorDetails> error = new ArrayList<>();
+        error.add(new ErrorDetails(String.valueOf(INTERNAL_SERVER_ERROR), exp.getMessage()));
+
+        var response = ApiResponseUtil.toInternalServerErrorApiResponse("Internal Server Error", error);
+        ResponseEntity.BodyBuilder bd = ResponseEntity.status(response.getStatus());
+        return bd.body(response);
     }
 
     @ExceptionHandler(ActivationTokenException.class)
-    public ResponseEntity<ExceptionResponse> handleException(ActivationTokenException exp) {
-        return ResponseEntity
-                .status(BAD_REQUEST)
-                .body(
-                        ExceptionResponse.builder()
-                                .error(exp.getMessage())
-                                .build()
-                );
+    public ResponseEntity<?> handleException(ActivationTokenException exp) {
+        ArrayList<ErrorDetails> error = new ArrayList<>();
+        error.add(new ErrorDetails(String.valueOf(BAD_REQUEST), exp.getMessage()));
+
+        var response = ApiResponseUtil.toBadRequestApiResponse("Bad Request", error);
+        ResponseEntity.BodyBuilder bd = ResponseEntity.status(response.getStatus());
+        return bd.body(response);
     }
 
     @ExceptionHandler(OperationNotPermittedException.class)
-    public ResponseEntity<ExceptionResponse> handleException(OperationNotPermittedException exp) {
-        return ResponseEntity
-                .status(BAD_REQUEST)
-                .body(
-                        ExceptionResponse.builder()
-                                .error(exp.getMessage())
-                                .build()
-                );
+    public ResponseEntity<?> handleException(OperationNotPermittedException exp) {
+        ArrayList<ErrorDetails> error = new ArrayList<>();
+        error.add(new ErrorDetails(String.valueOf(BAD_REQUEST), exp.getMessage()));
+
+        var response = ApiResponseUtil.toBadRequestApiResponse("Bad Request", error);
+        ResponseEntity.BodyBuilder bd = ResponseEntity.status(response.getStatus());
+        return bd.body(response);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ExceptionResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException exp) {
-        Set<String> errors = new HashSet<>();
+    public ResponseEntity<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException exp) {
+        ArrayList<ErrorDetails> error = new ArrayList<>();
         exp.getBindingResult().getAllErrors()
-                .forEach(error -> {
-                    //var fieldName = ((FieldError) error).getField();
-                    var errorMessage = error.getDefaultMessage();
-                    errors.add(errorMessage);
+                .forEach(err -> {
+                    error.add(new ErrorDetails(String.valueOf(BAD_REQUEST), err.getDefaultMessage()));
                 });
-
-        return ResponseEntity
-                .status(BAD_REQUEST)
-                .body(
-                        ExceptionResponse.builder()
-                                .validationErrors(errors)
-                                .build()
-                );
+        var response = ApiResponseUtil.toBadRequestApiResponse("Bad Request", error);
+        ResponseEntity.BodyBuilder bd = ResponseEntity.status(response.getStatus());
+        return bd.body(response);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ExceptionResponse> handleException(Exception exp) {
+    public ResponseEntity<?> handleException(Exception exp) {
         exp.printStackTrace();
-        return ResponseEntity
-                .status(INTERNAL_SERVER_ERROR)
-                .body(
-                        ExceptionResponse.builder()
-                                .businessErrorDescription("Internal error, please contact the admin")
-                                .error(exp.getMessage())
-                                .build()
-                );
+        ArrayList<ErrorDetails> error = new ArrayList<>();
+        error.add(new ErrorDetails(String.valueOf(INTERNAL_SERVER_ERROR), exp.getMessage()));
+
+        var response = ApiResponseUtil.toInternalServerErrorApiResponse("Internal Server Error", error);
+        ResponseEntity.BodyBuilder bd = ResponseEntity.status(response.getStatus());
+        return bd.body(response);
     }
 }
 

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Data Notification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 1200px;
+            margin: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .exchange {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+
+        .exchange h2 {
+            margin: 0 0 10px;
+            color: #555;
+        }
+
+        .product {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            background-color: #fff;
+        }
+
+        .product p {
+            margin: 5px 0;
+        }
+
+        .product p strong {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Product Data Notification</h1>
+    <div id="product-data">
+        <!-- Exchange data will be dynamically inserted here -->
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<script>
+    'use strict';
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const socket = new SockJS('/ws');
+        const stompClient = Stomp.over(socket);
+
+        stompClient.connect({}, function(frame) {
+            console.log('Connected: ' + frame);
+            stompClient.subscribe('/queue/market-data', function(message) {
+                const productData = JSON.parse(message.body);
+                updateProductData(productData);
+            });
+        });
+
+        console.log('App.js loaded');
+    });
+
+    function updateProductData(data) {
+        const productDataDiv = document.getElementById('product-data');
+        productDataDiv.innerHTML = ''; // Clear existing data
+
+        for (const [exchange, products] of Object.entries(data)) {
+            const exchangeDiv = document.createElement('div');
+            exchangeDiv.className = 'exchange';
+            exchangeDiv.innerHTML = `<h2>${exchange}</h2>`;
+
+            products.forEach(product => {
+                const productDiv = document.createElement('div');
+                productDiv.className = 'product';
+                productDiv.innerHTML = `
+                        <p><strong>Ticker:</strong> ${product.TICKER}</p>
+                        <p><strong>Sell Limit:</strong> ${product.SELL_LIMIT}</p>
+                        <p><strong>Last Traded Price:</strong> ${product.LAST_TRADED_PRICE}</p>
+                        <p><strong>Ask Price:</strong> ${product.ASK_PRICE}</p>
+                        <p><strong>Bid Price:</strong> ${product.BID_PRICE}</p>
+                        <p><strong>Buy Limit:</strong> ${product.BUY_LIMIT}</p>
+                        <p><strong>Max Price Shift:</strong> ${product.MAX_PRICE_SHIFT}</p>
+                    `;
+                exchangeDiv.appendChild(productDiv);
+            });
+
+            productDataDiv.appendChild(exchangeDiv);
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,6 +1,18 @@
 spring:
   application:
     name: market.data.service
+    exchanges:
+      - https://exchange.matraining.com
+      - https://exchange2.matraining.com
+    stocks:
+      - TSLA
+      - NFLX
+      - ORCL
+      - GOOGL
+      - AMZN
+      - MSFT
+      - IBM
+      - AAPL
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration,org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
   data:
@@ -22,3 +34,7 @@ external:
   exchange2:
     base-url: https://exchange2.matraining.com
 
+eureka.client.service-url.defaultZone: http://localhost:8761/eureka/
+
+#eureka.client.register-with-eureka=true
+#eureka.client.fetch-registry=true

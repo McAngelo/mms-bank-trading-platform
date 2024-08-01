@@ -3,7 +3,7 @@ package com.mms.user.service.services;
 import com.mms.user.service.dtos.*;
 import com.mms.user.service.helper.ApiResponse;
 import com.mms.user.service.helper.ApiResponseUtil;
-import com.mms.user.service.helper.Error;
+import com.mms.user.service.helper.ErrorDetails;
 import com.mms.user.service.repositories.RoleRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +15,7 @@ import java.util.ArrayList;
 @Service
 public class RoleService {
 
-    private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
+    private static final Logger logger = LoggerFactory.getLogger(RoleService.class);
 
     RoleRepository roleRepository;
 
@@ -28,9 +28,9 @@ public class RoleService {
             return ApiResponseUtil.toOkApiResponse(null, "User registration Successful");
         }catch(Exception exception){
             logger.error("error while processing registration", exception);
-            ArrayList<Error> error = new ArrayList<>();
-            error.add(new Error(exception.toString(), exception.getMessage()));
-            return ApiResponseUtil.toBadRequestApiResponse(null, "Error", error);
+            ArrayList<ErrorDetails> error = new ArrayList<>();
+            error.add(new ErrorDetails(exception.getMessage(), exception.toString()));
+            return ApiResponseUtil.toBadRequestApiResponse("Error", error);
         }
     }
 
@@ -42,9 +42,9 @@ public class RoleService {
             return ApiResponseUtil.toOkApiResponse(null, "Successful Subscription to the first exchange");
         }catch(Exception exception){
             logger.error("error while processing login: {}", exception);
-            ArrayList<Error> error = new ArrayList<>();
-            error.add(new Error(exception.toString(), exception.getMessage()));
-            return ApiResponseUtil.toBadRequestApiResponse(null, "Error", error);
+            ArrayList<ErrorDetails> error = new ArrayList<>();
+            error.add(new ErrorDetails(exception.getMessage(), exception.toString()));
+            return ApiResponseUtil.toBadRequestApiResponse("Error", error);
         }
     }
 
@@ -56,9 +56,9 @@ public class RoleService {
             return ApiResponseUtil.toOkApiResponse(roleDto, "Successful Subscription to the first exchange");
         }catch(Exception exception){
             logger.error("error while processing login: {}", exception);
-            ArrayList<Error> error = new ArrayList<>();
-            error.add(new Error(exception.toString(), exception.getMessage()));
-            return ApiResponseUtil.toBadRequestApiResponse(null, "Error", error);
+            ArrayList<ErrorDetails> error = new ArrayList<>();
+            error.add(new ErrorDetails(exception.getMessage(), exception.toString()));
+            return ApiResponseUtil.toBadRequestApiResponse("Error", error);
         }
     }
 
@@ -70,9 +70,9 @@ public class RoleService {
             return ApiResponseUtil.toOkApiResponse(roleDto, "Successful Subscription to the first exchange");
         }catch(Exception exception){
             logger.error("error while processing login: {}", exception);
-            ArrayList<Error> error = new ArrayList<>();
-            error.add(new Error(exception.toString(), exception.getMessage()));
-            return ApiResponseUtil.toBadRequestApiResponse(null, "Error", error);
+            ArrayList<ErrorDetails> error = new ArrayList<>();
+            error.add(new ErrorDetails(exception.getMessage(), exception.toString()));
+            return ApiResponseUtil.toBadRequestApiResponse("Error", error);
         }
     }
 
@@ -84,9 +84,9 @@ public class RoleService {
             return ApiResponseUtil.toOkApiResponse(null, "Successful Subscription to the first exchange");
         }catch(Exception exception){
             logger.error("error while processing login: {}", exception);
-            ArrayList<Error> error = new ArrayList<>();
-            error.add(new Error(exception.toString(), exception.getMessage()));
-            return ApiResponseUtil.toBadRequestApiResponse(null, "Error", error);
+            ArrayList<ErrorDetails> error = new ArrayList<>();
+            error.add(new ErrorDetails(exception.getMessage(), exception.toString()));
+            return ApiResponseUtil.toBadRequestApiResponse("Error", error);
         }
     }
 }

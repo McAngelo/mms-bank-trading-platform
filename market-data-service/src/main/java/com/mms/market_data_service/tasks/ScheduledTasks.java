@@ -2,6 +2,7 @@ package com.mms.market_data_service.tasks;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mms.market_data_service.helper.JsonHelper;
 import com.mms.market_data_service.services.interfaces.ExchangeService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -65,7 +66,12 @@ public class ScheduledTasks {
             productsData.forEach(p -> {
                 var key = String.format("%s:%s", EXCHANGE, p.ticker());
 
-                redisTemplate.opsForValue().set(key, p.toString());
+                try {
+                    redisTemplate.opsForValue().set(key, JsonHelper.toJson(p));
+                } catch (JsonProcessingException e) {
+                    log.error("Could not save product data {} to cache {}", p, e.toString());
+                    return;
+                }
 
                 LocalDateTime now = LocalDateTime.now();
                 LocalDateTime expiryDateTime = now.plusHours(1);

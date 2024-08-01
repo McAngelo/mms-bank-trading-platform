@@ -1,10 +1,7 @@
 package com.mms.reporting.service.services;
 
 
-import com.mms.reporting.service.dtos.CreateOrderReportDto;
-import com.mms.reporting.service.dtos.ExecutionDto;
-import com.mms.reporting.service.dtos.OrderActivityDto;
-import com.mms.reporting.service.dtos.OrderReportResponseDto;
+import com.mms.reporting.service.dtos.orderreport.*;
 import com.mms.reporting.service.enums.SearchFieldDataType;
 import com.mms.reporting.service.helper.*;
 import com.mms.reporting.service.models.Execution;
@@ -180,6 +177,46 @@ public class OrderReportService {
                     .collect(Collectors.toList());
 
             return ApiResponseUtil.toOkApiResponse(response);
+        } catch (Exception ex) {
+            return ApiResponseUtil.toInternalServerErrorApiResponse(null);
+        }
+    }
+
+    public IApiResponse<PagedList<OrderReportResponseDto>> orderReportSearch(List<SearchRequest> searchRequests, BaseFilter filter) {
+        try {
+
+            var result = orderReportRepository.findByFields(searchRequests, filter.getOffset(), filter.getLimit(), filter.fromDate(), filter.toDate());
+            List<OrderReport> orderReports = result.values().stream().flatMap(List::stream).toList();
+
+            List<OrderReportResponseDto> dtos = orderReports.stream()
+                    .map(DtosUtil::orderReportToOrderReportResponseDto)
+                    .collect(Collectors.toList());
+
+            int totalCount = result.keySet().stream().findFirst().orElse(0);
+
+            PagedList<OrderReportResponseDto> pagedList = new PagedList<>(dtos, filter.page(), filter.pageSize(), totalCount);
+
+            return ApiResponseUtil.toOkApiResponse(pagedList);
+        } catch (Exception ex) {
+            return ApiResponseUtil.toInternalServerErrorApiResponse(null);
+        }
+    }
+
+    public IApiResponse<PagedList<OrderReportResponseDto>> orderReportSearch(SearchQueryDto filter) {
+        try {
+
+            var result = orderReportRepository.findByFields(filter);
+            List<OrderReport> orderReports = result.values().stream().flatMap(List::stream).toList();
+
+            List<OrderReportResponseDto> dtos = orderReports.stream()
+                    .map(DtosUtil::orderReportToOrderReportResponseDto)
+                    .collect(Collectors.toList());
+
+            int totalCount = result.keySet().stream().findFirst().orElse(0);
+
+            PagedList<OrderReportResponseDto> pagedList = new PagedList<>(dtos, filter.page(), filter.pageSize(), totalCount);
+
+            return ApiResponseUtil.toOkApiResponse(pagedList);
         } catch (Exception ex) {
             return ApiResponseUtil.toInternalServerErrorApiResponse(null);
         }

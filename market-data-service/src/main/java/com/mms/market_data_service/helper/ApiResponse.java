@@ -7,24 +7,13 @@ import java.util.List;
 
 @Getter
 @Builder
-public class ApiResponse<T> implements IApiResponse<T> {
-    private final String message;
-    private final int status;
-    private final T data;
-    private final List<Error> errors;
-
-    public ApiResponse(String message, int status, T data, List<Error> errors) {
-        this.message = message;
-        this.status = status;
-        this.data = data;
-        this.errors = errors;
-    }
+public record ApiResponse<T>(String message, int status, T data, List<Error> errors) implements IApiResponse<T> {
 }
 
 
 interface IApiResponse<T> {
-    String getMessage();
-    int getStatus();
-    T getData();
-    List<Error> getErrors();
+    String message();
+    int status();
+    T data();
+    List<Error> errors();
 }

@@ -3,10 +3,12 @@ package com.mms.user.service.controllers;
 import com.mms.user.service.dtos.RoleDto;
 import com.mms.user.service.helper.ApiResponse;
 import com.mms.user.service.services.RoleService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("api/v1/roles")
+@Tag(name = "Roles")
 @RestController
 public class RolesController {
     @Autowired

@@ -12,14 +12,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 
 import static com.mms.user.service.exceptions.BusinessErrorCodes.*;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -99,7 +96,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleException(Exception exp) {
-        exp.printStackTrace();
+        //exp.printStackTrace();
         ArrayList<ErrorDetails> error = new ArrayList<>();
         error.add(new ErrorDetails(String.valueOf(INTERNAL_SERVER_ERROR), exp.getMessage()));
 

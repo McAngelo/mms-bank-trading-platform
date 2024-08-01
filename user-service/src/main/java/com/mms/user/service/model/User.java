@@ -44,9 +44,8 @@ public class User implements UserDetails, Principal {
     @Id
     @GeneratedValue
     private Integer id;
-    private String firstname;
-    private String lastname;
-    private LocalDate dateOfBirth;
+    @Getter
+    private String fullName;
     @Column(unique = true)
     private String email;
     private String password;
@@ -106,7 +105,7 @@ public class User implements UserDetails, Principal {
     }
 
     public String fullName() {
-        return getFirstname() + " " + getLastname();
+        return getFullName() ;
     }
 
     @Override
@@ -114,7 +113,4 @@ public class User implements UserDetails, Principal {
         return email;
     }
 
-    public String getFullName() {
-        return firstname + " " + lastname;
-    }
 }

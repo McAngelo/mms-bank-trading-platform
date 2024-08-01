@@ -12,10 +12,6 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @SpringBootApplication
 @EnableJpaAuditing(auditorAwareRef = "auditorAware")
 @EnableAsync
-/*@ComponentScan("com.mms.user.service.*")
-@EntityScan("com.mms.user.service.*")
-@EnableJpaRepositories
-@EnableDiscoveryClient*/
 public class Application {
 
 	public static void main(String[] args) {
@@ -25,8 +21,11 @@ public class Application {
 	@Bean
 	public CommandLineRunner runner(RoleRepository roleRepository) {
 		return args -> {
-			if (roleRepository.findByName("USER").isEmpty()) {
-				roleRepository.save(Role.builder().name("USER").build());
+			if (roleRepository.findByName("TRADER").isEmpty()) {
+				roleRepository.save(Role.builder().name("TRADER").build());
+			}
+			if (roleRepository.findByName("ADMIN").isEmpty()) {
+				roleRepository.save(Role.builder().name("ADMIN").build());
 			}
 		};
 	}

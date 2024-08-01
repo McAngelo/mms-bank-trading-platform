@@ -11,13 +11,15 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class BorrowedBookResponse {
-
+public class BookResponseDto {
     private Integer id;
     private String title;
     private String authorName;
     private String isbn;
+    private String synopsis;
+    private String owner;
+    private byte[] cover;
     private double rate;
-    private boolean returned;
-    private boolean returnApproved;
+    private boolean archived;
+    private boolean shareable;
 }

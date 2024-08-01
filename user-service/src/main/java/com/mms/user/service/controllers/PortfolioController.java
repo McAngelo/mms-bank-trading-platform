@@ -1,8 +1,8 @@
 package com.mms.user.service.controllers;
 
-import com.mms.user.service.dtos.BookRequest;
-import com.mms.user.service.dtos.BookResponse;
-import com.mms.user.service.dtos.BorrowedBookResponse;
+import com.mms.user.service.dtos.BookRequestDto;
+import com.mms.user.service.dtos.BookResponseDto;
+import com.mms.user.service.dtos.BorrowedBookResponseDto;
 import com.mms.user.service.helper.PageResponse;
 import com.mms.user.service.services.BookService;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -23,30 +23,30 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("books")
+@RequestMapping("portfolio")
 @RequiredArgsConstructor
-@Tag(name = "Book")
-public class BookController {
+@Tag(name = "Portfolio")
+public class PortfolioController {
 
     private final BookService service;
 
     @PostMapping
     public ResponseEntity<Integer> saveBook(
-            @Valid @RequestBody BookRequest request,
+            @Valid @RequestBody BookRequestDto request,
             Authentication connectedUser
     ) {
         return ResponseEntity.ok(service.save(request, connectedUser));
     }
 
     @GetMapping("/{book-id}")
-    public ResponseEntity<BookResponse> findBookById(
+    public ResponseEntity<BookResponseDto> findBookById(
             @PathVariable("book-id") Integer bookId
     ) {
         return ResponseEntity.ok(service.findById(bookId));
     }
 
     @GetMapping
-    public ResponseEntity<PageResponse<BookResponse>> findAllBooks(
+    public ResponseEntity<PageResponse<BookResponseDto>> findAllBooks(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "size", defaultValue = "10", required = false) int size,
             Authentication connectedUser
@@ -55,7 +55,7 @@ public class BookController {
     }
 
     @GetMapping("/owner")
-    public ResponseEntity<PageResponse<BookResponse>> findAllBooksByOwner(
+    public ResponseEntity<PageResponse<BookResponseDto>> findAllBooksByOwner(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "size", defaultValue = "10", required = false) int size,
             Authentication connectedUser
@@ -64,7 +64,7 @@ public class BookController {
     }
 
     @GetMapping("/borrowed")
-    public ResponseEntity<PageResponse<BorrowedBookResponse>> findAllBorrowedBooks(
+    public ResponseEntity<PageResponse<BorrowedBookResponseDto>> findAllBorrowedBooks(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "size", defaultValue = "10", required = false) int size,
             Authentication connectedUser
@@ -73,7 +73,7 @@ public class BookController {
     }
 
     @GetMapping("/returned")
-    public ResponseEntity<PageResponse<BorrowedBookResponse>> findAllReturnedBooks(
+    public ResponseEntity<PageResponse<BorrowedBookResponseDto>> findAllReturnedBooks(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "size", defaultValue = "10", required = false) int size,
             Authentication connectedUser

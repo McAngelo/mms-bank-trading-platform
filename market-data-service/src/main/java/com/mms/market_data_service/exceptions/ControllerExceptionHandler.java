@@ -16,7 +16,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     private ResponseEntity<ApiResponse<Object>> buildResponseEntity(ApiResponse<Object> apiResponse) {
         return new ResponseEntity<>(
                 apiResponse,
-                HttpStatus.valueOf(apiResponse.getStatus())
+                HttpStatus.valueOf(apiResponse.status())
         );
     }
 

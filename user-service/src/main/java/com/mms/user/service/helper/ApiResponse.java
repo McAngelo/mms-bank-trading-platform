@@ -1,23 +1,36 @@
 package com.mms.user.service.helper;
 
+
 import java.util.List;
 
 public class ApiResponse<T> implements IApiResponse<T> {
-    private final String message;
     private final int status;
     private final T data;
-    private final List<Error> errors;
+    private final List<ErrorDetails> errors;
+    private String message;
 
-    public ApiResponse(String message, int status, T data, List<Error> errors) {
+    public ApiResponse(T data, String message, int status, List<ErrorDetails> errors) {
         this.message = message;
         this.status = status;
         this.data = data;
         this.errors = errors;
     }
 
+    /*public ApiResponse() {
+        this.message = null;
+        this.status = 0;
+        this.data = null;
+        this.errors = null;
+    }*/
+
     @Override
     public String getMessage() {
         return message;
+    }
+
+    @Override
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     @Override
@@ -31,7 +44,7 @@ public class ApiResponse<T> implements IApiResponse<T> {
     }
 
     @Override
-    public List<Error> getErrors() {
+    public List<ErrorDetails> getErrors() {
         return errors;
     }
 }

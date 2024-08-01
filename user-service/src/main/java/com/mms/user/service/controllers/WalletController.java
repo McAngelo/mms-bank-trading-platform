@@ -1,7 +1,7 @@
 package com.mms.user.service.controllers;
 
-import com.mms.user.service.dtos.FeedbackRequest;
-import com.mms.user.service.dtos.FeedbackResponse;
+import com.mms.user.service.dtos.FeedbackRequestDto;
+import com.mms.user.service.dtos.FeedbackResponseDto;
 import com.mms.user.service.helper.PageResponse;
 import com.mms.user.service.services.FeedbackService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -18,23 +18,23 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("feedbacks")
+@RequestMapping("wallet")
 @RequiredArgsConstructor
-@Tag(name = "Feedback")
-public class FeedbackController {
+@Tag(name = "Wallet")
+public class WalletController {
 
     private final FeedbackService service;
 
     @PostMapping
     public ResponseEntity<Integer> saveFeedback(
-            @Valid @RequestBody FeedbackRequest request,
+            @Valid @RequestBody FeedbackRequestDto request,
             Authentication connectedUser
     ) {
         return ResponseEntity.ok(service.save(request, connectedUser));
     }
 
     @GetMapping("/book/{book-id}")
-    public ResponseEntity<PageResponse<FeedbackResponse>> findAllFeedbacksByBook(
+    public ResponseEntity<PageResponse<FeedbackResponseDto>> findAllFeedbacksByBook(
             @PathVariable("book-id") Integer bookId,
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "size", defaultValue = "10", required = false) int size,

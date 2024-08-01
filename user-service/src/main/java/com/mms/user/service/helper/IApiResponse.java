@@ -2,9 +2,10 @@ package com.mms.user.service.helper;
 
 import java.util.List;
 
-interface IApiResponse<T> {
+public interface IApiResponse<T> {
     String getMessage();
+    void setMessage(String message);
     int getStatus();
     T getData();
-    List<Error> getErrors();
+    List<ErrorDetails> getErrors();
 }

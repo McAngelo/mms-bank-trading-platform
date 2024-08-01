@@ -1,12 +1,14 @@
 package com.mms.user.service.controllers;
 
-import com.mms.user.service.dtos.RegistrationDto;
+import com.mms.user.service.dtos.RegistrationRequestDto;
 import com.mms.user.service.helper.ApiResponse;
 import com.mms.user.service.services.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("api/v1/users")
+@Tag(name = "Users")
 @RestController
 public class UsersController {
     @Autowired
@@ -24,12 +26,12 @@ public class UsersController {
     }
 
     @PostMapping
-    public ApiResponse<String> addUser(@RequestBody RegistrationDto registrationDto){
+    public ApiResponse<String> addUser(@RequestBody RegistrationRequestDto registrationDto){
         return userService.processUserCreation(registrationDto);
     }
 
     @PutMapping("{id}")
-    public ApiResponse<String> updateUser(@PathVariable("id") String id, @RequestBody RegistrationDto registrationDto){
+    public ApiResponse<String> updateUser(@PathVariable("id") String id, @RequestBody RegistrationRequestDto registrationDto){
         return userService.processUpdateUser(id, registrationDto);
     }
 

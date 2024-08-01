@@ -1,10 +1,9 @@
 package com.mms.user.service.services;
 
-import com.mms.user.service.dtos.RegistrationDto;
+import com.mms.user.service.dtos.RegistrationRequestDto;
 import com.mms.user.service.dtos.VerificationDto;
 import com.mms.user.service.helper.ApiResponse;
 import com.mms.user.service.helper.ApiResponseUtil;
-import com.mms.user.service.helper.Error;
 import com.mms.user.service.repositories.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +27,7 @@ public class UserService {
         }catch(Exception exception){
             logger.error("error while processing registration", exception);
             ArrayList<Error> error = new ArrayList<>();
-            error.add(new Error(exception.toString(), exception.getMessage()));
+            error.add(new Error());
             return ApiResponseUtil.toBadRequestApiResponse(null, "Error", error);
         }
     }
@@ -42,7 +41,7 @@ public class UserService {
         }catch(Exception exception){
             logger.error("error while processing login: {}", exception);
             ArrayList<Error> error = new ArrayList<>();
-            error.add(new Error(exception.toString(), exception.getMessage()));
+            error.add(new Error());
             return ApiResponseUtil.toBadRequestApiResponse(null, "Error", error);
         }
     }
@@ -56,12 +55,12 @@ public class UserService {
         }catch(Exception exception){
             logger.error("error while processing login: {}", exception);
             ArrayList<Error> error = new ArrayList<>();
-            error.add(new Error(exception.toString(), exception.getMessage()));
+            error.add(new Error());
             return ApiResponseUtil.toBadRequestApiResponse(null, "Error", error);
         }
     }
 
-    public ApiResponse processUserCreation(RegistrationDto registrationDto){
+    public ApiResponse processUserCreation(RegistrationRequestDto registrationDto){
         try {
             logger.info("Processing login authentication");
             //TODO: process the password
@@ -70,12 +69,12 @@ public class UserService {
         }catch(Exception exception){
             logger.error("error while processing login: {}", exception);
             ArrayList<Error> error = new ArrayList<>();
-            error.add(new Error(exception.toString(), exception.getMessage()));
+            error.add(new Error());
             return ApiResponseUtil.toBadRequestApiResponse(null, "Error", error);
         }
     }
 
-    public ApiResponse processUpdateUser(String id, RegistrationDto registrationDto){
+    public ApiResponse processUpdateUser(String id, RegistrationRequestDto registrationDto){
         try {
             logger.info("Processing login authentication");
             //TODO: process the password
@@ -84,7 +83,7 @@ public class UserService {
         }catch(Exception exception){
             logger.error("error while processing login: {}", exception);
             ArrayList<Error> error = new ArrayList<>();
-            error.add(new Error(exception.toString(), exception.getMessage()));
+            error.add(new Error());
             return ApiResponseUtil.toBadRequestApiResponse(null, "Error", error);
         }
     }
@@ -98,7 +97,7 @@ public class UserService {
         }catch(Exception exception){
             logger.error("error while processing login: {}", exception);
             ArrayList<Error> error = new ArrayList<>();
-            error.add(new Error(exception.toString(), exception.getMessage()));
+            error.add(new Error());
             return ApiResponseUtil.toBadRequestApiResponse(null, "Error", error);
         }
     }
@@ -112,7 +111,7 @@ public class UserService {
         }catch(Exception exception){
             logger.error("error while processing login: {}", exception);
             ArrayList<Error> error = new ArrayList<>();
-            error.add(new Error(exception.toString(), exception.getMessage()));
+            error.add(new Error());
             return ApiResponseUtil.toBadRequestApiResponse(null, "Error", error);
         }
     }

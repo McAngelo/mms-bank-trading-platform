@@ -1,8 +1,8 @@
 package com.mms.user.service.services;
 
-import com.mms.user.service.dtos.BookRequest;
-import com.mms.user.service.dtos.BookResponse;
-import com.mms.user.service.dtos.BorrowedBookResponse;
+import com.mms.user.service.dtos.BookRequestDto;
+import com.mms.user.service.dtos.BookResponseDto;
+import com.mms.user.service.dtos.BorrowedBookResponseDto;
 import com.mms.user.service.exceptions.OperationNotPermittedException;
 import com.mms.user.service.helper.FileStorageService;
 import com.mms.user.service.helper.PageResponse;
@@ -40,24 +40,24 @@ public class BookService {
     private final BookTransactionHistoryRepository transactionHistoryRepository;
     private final FileStorageService fileStorageService;
 
-    public Integer save(BookRequest request, Authentication connectedUser) {
+    public Integer save(BookRequestDto request, Authentication connectedUser) {
         User user = ((User) connectedUser.getPrincipal());
         Book book = bookMapper.toBook(request);
         book.setOwner(user);
         return bookRepository.save(book).getId();
     }
 
-    public BookResponse findById(Integer bookId) {
+    public BookResponseDto findById(Integer bookId) {
         return bookRepository.findById(bookId)
                 .map(bookMapper::toBookResponse)
                 .orElseThrow(() -> new EntityNotFoundException("No book found with ID:: " + bookId));
     }
 
-    public PageResponse<BookResponse> findAllBooks(int page, int size, Authentication connectedUser) {
+    public PageResponse<BookResponseDto> findAllBooks(int page, int size, Authentication connectedUser) {
         User user = ((User) connectedUser.getPrincipal());
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
         Page<Book> books = bookRepository.findAllDisplayableBooks(pageable, user.getId());
-        List<BookResponse> booksResponse = books.stream()
+        List<BookResponseDto> booksResponse = books.stream()
                 .map(bookMapper::toBookResponse)
                 .toList();
         return new PageResponse<>(
@@ -71,11 +71,11 @@ public class BookService {
         );
     }
 
-    public PageResponse<BookResponse> findAllBooksByOwner(int page, int size, Authentication connectedUser) {
+    public PageResponse<BookResponseDto> findAllBooksByOwner(int page, int size, Authentication connectedUser) {
         User user = ((User) connectedUser.getPrincipal());
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
         Page<Book> books = bookRepository.findAll(withOwnerId(user.getId()), pageable);
-        List<BookResponse> booksResponse = books.stream()
+        List<BookResponseDto> booksResponse = books.stream()
                 .map(bookMapper::toBookResponse)
                 .toList();
         return new PageResponse<>(
@@ -188,11 +188,11 @@ public class BookService {
         bookRepository.save(book);
     }
 
-    public PageResponse<BorrowedBookResponse> findAllBorrowedBooks(int page, int size, Authentication connectedUser) {
+    public PageResponse<BorrowedBookResponseDto> findAllBorrowedBooks(int page, int size, Authentication connectedUser) {
         User user = ((User) connectedUser.getPrincipal());
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
         Page<BookTransactionHistory> allBorrowedBooks = transactionHistoryRepository.findAllBorrowedBooks(pageable, user.getId());
-        List<BorrowedBookResponse> booksResponse = allBorrowedBooks.stream()
+        List<BorrowedBookResponseDto> booksResponse = allBorrowedBooks.stream()
                 .map(bookMapper::toBorrowedBookResponse)
                 .toList();
         return new PageResponse<>(
@@ -206,11 +206,11 @@ public class BookService {
         );
     }
 
-    public PageResponse<BorrowedBookResponse> findAllReturnedBooks(int page, int size, Authentication connectedUser) {
+    public PageResponse<BorrowedBookResponseDto> findAllReturnedBooks(int page, int size, Authentication connectedUser) {
         User user = ((User) connectedUser.getPrincipal());
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
         Page<BookTransactionHistory> allBorrowedBooks = transactionHistoryRepository.findAllReturnedBooks(pageable, user.getId());
-        List<BorrowedBookResponse> booksResponse = allBorrowedBooks.stream()
+        List<BorrowedBookResponseDto> booksResponse = allBorrowedBooks.stream()
                 .map(bookMapper::toBorrowedBookResponse)
                 .toList();
         return new PageResponse<>(

@@ -12,10 +12,6 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @SpringBootApplication
 @EnableJpaAuditing(auditorAwareRef = "auditorAware")
 @EnableAsync
-/*@ComponentScan("com.mms.user.service.*")
-@EntityScan("com.mms.user.service.*")
-@EnableJpaRepositories
-@EnableDiscoveryClient*/
 public class Application {
 
 	public static void main(String[] args) {

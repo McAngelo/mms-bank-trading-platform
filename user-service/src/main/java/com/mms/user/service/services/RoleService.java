@@ -3,7 +3,6 @@ package com.mms.user.service.services;
 import com.mms.user.service.dtos.*;
 import com.mms.user.service.helper.ApiResponse;
 import com.mms.user.service.helper.ApiResponseUtil;
-import com.mms.user.service.helper.Error;
 import com.mms.user.service.repositories.RoleRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +28,7 @@ public class RoleService {
         }catch(Exception exception){
             logger.error("error while processing registration", exception);
             ArrayList<Error> error = new ArrayList<>();
-            error.add(new Error(exception.toString(), exception.getMessage()));
+            error.add(new Error());
             return ApiResponseUtil.toBadRequestApiResponse(null, "Error", error);
         }
     }
@@ -43,7 +42,7 @@ public class RoleService {
         }catch(Exception exception){
             logger.error("error while processing login: {}", exception);
             ArrayList<Error> error = new ArrayList<>();
-            error.add(new Error(exception.toString(), exception.getMessage()));
+            error.add(new Error());
             return ApiResponseUtil.toBadRequestApiResponse(null, "Error", error);
         }
     }
@@ -57,7 +56,7 @@ public class RoleService {
         }catch(Exception exception){
             logger.error("error while processing login: {}", exception);
             ArrayList<Error> error = new ArrayList<>();
-            error.add(new Error(exception.toString(), exception.getMessage()));
+            error.add(new Error());
             return ApiResponseUtil.toBadRequestApiResponse(null, "Error", error);
         }
     }
@@ -71,7 +70,7 @@ public class RoleService {
         }catch(Exception exception){
             logger.error("error while processing login: {}", exception);
             ArrayList<Error> error = new ArrayList<>();
-            error.add(new Error(exception.toString(), exception.getMessage()));
+            error.add(new Error());
             return ApiResponseUtil.toBadRequestApiResponse(null, "Error", error);
         }
     }
@@ -85,7 +84,7 @@ public class RoleService {
         }catch(Exception exception){
             logger.error("error while processing login: {}", exception);
             ArrayList<Error> error = new ArrayList<>();
-            error.add(new Error(exception.toString(), exception.getMessage()));
+            error.add(new Error());
             return ApiResponseUtil.toBadRequestApiResponse(null, "Error", error);
         }
     }

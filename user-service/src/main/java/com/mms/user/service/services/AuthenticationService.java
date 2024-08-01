@@ -1,9 +1,12 @@
 package com.mms.user.service.services;
 
-import com.mms.user.service.dtos.AuthenticationRequest;
-import com.mms.user.service.dtos.AuthenticationResponse;
-import com.mms.user.service.dtos.RegistrationRequest;
+import com.mms.user.service.dtos.AuthenticationRequestDto;
+import com.mms.user.service.dtos.AuthenticationResponseDto;
+import com.mms.user.service.dtos.RegistrationRequestDto;
+import com.mms.user.service.dtos.RegistrationResponseDto;
+import com.mms.user.service.helper.ApiResponseUtil;
 import com.mms.user.service.helper.EmailTemplateName;
+import com.mms.user.service.helper.IApiResponse;
 import com.mms.user.service.model.Token;
 import com.mms.user.service.model.User;
 import com.mms.user.service.repositories.RoleRepository;
@@ -36,29 +39,30 @@ public class AuthenticationService {
     private final EmailService emailService;
     private final TokenRepository tokenRepository;
 
-
-
     @Value("${application.mailing.frontend.activation-url}")
     private String activationUrl;
 
-    public void register(RegistrationRequest request) throws MessagingException {
+    public IApiResponse<RegistrationResponseDto> register(RegistrationRequestDto request) throws MessagingException {
         var userRole = roleRepository.findByName("USER")
-                // todo - better exception handling
                 .orElseThrow(() -> new IllegalStateException("ROLE USER was not initiated"));
         var user = User.builder()
-                .firstname(request.getFirstname())
-                .lastname(request.getLastname())
+                .fullName(request.getFullName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .accountLocked(false)
                 .enabled(false)
+                .createdDate(LocalDateTime.now())
                 .roles(List.of(userRole))
                 .build();
-        userRepository.save(user);
-        sendValidationEmail(user);
+        var responseRaw = userRepository.save(user);
+        //sendValidationEmail(user);
+        RegistrationResponseDto response = new RegistrationResponseDto();
+        response.name = responseRaw.getFullName();
+        response.email = responseRaw.getEmail();
+        return ApiResponseUtil.toOkApiResponse(response, "Successful");
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    public AuthenticationResponseDto authenticate(AuthenticationRequestDto request) {
         var auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
@@ -71,7 +75,7 @@ public class AuthenticationService {
         claims.put("fullName", user.getFullName());
 
         var jwtToken = jwtService.generateToken(claims, (User) auth.getPrincipal());
-        return AuthenticationResponse.builder()
+        return AuthenticationResponseDto.builder()
                 .token(jwtToken)
                 .build();
     }

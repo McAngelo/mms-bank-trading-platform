@@ -11,7 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class FeedbackResponse {
+public class FeedbackResponseDto {
 
     private Double note;
     private String comment;

@@ -39,6 +39,6 @@ public class ApiResponseUtil {
     }
 
     private static <T> ApiResponse<T> toApiResponse(T data, String message, int status, List<Error> errors) {
-        return new ApiResponse<>(message, status, data, errors);
+        return new ApiResponse<>();
     }
 }

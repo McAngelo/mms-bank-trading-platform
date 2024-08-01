@@ -29,7 +29,7 @@ public class FeedbackService {
     private final BookRepository bookRepository;
     private final FeedbackMapper feedbackMapper;
 
-    public Integer save(FeedbackRequest request, Authentication connectedUser) {
+    public Integer save(FeedbackRequestDto request, Authentication connectedUser) {
         Book book = bookRepository.findById(request.bookId())
                 .orElseThrow(() -> new EntityNotFoundException("No book found with ID:: " + request.bookId()));
         if (book.isArchived() || !book.isShareable()) {
@@ -44,11 +44,11 @@ public class FeedbackService {
     }
 
     @Transactional
-    public PageResponse<FeedbackResponse> findAllFeedbacksByBook(Integer bookId, int page, int size, Authentication connectedUser) {
+    public PageResponse<FeedbackResponseDto> findAllFeedbacksByBook(Integer bookId, int page, int size, Authentication connectedUser) {
         Pageable pageable = PageRequest.of(page, size);
         User user = ((User) connectedUser.getPrincipal());
         Page<Feedback> feedbacks = feedBackRepository.findAllByBookId(bookId, pageable);
-        List<FeedbackResponse> feedbackResponses = feedbacks.stream()
+        List<FeedbackResponseDto> feedbackResponses = feedbacks.stream()
                 .map(f -> feedbackMapper.toFeedbackResponse(f, user.getId()))
                 .toList();
         return new PageResponse<>(

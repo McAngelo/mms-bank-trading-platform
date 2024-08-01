@@ -54,7 +54,7 @@ public class UsersController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<?> updateUser(@PathVariable("id") String id, @RequestBody RegistrationRequestDto registrationDto){
+    public ResponseEntity<?> updateUser(@PathVariable("id") String id, @RequestBody UserRequestDto registrationDto){
 
         var result =  userService.processUpdateUser(id, registrationDto);
         ResponseEntity.BodyBuilder bd = ResponseEntity.status(result.getStatus());

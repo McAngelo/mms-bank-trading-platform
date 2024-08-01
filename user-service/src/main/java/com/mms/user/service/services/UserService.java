@@ -124,7 +124,7 @@ public class UserService {
         }
     }
 
-    public ApiResponse processUpdateUser(String id, RegistrationRequestDto registrationDto){
+    public ApiResponse processUpdateUser(String id, UserRequestDto registrationDto){
         try {
             logger.info("Processing login authentication");
             //TODO: process the password

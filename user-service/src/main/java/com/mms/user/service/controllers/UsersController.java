@@ -54,20 +54,22 @@ public class UsersController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<?> updateUser(@PathVariable("id") String id, @RequestBody UserRequestDto registrationDto){
+    public ResponseEntity<?> updateUser(@PathVariable("id") int id, @RequestBody UserRequestDto registrationDto){
 
         var result =  userService.processUpdateUser(id, registrationDto);
         ResponseEntity.BodyBuilder bd = ResponseEntity.status(result.getStatus());
         return bd.body(result);
     }
 
-    @PutMapping("/change-account-status/{id}")
+    /*@PutMapping("/change-account-status/{id}")
     public ApiResponse<String> accountStatusChange(@PathVariable("id") String id, @PathVariable("status") String status){
         return userService.processAccountStatusChange(id, status);
-    }
+    }*/
 
-/*/    @DeleteMapping("{id}")
-//    public ApiResponse<String> deleteUser(@PathVariable("id") int id){
-//        return userService.processGetOneUser(id);
-//    }*/
+    @DeleteMapping("{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable("id") int id){
+        var result =  userService.processDeleteUser(id);
+        ResponseEntity.BodyBuilder bd = ResponseEntity.status(result.getStatus());
+        return bd.body(result);
+    }
 }

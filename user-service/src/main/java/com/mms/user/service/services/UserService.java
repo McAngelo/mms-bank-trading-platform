@@ -2,25 +2,22 @@ package com.mms.user.service.services;
 
 import com.mms.user.service.dtos.*;
 import com.mms.user.service.helper.*;
-import com.mms.user.service.model.Book;
 import com.mms.user.service.model.User;
 import com.mms.user.service.model.mappers.UserMapper;
 import com.mms.user.service.repositories.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -111,25 +108,39 @@ public class UserService {
 
     public IApiResponse<?> processUserCreation(UserRequestDto registrationDto){
         try {
-            logger.info("Processing login authentication");
+            logger.info("Creating a user");
             User user = userMapper.toUserRequest(registrationDto);
             var response = userRepository.save(user).getId();
-            logger.info("login process response: ");
             return ApiResponseUtil.toOkApiResponse(response, "User created successfully");
         }catch(Exception exception){
-            logger.error("error while processing login: {}", exception);
+            logger.error("error while processing user creation: {}", exception);
             ArrayList<ErrorDetails> error = new ArrayList<>();
             error.add(new ErrorDetails(exception.getMessage(), exception.toString()));
             return ApiResponseUtil.toBadRequestApiResponse("Error", error);
         }
     }
 
-    public ApiResponse processUpdateUser(String id, UserRequestDto registrationDto){
+    public IApiResponse<?> processUpdateUser(int userId, UserRequestDto registrationDto){
         try {
-            logger.info("Processing login authentication");
-            //TODO: process the password
-            logger.info("login process response: ");
-            return ApiResponseUtil.toOkApiResponse(registrationDto, "Successful Subscription to the first exchange");
+            logger.info("Get one user by Id");
+            Optional<User> userOptional = userRepository.findById(userId);
+
+            logger.info("Get one user by Id {}", userOptional);
+
+            if(userOptional.isEmpty()){
+                logger.debug("Could not find user");
+                return ApiResponseUtil.toNotFoundApiResponse(null, "User not found");
+            }
+
+            User user = userOptional.get();
+
+            user.setFullName(registrationDto.getFullName());
+            user.setEmail(registrationDto.getEmail());
+            user.setEnabled(registrationDto.isEnabled());
+            user.setAccountLocked(registrationDto.isAccountLocked());
+
+            var response = userRepository.saveAndFlush(user);
+            return ApiResponseUtil.toOkApiResponse(response, "Updated user successfully");
         }catch(Exception exception){
             logger.error("error while processing login: {}", exception);
             ArrayList<ErrorDetails> error = new ArrayList<>();
@@ -152,12 +163,24 @@ public class UserService {
         }
     }
 
-    public ApiResponse processDeleteUser(String UserId){
+    public ApiResponse processDeleteUser(int userId){
         try {
             logger.info("Processing login authentication");
-            //TODO: process the password
-            logger.info("login process response: ");
-            return ApiResponseUtil.toOkApiResponse(UserId, "Successful Subscription to the first exchange");
+            logger.info("Get one user by Id");
+            Optional<User> userOptional = userRepository.findById(userId);
+
+            logger.info("Get one user by Id {}", userOptional);
+
+            if(userOptional.isEmpty()){
+                logger.debug("Could not find user");
+                return ApiResponseUtil.toNotFoundApiResponse(null, "User not found");
+            }
+
+            User user = userOptional.get();
+            user.setAccountLocked(true);
+
+            var response = userRepository.saveAndFlush(user);
+            return ApiResponseUtil.toOkApiResponse(response, "User account blocked successfully");
         }catch(Exception exception){
             logger.error("error while processing login: {}", exception);
             ArrayList<ErrorDetails> error = new ArrayList<>();

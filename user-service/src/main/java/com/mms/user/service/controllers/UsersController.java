@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/v1/users")
@@ -59,6 +60,7 @@ public class UsersController {
         var result =  userService.processUpdateUser(id, registrationDto);
         ResponseEntity.BodyBuilder bd = ResponseEntity.status(result.getStatus());
         return bd.body(result);
+
     }
 
     /*@PutMapping("/change-account-status/{id}")

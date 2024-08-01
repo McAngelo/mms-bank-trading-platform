@@ -151,7 +151,7 @@ public class UserService {
         }
     }
 
-    public ApiResponse processAccountStatusChange(String id, String status){
+    public IApiResponse<?> processAccountStatusChange(String id, String status){
         try {
             logger.info("Processing login authentication");
             //TODO: process the password
@@ -165,7 +165,7 @@ public class UserService {
         }
     }
 
-    public ApiResponse processDeleteUser(int userId){
+    public IApiResponse<?> processDeleteUser(int userId){
         try {
             logger.info("Processing login authentication");
             logger.info("Get one user by Id");

@@ -7,8 +7,10 @@ import com.mms.user.service.dtos.RegistrationResponseDto;
 import com.mms.user.service.helper.ApiResponseUtil;
 import com.mms.user.service.helper.EmailTemplateName;
 import com.mms.user.service.helper.IApiResponse;
+import com.mms.user.service.model.Portfolio;
 import com.mms.user.service.model.Token;
 import com.mms.user.service.model.User;
+import com.mms.user.service.repositories.PortfolioRepository;
 import com.mms.user.service.repositories.RoleRepository;
 import com.mms.user.service.repositories.TokenRepository;
 import com.mms.user.service.repositories.UserRepository;
@@ -32,6 +34,7 @@ import java.util.List;
 public class AuthenticationService {
 
     private final UserRepository userRepository;
+    private final PortfolioRepository portfolioRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
@@ -50,11 +53,14 @@ public class AuthenticationService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .accountLocked(false)
-                .enabled(false)
+                .enabled(true)
                 .createdDate(LocalDateTime.now())
                 .roles(List.of(userRole))
                 .build();
         var responseRaw = userRepository.save(user);
+
+        //TODO: pass the user id to both the portfolio and wallet srevices to create accounts for the user
+
         return ApiResponseUtil.toOkApiResponse(responseRaw, "Successful");
     }
 

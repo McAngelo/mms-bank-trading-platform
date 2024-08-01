@@ -16,12 +16,12 @@ public class ExchangeSubscriptionController {
 
     @GetMapping
     public ApiResponse getAllUser(){
-        return userService.processGetAllUsers();
+        return userService.processGetOneUser(1);
     }
 
 
     @GetMapping("/{id}")
-    public ApiResponse getUserById(@PathVariable("id") String id){
+    public ApiResponse getUserById(@PathVariable("id") int id){
         return userService.processGetOneUser(id);
     }
 
@@ -41,7 +41,7 @@ public class ExchangeSubscriptionController {
     }
 
     @DeleteMapping("{id}")
-    public ApiResponse<String> deleteUser(@PathVariable("id") String id){
+    public ApiResponse<String> deleteUser(@PathVariable("id") int id){
         return userService.processGetOneUser(id);
     }
 }

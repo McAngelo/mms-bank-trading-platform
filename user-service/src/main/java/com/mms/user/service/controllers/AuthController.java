@@ -35,7 +35,10 @@ public class AuthController {
         return bd.body(result);
     }
 
-    @PostMapping(value="/login")
+    @Operation(summary = "User Logs", description = "Allows a user to log into the system", tags = {"Authentication"})
+    @ApiResponses(value = {@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "Successfully logs a user", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class, type = "object", anyOf = {AuthenticationRequestDto.class}))}),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid request payload", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class))})})
+    @PostMapping(value="/login", consumes = "application/json", produces = "application/json")
     public ResponseEntity<IApiResponse<?>> login(@RequestBody AuthenticationRequestDto request){
         var result = service.authenticate(request);
         ResponseEntity.BodyBuilder bd = ResponseEntity.status(result.getStatus());

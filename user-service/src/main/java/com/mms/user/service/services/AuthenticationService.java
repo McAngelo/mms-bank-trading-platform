@@ -55,8 +55,6 @@ public class AuthenticationService {
                 .roles(List.of(userRole))
                 .build();
         var responseRaw = userRepository.save(user);
-
-        //RegistrationResponseDto response = new RegistrationResponseDto();
         return ApiResponseUtil.toOkApiResponse(responseRaw, "Successful");
     }
 

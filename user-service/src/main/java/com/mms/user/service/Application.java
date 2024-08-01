@@ -21,8 +21,11 @@ public class Application {
 	@Bean
 	public CommandLineRunner runner(RoleRepository roleRepository) {
 		return args -> {
-			if (roleRepository.findByName("USER").isEmpty()) {
-				roleRepository.save(Role.builder().name("USER").build());
+			if (roleRepository.findByName("TRADER").isEmpty()) {
+				roleRepository.save(Role.builder().name("TRADER").build());
+			}
+			if (roleRepository.findByName("ADMIN").isEmpty()) {
+				roleRepository.save(Role.builder().name("ADMIN").build());
 			}
 		};
 	}

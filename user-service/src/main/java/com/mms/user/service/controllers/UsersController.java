@@ -1,15 +1,10 @@
 package com.mms.user.service.controllers;
 
-import com.mms.user.service.dtos.RegistrationRequestDto;
 import com.mms.user.service.dtos.UserRequestDto;
-import com.mms.user.service.dtos.UserSearchDto;
-import com.mms.user.service.helper.ApiResponse;
 import com.mms.user.service.services.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 

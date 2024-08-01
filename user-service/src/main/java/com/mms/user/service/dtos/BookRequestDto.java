@@ -3,7 +3,7 @@ package com.mms.user.service.dtos;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
-public record BookRequest(
+public record BookRequestDto(
         Integer id,
         @NotNull(message = "100")
         @NotEmpty(message = "100")

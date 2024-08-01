@@ -1,8 +1,8 @@
 package com.mms.user.service.model.mappers;
 
-import com.mms.user.service.dtos.BookRequest;
-import com.mms.user.service.dtos.BookResponse;
-import com.mms.user.service.dtos.BorrowedBookResponse;
+import com.mms.user.service.dtos.BookRequestDto;
+import com.mms.user.service.dtos.BookResponseDto;
+import com.mms.user.service.dtos.BorrowedBookResponseDto;
 import com.mms.user.service.helper.FileUtils;
 import com.mms.user.service.model.Book;
 import com.mms.user.service.model.BookTransactionHistory;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class BookMapper {
-    public Book toBook(BookRequest request) {
+    public Book toBook(BookRequestDto request) {
         return Book.builder()
                 .id(request.id())
                 .title(request.title())
@@ -22,8 +22,8 @@ public class BookMapper {
                 .build();
     }
 
-    public BookResponse toBookResponse(Book book) {
-        return BookResponse.builder()
+    public BookResponseDto toBookResponse(Book book) {
+        return BookResponseDto.builder()
                 .id(book.getId())
                 .title(book.getTitle())
                 .authorName(book.getAuthorName())
@@ -37,8 +37,8 @@ public class BookMapper {
                 .build();
     }
 
-    public BorrowedBookResponse toBorrowedBookResponse(BookTransactionHistory history) {
-        return BorrowedBookResponse.builder()
+    public BorrowedBookResponseDto toBorrowedBookResponse(BookTransactionHistory history) {
+        return BorrowedBookResponseDto.builder()
                 .id(history.getBook().getId())
                 .title(history.getBook().getTitle())
                 .authorName(history.getBook().getAuthorName())

@@ -24,21 +24,21 @@ public class ExchangeController {
     public ResponseEntity<ApiResponse<String>> subscribe(@PathVariable("exchangeId") String exchangeId, @Valid String callBackUrl) {
         var response = marketExchangeService.subscribe(exchangeId, callBackUrl);
         logger.info("subscribe response: {}", response);
-        return ResponseEntity.status(response.getStatus()).body(response);
+        return ResponseEntity.status(response.status()).body(response);
     }
 
     @PutMapping("update-subscribe/{exchangeId}")
     public ResponseEntity<ApiResponse<String>> updateSubscribe(@PathVariable("exchangeId") String exchangeId, @Valid String callBackUrl) {
         var response = marketExchangeService.updateSubscribe(exchangeId, callBackUrl);
         logger.info("updateSubscribe response: {}", response);
-        return ResponseEntity.status(response.getStatus()).body(response);
+        return ResponseEntity.status(response.status()).body(response);
     }
 
     @DeleteMapping("unsubscribe/{exchangeId}")
     public ResponseEntity<ApiResponse<String>> unsubscribe(@PathVariable("exchangeId") String exchangeId, @Valid String callBackUrl) {
         var response = marketExchangeService.unsubscribe(exchangeId, callBackUrl);
         logger.info("unsubscribe response: {}", response);
-        return ResponseEntity.status(response.getStatus()).body(response);
+        return ResponseEntity.status(response.status()).body(response);
     }
 
     //
@@ -46,6 +46,6 @@ public class ExchangeController {
     public ResponseEntity<ApiResponse<Object>> callbackUrl(@RequestBody @Valid Order order) {
         var response = marketExchangeService.callbackUrl(order);
         logger.info("callbackUrl response: {}", response);
-        return ResponseEntity.status(response.getStatus()).body(response);
+        return ResponseEntity.status(response.status()).body(response);
     }
 }

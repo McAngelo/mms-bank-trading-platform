@@ -7,10 +7,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("api/v1/users")
-@Tag(name = "Users")
+@RequestMapping("api/v1/exchange-subscription")
+@Tag(name = "Exchange subscription")
 @RestController
-public class UsersController {
+public class ExchangeSubscriptionController {
     @Autowired
     UserService userService;
 

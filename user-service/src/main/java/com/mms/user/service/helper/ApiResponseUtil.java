@@ -22,23 +22,23 @@ public class ApiResponseUtil {
         return toApiResponse(data, message, HttpStatus.NOT_FOUND.value(), null);
     }
 
-    public static <T> ApiResponse<T> toFailedDependencyApiResponse(T data, String message, List<Error> errors) {
+    public static <T> ApiResponse<T> toFailedDependencyApiResponse(T data, String message, List<ErrorDetails> errors) {
         return toApiResponse(data, message, HttpStatus.FAILED_DEPENDENCY.value(), errors);
     }
 
-    public static <T> ApiResponse<T> toUnAthorizedApiResponse(T data, String message) {
-        return toApiResponse(data, message, HttpStatus.UNAUTHORIZED.value(), null);
+    public static <T> ApiResponse<T> toUnAthorizedApiResponse(String message, List<ErrorDetails> error) {
+        return toApiResponse(null, message, HttpStatus.UNAUTHORIZED.value(), error);
     }
 
-    public static <T> ApiResponse<T> toInternalServerErrorApiResponse(T data, String message, List<Error> errors) {
-        return toApiResponse(data, message, HttpStatus.INTERNAL_SERVER_ERROR.value(), errors);
+    public static <T> ApiResponse<T> toInternalServerErrorApiResponse(String message, List<ErrorDetails> errors) {
+        return toApiResponse(null, message, HttpStatus.INTERNAL_SERVER_ERROR.value(), errors);
     }
 
-    public static <T> ApiResponse<T> toBadRequestApiResponse(T data, String message, List<Error> errors) {
-        return toApiResponse(data, message, HttpStatus.BAD_REQUEST.value(), errors);
+    public static <T> ApiResponse<T> toBadRequestApiResponse(String message, List<ErrorDetails> errors) {
+        return toApiResponse(null, message, HttpStatus.BAD_REQUEST.value(), errors);
     }
 
-    private static <T> ApiResponse<T> toApiResponse(T data, String message, int status, List<Error> errors) {
-        return new ApiResponse<>(message, status, data, errors);
+    private static <T> ApiResponse<T> toApiResponse(T data, String message, int status, List<ErrorDetails> errors) {
+        return new ApiResponse<>(data, message, status, errors);
     }
 }

@@ -10,4 +10,10 @@ import java.util.List;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findByPortfolioIdAndStatus(long portfolioId, OrderStatus status);
+
+    boolean existsByPortfolioIdAndUserIdAndTickerAndQuantityGreaterThanEqual(
+            long portfolioId,
+            long userId,
+            String ticker,
+            int quantity);
 }

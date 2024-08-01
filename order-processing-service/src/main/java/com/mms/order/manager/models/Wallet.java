@@ -8,12 +8,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @Entity
 @Data
 @Builder
-@Table(name="Wallet")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Wallet {
@@ -22,12 +20,9 @@ public class Wallet {
     private long id;
 
     @JsonIgnore
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "userId", insertable = false, updatable = false)
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
-
-    @OneToMany(mappedBy = "wallet")
-    private List<Transaction> transactions;
 
     private BigDecimal balance;
     private boolean isActive;

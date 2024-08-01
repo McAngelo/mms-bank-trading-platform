@@ -7,12 +7,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Data
 @Builder
-@Table(name="Portfolio")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Portfolio {
@@ -23,15 +23,10 @@ public class Portfolio {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "userId", insertable = false, updatable = false)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @OneToMany(mappedBy = "portfolio" , cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Order> orders;
-
-    @OneToMany(mappedBy = "portfolio", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Product> products;
-
-    private LocalDate createdAt;
-    private LocalDate updatedAt;
+    private boolean isDefault;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

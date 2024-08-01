@@ -1,8 +1,10 @@
 package com.mms.order.manager.services.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mms.order.manager.dtos.internal.ProductData;
+import com.mms.order.manager.dtos.internal.OpenOrderDto;
+import com.mms.order.manager.dtos.internal.ProductMarketData;
 import com.mms.order.manager.exceptions.MarketDataException;
 import com.mms.order.manager.repositories.ExchangeRepository;
 import com.mms.order.manager.services.interfaces.MarketDataService;
@@ -21,29 +23,30 @@ public class MarketDataServiceImpl implements MarketDataService {
     private final ExchangeRepository exchangeRepository;
 
     @Override
-    public ProductData getProductData(String exchangeSlug, String product) throws MarketDataException {
-        var productJsonString = redisService.getValue(exchangeSlug + product);
-        ProductData productDataDto;
+    public ProductMarketData getProductData(String exchangeSlug, String product) throws MarketDataException {
+        var productJsonString = redisService.getValue(String.format("%s:%s" ,exchangeSlug, product));
+
+        ProductMarketData productMarketDataDto;
 
         try {
-            productDataDto = new ObjectMapper().readValue(productJsonString, ProductData.class);
-        } catch (JsonProcessingException e) {
-            throw new MarketDataException("Error deserializing product data from cache");
+            productMarketDataDto = new ObjectMapper().readValue(productJsonString, ProductMarketData.class);
+        } catch (Exception e) {
+            throw new MarketDataException("Error deserializing product data from cache::", e);
         }
 
-        return productDataDto;
+        return productMarketDataDto;
     }
 
     @Override
-    public Map<String, ProductData> getProductDataFromAllExchanges(String product) {
+    public Map<String, ProductMarketData> getProductDataFromAllExchanges(String product) {
         var exchangesSlugs = exchangeRepository.findAllSlugs();
-        Map<String, ProductData> productsData = new HashMap<>();
+        Map<String, ProductMarketData> productsData = new HashMap<>();
 
         exchangesSlugs.forEach(s -> {
             var productJsonString = redisService.getValue(s + product);
 
             try {
-                var productData = new ObjectMapper().readValue(productJsonString, ProductData.class);
+                var productData = new ObjectMapper().readValue(productJsonString, ProductMarketData.class);
 
                 productsData.put(s, productData);
             } catch (JsonProcessingException e) {
@@ -52,5 +55,10 @@ public class MarketDataServiceImpl implements MarketDataService {
         });
 
         return productsData;
+    }
+
+    @Override
+    public List<OpenOrderDto> getOpenOrdersFromOrderBook() {
+        return List.of();
     }
 }

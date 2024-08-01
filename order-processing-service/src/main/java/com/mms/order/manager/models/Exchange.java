@@ -16,9 +16,6 @@ public class Exchange {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @OneToMany(mappedBy = "exchange")
-    private List<Execution> executions;
-
     private String privateKey;
 
     private String name;

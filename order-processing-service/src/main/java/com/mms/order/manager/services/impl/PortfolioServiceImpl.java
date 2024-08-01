@@ -1,6 +1,8 @@
 package com.mms.order.manager.services.impl;
 
+import com.mms.order.manager.dtos.requests.CreatePortfolioDto;
 import com.mms.order.manager.dtos.responses.PortfolioDto;
+import com.mms.order.manager.exceptions.PortfolioException;
 import com.mms.order.manager.models.Portfolio;
 import com.mms.order.manager.models.User;
 import com.mms.order.manager.repositories.OrderRepository;
@@ -10,6 +12,8 @@ import com.mms.order.manager.services.interfaces.PortfolioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,22 +22,22 @@ import java.util.Optional;
 public class PortfolioServiceImpl implements PortfolioService {
     private final PortfolioRepository portfolioRepository;
     private final UserRepository userRepository;
-    private final OrderRepository orderRepository;
 
     @Override
-    public boolean createPortfolio(long userId) {
-        Optional<User> userOptional = userRepository.findById(userId);
+    public void createPortfolio(CreatePortfolioDto portfolioDto) throws PortfolioException {
+        Optional<User> userOptional = userRepository.findById(portfolioDto.userId());
 
         if (userOptional.isEmpty()) {
-            return false;
+            throw new PortfolioException("User does not exist, could not create portfolio");
         }
 
         var portfolio = Portfolio.builder()
                 .user(userOptional.get())
+                .name(portfolioDto.name())
+                .createdAt(LocalDateTime.now())
                 .build();
 
         portfolioRepository.save(portfolio);
-        return true;
     }
 
     @Override
@@ -50,7 +54,7 @@ public class PortfolioServiceImpl implements PortfolioService {
     }
 
     @Override
-    public boolean userOwnsProduct(long userId, String productSlug, int quantity) {
+    public boolean userOwnsProduct(long userId, long portfolioId, String ticker, int quantity) {
         return false;
     }
 }

@@ -8,12 +8,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Data
 @Builder
-@Table(name="AppUser")
+@Table(name="app_user")
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
@@ -23,19 +24,14 @@ public class User {
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "roleId", insertable = false, updatable = false)
+    @JoinColumn(name = "role_id")
     private Role role;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Portfolio> portfolios;
-
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private Wallet wallet;
-
     private String email;
+    private String fullName;
     private LocalDate dob;
     private String password;
     private boolean isActive;
-    private LocalDate createdAt;
-    private LocalDate updateAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime updateAt;
 }

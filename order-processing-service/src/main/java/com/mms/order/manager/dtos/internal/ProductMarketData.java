@@ -1,9 +1,10 @@
 package com.mms.order.manager.dtos.internal;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 
-
-public record ProductData(
+@Builder
+public record ProductMarketData (
         @JsonProperty("TICKER")
         String ticker,
 
@@ -28,7 +29,7 @@ public record ProductData(
         @Override
         public String toString() {
                 return "{" +
-                        "ticker='" + ticker + '\'' +
+                        "ticker=" + ticker +
                         ", sellLimit=" + sellLimit +
                         ", lastTradedPrice=" + lastTradedPrice +
                         ", askPrice=" + askPrice +

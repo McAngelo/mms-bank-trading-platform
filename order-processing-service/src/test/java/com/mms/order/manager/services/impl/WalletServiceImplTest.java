@@ -1,5 +1,6 @@
 package com.mms.order.manager.services.impl;
 
+import com.mms.order.manager.exceptions.WalletException;
 import com.mms.order.manager.models.User;
 import com.mms.order.manager.models.Wallet;
 import com.mms.order.manager.repositories.UserRepository;
@@ -23,6 +24,7 @@ import java.math.BigDecimal;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -48,22 +50,18 @@ class WalletServiceImplTest {
         // WHEN
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(mockedUser));
 
-        var IsWalletCreated = walletService.createWallet(1L, new BigDecimal(100));
-
         // THEN
+        assertDoesNotThrow(() -> walletService.createWallet(1L, new BigDecimal(100)));
         verify(walletRepository, new Times(1)).save(any(Wallet.class));
-        assertTrue(IsWalletCreated);
     }
 
     @Test
-    void shouldNotCreateWalletWhenUserIsNotFound() {
+    void shouldNotCreateWalletWhenUserIsNotFound() throws WalletException {
         // WHEN
         when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        var IsWalletCreated = walletService.createWallet(1L, new BigDecimal(100));
-
         // THEN
-        assertFalse(IsWalletCreated);
+        assertThrows(WalletException.class, () -> walletService.createWallet(1L, new BigDecimal(100)));
     }
 
     @Test

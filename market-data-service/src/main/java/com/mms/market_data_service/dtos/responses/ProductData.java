@@ -28,7 +28,7 @@ public record ProductData(
         @Override
         public String toString() {
                 return "{" +
-                        "ticker='" + ticker + '\'' +
+                        "ticker=" + ticker +
                         ", sellLimit=" + sellLimit +
                         ", lastTradedPrice=" + lastTradedPrice +
                         ", askPrice=" + askPrice +

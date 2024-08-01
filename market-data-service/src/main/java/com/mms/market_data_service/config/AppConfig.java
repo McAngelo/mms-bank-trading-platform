@@ -1,5 +1,6 @@
 package com.mms.market_data_service.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mms.market_data_service.services.interfaces.ExchangeService;
 import com.mms.market_data_service.tasks.ScheduledTasks;
 import org.springframework.boot.CommandLineRunner;
@@ -12,9 +13,9 @@ import org.springframework.web.client.RestTemplate;
 public class AppConfig {
 
     @Bean
-    public CommandLineRunner runAtStartup(ExchangeService exchangeService, RedisTemplate<String, String> redisTemplate) {
+    public CommandLineRunner runAtStartup(ExchangeService exchangeService, RedisTemplate<String, String> redisTemplate, ObjectMapper objectMapper) {
         return args -> {
-            var startupJob = new ScheduledTasks(exchangeService, redisTemplate);
+            var startupJob = new ScheduledTasks(exchangeService, redisTemplate, objectMapper);
             startupJob.getProductsDataFromExchange1(); // Run the job at startup
         };
     }

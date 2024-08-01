@@ -1,5 +1,6 @@
 package com.mms.order.manager.services.impl;
 
+import com.mms.order.manager.exceptions.WalletException;
 import com.mms.order.manager.models.User;
 import com.mms.order.manager.models.Wallet;
 import com.mms.order.manager.repositories.UserRepository;
@@ -18,11 +19,11 @@ public class WalletServiceImpl implements WalletService {
     private final UserRepository userRepository;
 
     @Override
-    public boolean createWallet(long userId, BigDecimal balance) {
+    public void createWallet(long userId, BigDecimal balance) throws WalletException {
         Optional<User> userOptional = userRepository.findById(userId);
 
         if (userOptional.isEmpty()) {
-            return false;
+            throw new WalletException("User does not exist, could not create wallet");
         }
 
         var wallet = Wallet.builder()
@@ -32,7 +33,6 @@ public class WalletServiceImpl implements WalletService {
                 .build();
 
         walletRepository.save(wallet);
-        return true;
     }
 
     @Override

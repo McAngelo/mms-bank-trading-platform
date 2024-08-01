@@ -13,7 +13,6 @@ import java.time.LocalDate;
 @Entity
 @Data
 @Builder
-@Table(name="Transaction")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Transaction {

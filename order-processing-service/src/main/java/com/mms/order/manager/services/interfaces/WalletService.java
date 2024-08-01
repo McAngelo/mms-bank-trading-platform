@@ -1,10 +1,12 @@
 package com.mms.order.manager.services.interfaces;
 
+import com.mms.order.manager.exceptions.WalletException;
+
 import java.math.BigDecimal;
 import java.util.Optional;
 
 public interface WalletService {
-    boolean createWallet(long userId, BigDecimal balance);
+    void createWallet(long userId, BigDecimal balance) throws WalletException;
 
     Optional<BigDecimal> getBalanceByWalletId(long walletId);
 

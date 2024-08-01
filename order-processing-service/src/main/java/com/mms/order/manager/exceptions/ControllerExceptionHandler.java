@@ -30,10 +30,40 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
         return buildResponseEntity(apiResponse);
     }
 
+    @ExceptionHandler(ExchangeException.class)
+    protected ResponseEntity<ApiResponse<Object>> handleExchangeException(ExchangeException ex) {
+        var apiResponse = ApiResponse.builder()
+                .message(ex.getMessage())
+                .status(HttpStatus.BAD_REQUEST.value())
+                .build();
+
+        return buildResponseEntity(apiResponse);
+    }
+
+    @ExceptionHandler(MarketDataException.class)
+    protected ResponseEntity<ApiResponse<Object>> handleExchangeException(MarketDataException ex) {
+        var apiResponse = ApiResponse.builder()
+                .message(ex.getMessage())
+                .status(HttpStatus.BAD_REQUEST.value())
+                .build();
+
+        return buildResponseEntity(apiResponse);
+    }
+
+    @ExceptionHandler(UserException.class)
+    protected ResponseEntity<ApiResponse<Object>> handleExchangeException(UserException ex) {
+        var apiResponse = ApiResponse.builder()
+                .message(ex.getMessage())
+                .status(HttpStatus.BAD_REQUEST.value())
+                .build();
+
+        return buildResponseEntity(apiResponse);
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     protected ResponseEntity<ApiResponse<Object>> handleExchangeException(IllegalArgumentException ex) {
         var apiResponse = ApiResponse.builder()
-                .message(ex.getMessage())
+                .message(ex.getMessage() + ex)
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .build();
 

@@ -19,7 +19,7 @@ import java.util.List;
 @Data
 @Slf4j
 @Builder
-@Table(name="TradeOrder")
+@Table(name="market_order")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Order {
@@ -27,11 +27,13 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "productId", insertable = false, updatable = false)
-    private Product product;
-    private long productId;
+//    @JsonIgnore
+//    @ManyToOne
+//    @JoinColumn(name = "productId", insertable = false, updatable = false)
+//    private Product product;
+//    private long productId;
+
+    private String ticker;
 
     @JsonIgnore
     @ManyToOne
@@ -50,7 +52,7 @@ public class Order {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "order_id")
-    private List<OrderExchange> orderExchanges;
+    private List<SplitOrder> orderSplits;
 
     @Enumerated(EnumType.STRING)
     private OrderSide side;

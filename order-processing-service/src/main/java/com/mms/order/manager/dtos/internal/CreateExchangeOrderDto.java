@@ -1,6 +1,8 @@
 package com.mms.order.manager.dtos.internal;
 
 import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 
@@ -11,4 +13,6 @@ public record CreateExchangeOrderDto (
     BigDecimal price,
     String side,
     String type
-) {}
+) {
+
+}

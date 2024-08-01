@@ -5,19 +5,14 @@ import com.mms.order.manager.enums.OrderSide;
 import com.mms.order.manager.enums.OrderType;
 import com.mms.order.manager.exceptions.ExchangeException;
 import com.mms.order.manager.models.Exchange;
-import com.mms.order.manager.models.Order;
-import com.mms.order.manager.models.OrderExchange;
-import com.mms.order.manager.models.Product;
 import com.mms.order.manager.repositories.ExchangeRepository;
-import com.mms.order.manager.repositories.OrderExchangeRepository;
-import com.mms.order.manager.repositories.projections.ExchangeView;
+import com.mms.order.manager.utils.ExchangeExecutor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -41,9 +36,6 @@ class ExchangeExecutorTest {
     ExchangeRepository exchangeRepository;
 
     @Mock
-    OrderExchangeRepository orderExchangeRepository;
-
-    @Mock
     RestTemplate restTemplate;
 
     @InjectMocks
@@ -51,26 +43,25 @@ class ExchangeExecutorTest {
 
     @BeforeEach
     void setUp() {
-        exchangeExecutor = new ExchangeExecutor(restTemplate, exchangeRepository, orderExchangeRepository);
+        exchangeExecutor = new ExchangeExecutor(restTemplate);
     }
 
     @Test
     void shouldSuccessfullyExecuteOrderOnExchange() {
         // GIVEN
-        var order = Order.builder()
-                .product(Product.builder().symbol("GOOGL").build())
+        var order = CreateExchangeOrderDto.builder()
+                .product("GOOGL")
                 .quantity(1)
-                .side(OrderSide.BUY)
-                .type(OrderType.MARKET)
+                .side(OrderSide.BUY.toString())
+                .type(OrderType.MARKET.toString())
                 .build();
 
-        var exchangeView = mock(Exchange.class);
+        var exchange = Exchange.builder()
+                .baseUrl("http://test-exchange.com")
+                .privateKey("test-key")
+                .build();
 
-        when(exchangeRepository.findBySlug(anyString())).thenReturn(Optional.of(exchangeView));
-        when(exchangeView.getBaseUrl()).thenReturn("http://example.com");
-        when(exchangeView.getPrivateKey()).thenReturn("private-key");
-        when(orderExchangeRepository.save(any(OrderExchange.class))).thenReturn(mock(OrderExchange.class));
-
+        when(exchangeRepository.findBySlug(anyString())).thenReturn(Optional.of(exchange));
         when(restTemplate.postForEntity(
                 anyString(),
                 any(CreateExchangeOrderDto.class),
@@ -78,46 +69,26 @@ class ExchangeExecutorTest {
         )).thenReturn(new ResponseEntity<>("02c27916-1056-41f6-a763-5cdceccfddaf", HttpStatus.OK));
 
         // ASSERT
-        assertDoesNotThrow(() -> exchangeExecutor.executeOrder(order, "exchangeSlug", 1.0));
-
-        verify(exchangeRepository).findBySlug(anyString());
-        verify(orderExchangeRepository).save(any(OrderExchange.class));
+        assertDoesNotThrow(() -> exchangeExecutor.executeOrder(order, exchange));
         verify(restTemplate).postForEntity(anyString(), any(CreateExchangeOrderDto.class), any());
-    }
-
-    @Test
-    void shouldThrowExchangeExceptionWhenExecutingAnOrder() {
-        // GIVEN
-        var order = Order.builder()
-                .product(Product.builder().symbol("GOOGL").build())
-                .quantity(1)
-                .side(OrderSide.BUY)
-                .type(OrderType.MARKET)
-                .build();
-
-        when(exchangeRepository.findBySlug(anyString())).thenReturn(Optional.empty());
-
-        // ASSERT
-        assertThrows(ExchangeException.class, () -> exchangeExecutor.executeOrder(order, "exchange-slug", 1.0));
-        verify(exchangeRepository).findBySlug(anyString());
     }
 
     @Test
     void shouldThrowExchangeExceptionWhenSendingOrderToExchange() {
         // GIVEN
-        var order = Order.builder()
-                .product(Product.builder().symbol("GOOGL").build())
+        var order = CreateExchangeOrderDto.builder()
+                .product("GOOGL")
                 .quantity(1)
-                .side(OrderSide.BUY)
-                .type(OrderType.MARKET)
+                .side(OrderSide.BUY.toString())
+                .type(OrderType.MARKET.toString())
                 .build();
 
-        var exchangeView = mock(Exchange.class);
+        var exchange = Exchange.builder()
+                .baseUrl("http://test-exchange.com")
+                .privateKey("test-key")
+                .build();
 
-        when(exchangeRepository.findBySlug(anyString())).thenReturn(Optional.of(exchangeView));
-        when(exchangeView.getBaseUrl()).thenReturn("http://example.com");
-        when(exchangeView.getPrivateKey()).thenReturn("private-key");
-        when(orderExchangeRepository.save(any(OrderExchange.class))).thenReturn(mock(OrderExchange.class));
+        when(exchangeRepository.findBySlug(anyString())).thenReturn(Optional.of(exchange));
         when(restTemplate.postForEntity(
                 anyString(),
                 any(CreateExchangeOrderDto.class),
@@ -125,8 +96,7 @@ class ExchangeExecutorTest {
         )).thenReturn(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
 
         // ASSERT
-        assertThrows(ExchangeException.class, () -> exchangeExecutor.executeOrder(order, "exchange-slug", 1.0));
-        verify(exchangeRepository).findBySlug(anyString());
+        assertThrows(ExchangeException.class, () -> exchangeExecutor.executeOrder(order, exchange));
         verify(restTemplate).postForEntity(anyString(), any(CreateExchangeOrderDto.class), any());
     }
 }

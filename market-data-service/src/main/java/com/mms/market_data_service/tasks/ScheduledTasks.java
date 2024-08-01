@@ -1,5 +1,6 @@
 package com.mms.market_data_service.tasks;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mms.market_data_service.services.interfaces.ExchangeService;
 import jakarta.annotation.PostConstruct;
@@ -18,7 +19,7 @@ import java.time.LocalDateTime;
 public class ScheduledTasks {
     private final ExchangeService exchangeService;
     private final RedisTemplate<String, String> redisTemplate;
-
+    private final ObjectMapper objectMapper;
 
     @PostConstruct
     public void onStartup() {
@@ -36,12 +37,17 @@ public class ScheduledTasks {
             productsData.forEach(p -> {
                 var key = String.format("%s:%s", EXCHANGE, p.ticker());
 
-                redisTemplate.opsForValue().set(key, p.toString());
+                try {
+                    var productJson = objectMapper.writeValueAsString(p);
+                    redisTemplate.opsForValue().set(key, productJson);
 
-                LocalDateTime now = LocalDateTime.now();
-                LocalDateTime expiryDateTime = now.plusHours(1);
+                    LocalDateTime now = LocalDateTime.now();
+                    LocalDateTime expiryDateTime = now.plusHours(1);
 
-                redisTemplate.expire(key, Duration.between(now, expiryDateTime));
+                    redisTemplate.expire(key, Duration.between(now, expiryDateTime));
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                }
             });
 
             log.info("Invalidated exchange1 products data in cache");

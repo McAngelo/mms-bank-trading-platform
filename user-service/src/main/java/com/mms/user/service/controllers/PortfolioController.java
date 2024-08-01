@@ -3,23 +3,18 @@ package com.mms.user.service.controllers;
 import com.mms.user.service.dtos.BookRequestDto;
 import com.mms.user.service.dtos.BookResponseDto;
 import com.mms.user.service.dtos.BorrowedBookResponseDto;
+import com.mms.user.service.dtos.PortfolioRequestDTO;
 import com.mms.user.service.helper.PageResponse;
+import com.mms.user.service.model.Portfolio;
 import com.mms.user.service.services.BookService;
+import com.mms.user.service.services.PortfolioService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
@@ -29,106 +24,63 @@ import org.springframework.web.multipart.MultipartFile;
 public class PortfolioController {
 
     private final BookService service;
-
-    @PostMapping
-    public ResponseEntity<Integer> saveBook(
-            @Valid @RequestBody BookRequestDto request,
-            Authentication connectedUser
-    ) {
-        return ResponseEntity.ok(service.save(request, connectedUser));
-    }
-
-    @GetMapping("/{book-id}")
-    public ResponseEntity<BookResponseDto> findBookById(
-            @PathVariable("book-id") Integer bookId
-    ) {
-        return ResponseEntity.ok(service.findById(bookId));
-    }
+    private final PortfolioService portfolioService;
 
     @GetMapping
-    public ResponseEntity<PageResponse<BookResponseDto>> findAllBooks(
+    public ResponseEntity<?> findAllBooks(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "size", defaultValue = "10", required = false) int size,
             Authentication connectedUser
     ) {
-        return ResponseEntity.ok(service.findAllBooks(page, size, connectedUser));
+        var result = portfolioService.processGetAllPortfolios(page, size);
+
+        ResponseEntity.BodyBuilder bd = ResponseEntity.status(result.getStatus());
+        return bd.body(result);
     }
 
-    @GetMapping("/owner")
-    public ResponseEntity<PageResponse<BookResponseDto>> findAllBooksByOwner(
-            @RequestParam(name = "page", defaultValue = "0", required = false) int page,
-            @RequestParam(name = "size", defaultValue = "10", required = false) int size,
-            Authentication connectedUser
+    @GetMapping("/details/{id}")
+    public ResponseEntity<?> findPortfolioById(
+            @PathVariable("id") int portfolioId
     ) {
-        return ResponseEntity.ok(service.findAllBooksByOwner(page, size, connectedUser));
+        var result = portfolioService.processGetOnePortfolioById(portfolioId);
+
+        ResponseEntity.BodyBuilder bd = ResponseEntity.status(result.getStatus());
+        return bd.body(result);
+    }
+    @GetMapping("/user/details/{id}")
+    public ResponseEntity<?> findPortfolioByUserId(
+            @PathVariable("id") int userId
+    ) {
+        var result = portfolioService.processGetPortfoliosByUserId(userId);
+        ResponseEntity.BodyBuilder bd = ResponseEntity.status(result.getStatus());
+        return bd.body(result);
     }
 
-    @GetMapping("/borrowed")
-    public ResponseEntity<PageResponse<BorrowedBookResponseDto>> findAllBorrowedBooks(
-            @RequestParam(name = "page", defaultValue = "0", required = false) int page,
-            @RequestParam(name = "size", defaultValue = "10", required = false) int size,
+    @PostMapping("/save")
+    public ResponseEntity<?> savePortfolio(
+            @Valid @RequestBody PortfolioRequestDTO request,
             Authentication connectedUser
     ) {
-        return ResponseEntity.ok(service.findAllBorrowedBooks(page, size, connectedUser));
+        var result = portfolioService.processPortfolioCreation(request, connectedUser);
+        ResponseEntity.BodyBuilder bd = ResponseEntity.status(result.getStatus());
+        return bd.body(result);
     }
 
-    @GetMapping("/returned")
-    public ResponseEntity<PageResponse<BorrowedBookResponseDto>> findAllReturnedBooks(
-            @RequestParam(name = "page", defaultValue = "0", required = false) int page,
-            @RequestParam(name = "size", defaultValue = "10", required = false) int size,
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> updatePortfolio(
+            @PathVariable("id") int portfolioId,
+            @Valid @RequestBody PortfolioRequestDTO request,
             Authentication connectedUser
     ) {
-        return ResponseEntity.ok(service.findAllReturnedBooks(page, size, connectedUser));
+        var result = portfolioService.processUpdatePortfolio(portfolioId, request, connectedUser);
+        ResponseEntity.BodyBuilder bd = ResponseEntity.status(result.getStatus());
+        return bd.body(result);
     }
 
-    @PatchMapping("/shareable/{book-id}")
-    public ResponseEntity<Integer> updateShareableStatus(
-            @PathVariable("book-id") Integer bookId,
-            Authentication connectedUser
-    ) {
-        return ResponseEntity.ok(service.updateShareableStatus(bookId, connectedUser));
-    }
-
-    @PatchMapping("/archived/{book-id}")
-    public ResponseEntity<Integer> updateArchivedStatus(
-            @PathVariable("book-id") Integer bookId,
-            Authentication connectedUser
-    ) {
-        return ResponseEntity.ok(service.updateArchivedStatus(bookId, connectedUser));
-    }
-
-    @PostMapping("borrow/{book-id}")
-    public ResponseEntity<Integer> borrowBook(
-            @PathVariable("book-id") Integer bookId,
-            Authentication connectedUser
-    ) {
-        return ResponseEntity.ok(service.borrowBook(bookId, connectedUser));
-    }
-
-    @PatchMapping("borrow/return/{book-id}")
-    public ResponseEntity<Integer> returnBorrowBook(
-            @PathVariable("book-id") Integer bookId,
-            Authentication connectedUser
-    ) {
-        return ResponseEntity.ok(service.returnBorrowedBook(bookId, connectedUser));
-    }
-
-    @PatchMapping("borrow/return/approve/{book-id}")
-    public ResponseEntity<Integer> approveReturnBorrowBook(
-            @PathVariable("book-id") Integer bookId,
-            Authentication connectedUser
-    ) {
-        return ResponseEntity.ok(service.approveReturnBorrowedBook(bookId, connectedUser));
-    }
-
-    @PostMapping(value = "/cover/{book-id}", consumes = "multipart/form-data")
-    public ResponseEntity<?> uploadBookCoverPicture(
-            @PathVariable("book-id") Integer bookId,
-            @Parameter()
-            @RequestPart("file") MultipartFile file,
-            Authentication connectedUser
-    ) {
-        service.uploadBookCoverPicture(file, connectedUser, bookId);
-        return ResponseEntity.accepted().build();
+    @DeleteMapping("{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable("id") int portfolioId){
+        var result = portfolioService.processDeletePortfolio(portfolioId);
+        ResponseEntity.BodyBuilder bd = ResponseEntity.status(result.getStatus());
+        return bd.body(result);
     }
 }

@@ -1,0 +1,31 @@
+eureka:
+  client:
+    register-with-eureka: false
+
+server:
+  port: 8222
+
+jwt:
+  secret: SECRET
+
+spring:
+  application:
+    name: api-gateway
+#  cloud:
+#    gateway:
+#      routes:
+#        - id: order-service
+#          uri: localhost:8084
+#          predicates:
+#            - Path=/api/v1/order/**
+#            - Path=/api/v1/orders/**
+#        - id: reporting-service
+#          uri: localhost:8085
+#          predicates:
+#            - Path=/api/v1/report/**
+#            - Path=/api/v1/reports/**
+#        - id: user-service
+#          uri: localhost:8083
+#          predicates:
+#            - Path=/api/v1/user/**
+#            - Path=/api/v1/users/**

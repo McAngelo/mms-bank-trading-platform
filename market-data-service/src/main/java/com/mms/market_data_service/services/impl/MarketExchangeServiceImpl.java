@@ -8,10 +8,10 @@ import com.mms.market_data_service.helper.Error;
 import com.mms.market_data_service.helper.ExternalApiRequests;
 import com.mms.market_data_service.models.Order;
 import com.mms.market_data_service.repositories.MarketFeedRepository;
-import com.mms.market_data_service.services.MarketDataSocketServer;
 import com.mms.market_data_service.services.interfaces.MarketExchangeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -24,11 +24,13 @@ public class MarketExchangeServiceImpl implements MarketExchangeService {
     private final Gson gson = new Gson();
 
     RestTemplate restTemplate; // we can use this to make http requests
+    private final SimpMessagingTemplate messagingTemplate;
 
     private final MarketFeedRepository marketFeedRepository;
 
-    public MarketExchangeServiceImpl(AppProperties appProperties, MarketFeedRepository marketFeedRepository) {
+    public MarketExchangeServiceImpl(AppProperties appProperties, SimpMessagingTemplate messagingTemplate, MarketFeedRepository marketFeedRepository) {
         this.appProperties = appProperties;
+        this.messagingTemplate = messagingTemplate;
         this.marketFeedRepository = marketFeedRepository;
     }
 
@@ -90,7 +92,12 @@ public class MarketExchangeServiceImpl implements MarketExchangeService {
         try {
             // Broadcast to all listening services
             logger.info("Broadcast order to all listening services");
-            MarketDataSocketServer.broadcastOrder(order);
+//            MarketDataSocketServer.broadcastOrder(order);
+
+            logger.info("Message to broadcast: {}", order);
+
+            messagingTemplate.convertAndSend("/queue/new-order", order);
+
             // Save to Redis cache
             logger.info("Save to Redis cache");
             Order response = marketFeedRepository.save(order);

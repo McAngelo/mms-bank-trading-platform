@@ -51,11 +51,11 @@ public class ExternalApiRequests {
         return response;
     }
 
-    public HttpResponse<String> postRequests(String endpoint, Object data, String contentType) throws IOException, InterruptedException {
+    public HttpResponse<String> postRequests(String endpoint, String data, String contentType) throws IOException, InterruptedException {
         HttpClient client = HttpClient.newHttpClient();
 
         HttpRequest request = HttpRequest.newBuilder()
-                .POST(HttpRequest.BodyPublishers.ofString(convertToJson(data)))
+                .POST(HttpRequest.BodyPublishers.ofString(data))
                 .timeout(Duration.ofSeconds(10))
                 .uri(URI.create(BASE_URL + "/" + endpoint))
                 .header("Content-Type", contentType) // "application/json" or  "text/plain"

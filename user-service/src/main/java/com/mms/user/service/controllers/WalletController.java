@@ -2,45 +2,80 @@ package com.mms.user.service.controllers;
 
 import com.mms.user.service.dtos.FeedbackRequestDto;
 import com.mms.user.service.dtos.FeedbackResponseDto;
+import com.mms.user.service.dtos.WalletRequestDTO;
 import com.mms.user.service.helper.PageResponse;
 import com.mms.user.service.services.FeedbackService;
+import com.mms.user.service.services.WalletService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("wallet")
+@RequestMapping("api/v1/wallet")
 @RequiredArgsConstructor
 @Tag(name = "Wallet")
 public class WalletController {
 
-    private final FeedbackService service;
+    private final WalletService walletService;
 
-    @PostMapping
-    public ResponseEntity<Integer> saveFeedback(
-            @Valid @RequestBody FeedbackRequestDto request,
-            Authentication connectedUser
-    ) {
-        return ResponseEntity.ok(service.save(request, connectedUser));
-    }
-
-    @GetMapping("/book/{book-id}")
-    public ResponseEntity<PageResponse<FeedbackResponseDto>> findAllFeedbacksByBook(
-            @PathVariable("book-id") Integer bookId,
+    @GetMapping
+    public ResponseEntity<?> findAllBooks(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "size", defaultValue = "10", required = false) int size,
             Authentication connectedUser
     ) {
-        return ResponseEntity.ok(service.findAllFeedbacksByBook(bookId, page, size, connectedUser));
+        var result = walletService.processGetAllWallets(page, size);
+
+        ResponseEntity.BodyBuilder bd = ResponseEntity.status(result.getStatus());
+        return bd.body(result);
+    }
+
+    @GetMapping("/details/{id}")
+    public ResponseEntity<?> findWalletById(
+            @PathVariable("id") int WalletId
+    ) {
+        var result = walletService.processGetOneWalletById(WalletId);
+        ResponseEntity.BodyBuilder bd = ResponseEntity.status(result.getStatus());
+        return bd.body(result);
+    }
+    @GetMapping("/user/details/{id}")
+    public ResponseEntity<?> findWalletByUserId(
+            @PathVariable("id") int userId
+    ) {
+        var result = walletService.processGetWalletsByUserId(userId);
+        ResponseEntity.BodyBuilder bd = ResponseEntity.status(result.getStatus());
+        return bd.body(result);
+    }
+
+    @PostMapping("/save")
+    public ResponseEntity<?> saveWallet(
+            @Valid @RequestBody WalletRequestDTO request,
+            Authentication connectedUser
+    ) {
+        var result = walletService.processWalletCreation(request, connectedUser);
+        ResponseEntity.BodyBuilder bd = ResponseEntity.status(result.getStatus());
+        return bd.body(result);
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> updateWallet(
+            @PathVariable("id") int WalletId,
+            @Valid @RequestBody WalletRequestDTO request,
+            Authentication connectedUser
+    ) {
+        var result = walletService.processUpdateWallet(WalletId, request, connectedUser);
+        ResponseEntity.BodyBuilder bd = ResponseEntity.status(result.getStatus());
+        return bd.body(result);
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable("id") int WalletId){
+        var result = walletService.processDeleteWallet(WalletId);
+        ResponseEntity.BodyBuilder bd = ResponseEntity.status(result.getStatus());
+        return bd.body(result);
     }
 }
 

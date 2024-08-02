@@ -18,12 +18,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("portfolio")
+@RequestMapping("api/v1/portfolio")
 @RequiredArgsConstructor
 @Tag(name = "Portfolio")
 public class PortfolioController {
 
-    private final BookService service;
     private final PortfolioService portfolioService;
 
     @GetMapping

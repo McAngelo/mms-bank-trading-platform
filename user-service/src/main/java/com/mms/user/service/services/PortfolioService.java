@@ -1,13 +1,12 @@
 package com.mms.user.service.services;
 
 import com.mms.user.service.dtos.PortfolioRequestDTO;
-import com.mms.user.service.dtos.UserRequestDto;
 import com.mms.user.service.helper.*;
 import com.mms.user.service.model.Portfolio;
 import com.mms.user.service.model.User;
-import com.mms.user.service.model.mappers.UserMapper;
 import com.mms.user.service.repositories.PortfolioRepository;
 import com.mms.user.service.repositories.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -30,7 +29,6 @@ import java.util.Optional;
 public class PortfolioService {
     private static final Logger logger = LoggerFactory.getLogger(PortfolioService.class);
     private final PortfolioRepository portfolioRepository;
-    private final UserMapper userMapper;
     private final UserRepository userRepository;
 
     public IApiResponse<?> processGetAllPortfolios(int page, int size){
@@ -60,15 +58,7 @@ public class PortfolioService {
 
     public IApiResponse<?> processGetOnePortfolioById(int portfolioId){
         try {
-            logger.info("Get one portfolio by Id");
-            var portfolio = portfolioRepository.findById(portfolioId);
-
-            logger.info("Get one portfolio by Id {}", portfolio);
-
-            if(portfolio.isEmpty()){
-                logger.debug("Could not find portfolio");
-                return ApiResponseUtil.toNotFoundApiResponse(null, "Portfolio not found");
-            }
+            Portfolio portfolio = checkPortfolio(portfolioId);
 
             return ApiResponseUtil.toOkApiResponse(portfolio, "Successful");
         }catch(Exception exception){
@@ -131,18 +121,7 @@ public class PortfolioService {
 
     public IApiResponse<?> processUpdatePortfolio(int id, PortfolioRequestDTO requestDto, Authentication connectedUser){
         try {
-            logger.info("Get one portfolio by Id");
-            Optional<Portfolio> portfolioOptional = portfolioRepository.findById(id);
-
-            logger.info("Get one portfolio by Id {}", portfolioOptional);
-
-            if(portfolioOptional.isEmpty()){
-                logger.debug("Could not find user");
-                return ApiResponseUtil.toNotFoundApiResponse(null, "User not found");
-            }
-
-            Portfolio portfolio = portfolioOptional.get();
-
+            Portfolio portfolio = checkPortfolio(id);
             portfolio.setPortfolioName(requestDto.getPortfolioName());
             portfolio.setPortfolioType(requestDto.getPortfolioType());
             portfolio.setStatus(requestDto.getStatus());
@@ -158,27 +137,31 @@ public class PortfolioService {
 
     public IApiResponse<?> processDeletePortfolio(int portoflioId){
         try {
-            logger.info("Processing login authentication");
-            Optional<Portfolio> portfolioOptional = portfolioRepository.findById(portoflioId);
-
-            logger.info("Get one portfolio by Id {}", portfolioOptional);
-
-            if(portfolioOptional.isEmpty()){
-                logger.debug("Could not find user");
-                return ApiResponseUtil.toNotFoundApiResponse(null, "User not found");
-            }
-
-            Portfolio portfolio = portfolioOptional.get();
-
+            Portfolio portfolio = checkPortfolio(portoflioId);
             portfolio.setStatus(Portfolio.Status.DISABLED);
 
             var response = portfolioRepository.saveAndFlush(portfolio).getId();
             return ApiResponseUtil.toOkApiResponse(response, "Portfolio account disabled successfully");
         }catch(Exception exception){
-            logger.error("error while processing login: {}", exception);
+            logger.error("error attempting to disable account: {}", exception);
             ArrayList<ErrorDetails> error = new ArrayList<>();
             error.add(new ErrorDetails(exception.getMessage(), exception.toString()));
             return ApiResponseUtil.toBadRequestApiResponse("Error", error);
         }
+    }
+
+    private Portfolio checkPortfolio(int portoflioId){
+        logger.info("Processing login authentication");
+        Optional<Portfolio> portfolioOptional = portfolioRepository.findById(portoflioId);
+
+        logger.info("Get one portfolio by Id {}", portfolioOptional);
+
+        if(portfolioOptional.isEmpty()){
+            logger.debug("Could not find user");
+            throw new EntityNotFoundException("User not found");
+            //return ApiResponseUtil.toNotFoundApiResponse(null, "User not found");
+        }
+
+        return portfolioOptional.get();
     }
 }

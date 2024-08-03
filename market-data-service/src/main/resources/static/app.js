@@ -1,7 +1,7 @@
 'use strict';
 
 document.addEventListener("DOMContentLoaded", function() {
-    const socket = new SockJS('/ws');
+    const socket = new SockJS('ws://localhost:8082/ws');
     const stompClient = Stomp.over(socket);
 
     stompClient.connect({}, function(frame) {

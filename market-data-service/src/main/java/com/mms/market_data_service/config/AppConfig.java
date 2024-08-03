@@ -15,8 +15,8 @@ public class AppConfig {
     @Bean
     public CommandLineRunner runAtStartup(ExchangeService exchangeService, RedisTemplate<String, String> redisTemplate, ObjectMapper objectMapper) {
         return args -> {
-            var startupJob = new ScheduledTasks(exchangeService, redisTemplate, objectMapper);
-            startupJob.getProductsDataFromExchange1(); // Run the job at startup
+            ScheduledTasks startupJob = new ScheduledTasks(exchangeService, redisTemplate, objectMapper);
+            startupJob.onStartup();
         };
     }
 

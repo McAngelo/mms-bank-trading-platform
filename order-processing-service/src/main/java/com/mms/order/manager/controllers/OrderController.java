@@ -37,7 +37,17 @@ public class OrderController {
         return ResponseEntity.ok(ApiResponse.builder()
                 .status(HttpStatus.OK.value())
                 .data(order)
-                .message("Successfully created order")
+                .message("Successfully retrieved order")
+                .build());
+    }
+
+    @PatchMapping("/{orderId}")
+    public ResponseEntity<ApiResponse> updateOrderById(@PathVariable("orderId") long orderId) throws OrderException, ExchangeException {
+        orderService.updateOrderStatus(orderId);
+
+        return ResponseEntity.ok(ApiResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message("Successfully updated order")
                 .build());
     }
 }

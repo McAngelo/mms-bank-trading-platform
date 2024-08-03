@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface ExecutionRepository extends JpaRepository<Execution, Long> {
-    List<Execution> findAllByOrderId(Long id);
+    List<Execution> findAllByOrderSplitId(long id);
 }

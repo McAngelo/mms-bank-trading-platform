@@ -1,8 +1,8 @@
 package com.mms.market_data_service.tasks;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.mms.market_data_service.dtos.responses.ProductData;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mms.market_data_service.helper.JsonHelper;
 import com.mms.market_data_service.services.interfaces.ExchangeService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +12,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Component
 @Slf4j
@@ -22,66 +23,44 @@ public class ScheduledTasks {
     private final RedisTemplate<String, String> redisTemplate;
     private final ObjectMapper objectMapper;
 
+    private static final Duration CACHE_EXPIRY_DURATION = Duration.ofHours(1);
+
     @PostConstruct
     public void onStartup() {
-        getProductsDataFromExchange1();
-        getProductsDataFromExchange2();
-        log.info("Populated cache on start up");
+        populateCacheForExchange("EXCHANGE1");
+        populateCacheForExchange("EXCHANGE2");
+        log.info("Populated cache on startup");
     }
 
-    @Scheduled(cron = "0 * * * * *")
-    public void getProductsDataFromExchange1() {
+    @Scheduled(fixedRate = 1, timeUnit = TimeUnit.MINUTES)
+    public void updateProductDataCache() {
+        List.of("EXCHANGE1", "EXCHANGE2").forEach(this::populateCacheForExchange);
+    }
+
+    private void populateCacheForExchange(String exchange) {
         try {
-            var EXCHANGE = "EXCHANGE1";
-            var productsData = exchangeService.getProductDataFromExchange(EXCHANGE);
-
-            productsData.forEach(p -> {
-                var key = String.format("%s:%s", EXCHANGE, p.ticker());
-
-                try {
-                    var productJson = objectMapper.writeValueAsString(p);
-                    redisTemplate.opsForValue().set(key, productJson);
-
-                    LocalDateTime now = LocalDateTime.now();
-                    LocalDateTime expiryDateTime = now.plusHours(1);
-
-                    redisTemplate.expire(key, Duration.between(now, expiryDateTime));
-                } catch (JsonProcessingException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-
-            log.info("Invalidated exchange1 products data in cache");
+            List<ProductData> productsData = exchangeService.getProductDataFromExchange(exchange);
+            cacheProductData(exchange, productsData);
+            log.info("Updated product data for {} in cache", exchange);
         } catch (Exception e) {
-            log.error("Could not invalidated exchange1 products data in cache {}", e.toString());
+            log.error("Failed to update product data for {} in cache: {}", exchange, e.getMessage(), e);
         }
     }
 
-    @Scheduled(cron = "0 * * * * *")
-    public void getProductsDataFromExchange2() {
+    private void cacheProductData(String exchange, List<ProductData> products) {
+        var key = String.format("products:%s", exchange);
+
         try {
-            var EXCHANGE = "EXCHANGE2";
-            var productsData = exchangeService.getProductDataFromExchange(EXCHANGE);
-
-            productsData.forEach(p -> {
-                var key = String.format("%s:%s", EXCHANGE, p.ticker());
-
-                try {
-                    redisTemplate.opsForValue().set(key, JsonHelper.toJson(p));
-                } catch (JsonProcessingException e) {
-                    log.error("Could not save product data {} to cache {}", p, e.toString());
-                    return;
-                }
-
-                LocalDateTime now = LocalDateTime.now();
-                LocalDateTime expiryDateTime = now.plusHours(1);
-
-                redisTemplate.expire(key, Duration.between(now, expiryDateTime));
-            });
-
-            log.info("Invalidated exchange2 products data in cache");
+            redisTemplate.delete(key);
+            for (ProductData product : products) {
+                String productJson = objectMapper.writeValueAsString(product);
+                redisTemplate.opsForList().rightPush(key, productJson);
+            }
+            redisTemplate.expire(key, CACHE_EXPIRY_DURATION);
+        } catch (JsonProcessingException e) {
+            log.error("Failed to serialize product data for {}: {}", exchange, e.getMessage(), e);
         } catch (Exception e) {
-            log.error("Could not invalidated exchange2 products data in cache {}", e.toString());
+            log.error("Unexpected error while caching product data for {}: {}", exchange, e.getMessage(), e);
         }
     }
 }

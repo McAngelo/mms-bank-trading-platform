@@ -22,13 +22,8 @@ public class Execution {
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "orderId", insertable = false, updatable = false)
-    private Order order;
-
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "exchangeId", insertable = false, updatable = false)
-    private Exchange exchange;
+    @JoinColumn(name = "order_split_id", updatable = false)
+    private OrderSplit orderSplit;
 
     private BigDecimal price;
     private int quantity;

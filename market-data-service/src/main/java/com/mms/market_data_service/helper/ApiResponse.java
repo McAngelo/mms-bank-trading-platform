@@ -6,8 +6,11 @@ import lombok.Getter;
 import java.util.List;
 
 @Builder
-public record ApiResponse<T>(String message, int status, T data, List<Error> errors) implements IApiResponse<T> {
-}
+public record ApiResponse<T>(
+        String message,
+        int status, T data,
+        List<Error> errors
+) implements IApiResponse<T> { }
 
 
 interface IApiResponse<T> {

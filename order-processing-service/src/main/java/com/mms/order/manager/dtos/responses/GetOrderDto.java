@@ -20,6 +20,5 @@ public record GetOrderDto (
     OrderStatus orderStatus,
     String ticker,
     OrderType orderType,
-    List<OrderSplitDto> orderSplits,
-    List<ExecutionDto> executions
+    List<OrderSplitDto> orderSplits
 ) {}

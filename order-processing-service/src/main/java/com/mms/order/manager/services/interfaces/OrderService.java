@@ -11,6 +11,12 @@ import java.util.List;
 
 public interface OrderService {
     void createOrder(CreateOrderDto orderDto) throws OrderException, MarketDataException, ExchangeException;
+
     GetOrderDto getOrder(long orderId) throws OrderException;
+
     List<GetOrdersDto> getOrders(long portfolioId, int page, int siz);
+
+    void updateOrderStatus(long orderId) throws OrderException, ExchangeException;
+
+    void updateOrderStatus(String exchangeOrderId) throws OrderException, ExchangeException;
 }

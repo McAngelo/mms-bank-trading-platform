@@ -36,7 +36,7 @@ public class Scheduler {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("h:mma EEE. dd MMM, yyyy");
 
     @Async
-    @Scheduled(fixedRate = 3, timeUnit = TimeUnit.SECONDS)
+    @Scheduled(fixedRate = 1, timeUnit = TimeUnit.MINUTES)
     public void scheduleTask() throws InterruptedException, JsonProcessingException {
         LocalDateTime now = LocalDateTime.now();
         String formatDateTime = now.format(formatter);

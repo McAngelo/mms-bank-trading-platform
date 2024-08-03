@@ -12,7 +12,6 @@ import com.mms.order.manager.repositories.ExchangeRepository;
 import com.mms.order.manager.repositories.OrderSplitRepository;
 import com.mms.order.manager.services.interfaces.MarketDataService;
 import com.mms.order.manager.services.interfaces.OrderSplittingStrategyService;
-import com.mms.order.manager.utils.ExchangeExecutor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
@@ -23,11 +22,11 @@ import java.util.*;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class BestPriceExecutionStrategyServiceImpl implements OrderSplittingStrategyService {
+public class BestPriceStrategyServiceImpl implements OrderSplittingStrategyService {
+    private final ExchangeServiceImpl exchangeService;
     private final OrderSplitRepository splitOrderSplitRepository;
-    private final NonSplitOrderExecutionService nonSplitOrderExecutionService;
+    private final SingleOrderStrategyService singleOrderStrategyService;
     private final MarketDataService marketDataService;
-    private final ExchangeExecutor exchangeExecutor;
     private final ExchangeRepository exchangeRepository;
 
     @Override
@@ -44,7 +43,7 @@ public class BestPriceExecutionStrategyServiceImpl implements OrderSplittingStra
         List<OpenOrderDto> openOrders = getOpenOrdersFromOrderBook(ticker);
 
         if (openOrders.isEmpty()) {
-            nonSplitOrderExecutionService.executeOrder(order, sortedProductDataPairs.getFirst().getLeft());
+            singleOrderStrategyService.executeOrder(order, sortedProductDataPairs.getFirst().getLeft());
         }
 
         for (Pair<String, ProductMarketData> exchangeProductDataPair : sortedProductDataPairs) {
@@ -52,7 +51,7 @@ public class BestPriceExecutionStrategyServiceImpl implements OrderSplittingStra
 
             Exchange exchange = getExchange(exchangeProductDataPair.getLeft());
 
-            String exchangeOrderId = exchangeExecutor.executeOrder(newExchangeOrder, exchange);
+            String exchangeOrderId = exchangeService.executeOrder(newExchangeOrder, exchange);
 
             splitOrderSplitRepository.save(OrderSplit.builder()
                     .order(order)

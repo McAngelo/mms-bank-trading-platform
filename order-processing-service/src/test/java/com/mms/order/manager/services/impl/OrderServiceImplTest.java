@@ -14,9 +14,9 @@ import com.mms.order.manager.repositories.ExecutionRepository;
 import com.mms.order.manager.repositories.OrderRepository;
 import com.mms.order.manager.repositories.OrderSplitRepository;
 import com.mms.order.manager.services.interfaces.MarketDataService;
-import com.mms.order.manager.services.interfaces.OrderService;
 import com.mms.order.manager.services.interfaces.WalletService;
 import com.mms.order.manager.utils.ExchangeExecutor;
+import com.mms.order.manager.utils.converters.ExecutionConvertor;
 import com.mms.order.manager.utils.converters.OrderConvertor;
 import com.mms.order.manager.utils.OrderValidator;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,13 +46,13 @@ class OrderServiceImplTest {
     OrderValidator orderValidator;
 
     @Mock
-    OrderExecutionService orderExecutionService;
+    ExecutionStrategyService executionStrategyService;
 
     @Mock
     OrderRepository orderRepository;
 
     @Mock
-    ExchangeExecutor exchangeExecutor;
+    ExchangeServiceImpl exchangeService;
 
     @Mock
     WalletService walletService;
@@ -70,12 +70,15 @@ class OrderServiceImplTest {
     OrderConvertor orderConvertor;
 
     @InjectMocks
+    ExecutionConvertor executionConvertor;
+
+    @InjectMocks
     OrderServiceImpl orderService;
 
     @BeforeEach
     void setUp() {
         orderValidator = new OrderValidator(walletService, orderRepository, marketDataService);
-        orderService = new OrderServiceImpl(orderRepository, orderValidator, orderExecutionService, orderSplitRepository, executionRepository, orderConvertor);
+        orderService = new OrderServiceImpl(orderRepository, orderValidator, executionStrategyService, orderSplitRepository, executionRepository, orderConvertor, exchangeService, executionConvertor);
     }
 
     @Test
@@ -105,14 +108,14 @@ class OrderServiceImplTest {
 
         when(walletService.getBalanceByUserId(anyLong())).thenReturn(Optional.of(new BigDecimal(10)));
         when(marketDataService.getProductData(anyString(), anyString())).thenReturn(productMarketData);
-        when(exchangeExecutor.executeOrder(any(CreateExchangeOrderDto.class), any(Exchange.class))).thenReturn("exchange-order-id");
+        when(exchangeService.executeOrder(any(CreateExchangeOrderDto.class), any(Exchange.class))).thenReturn("exchange-order-id");
         when(orderRepository.existsByPortfolioIdAndUserIdAndTickerAndQuantityGreaterThanEqual(anyLong(), anyLong(), anyString(), anyInt())).thenReturn(true);
 
 
         assertDoesNotThrow(() -> orderService.createOrder(orderDto));
         verify(walletService).getBalanceByUserId(anyLong());
         verify(marketDataService).getProductData(anyString(), anyString());
-        verify(exchangeExecutor).executeOrder(any(CreateExchangeOrderDto.class), any(Exchange.class));
+        verify(exchangeService).executeOrder(any(CreateExchangeOrderDto.class), any(Exchange.class));
         verify(orderRepository).existsByPortfolioIdAndUserIdAndTickerAndQuantityGreaterThanEqual(anyLong(), anyLong(), anyString(), anyInt());
     }
 

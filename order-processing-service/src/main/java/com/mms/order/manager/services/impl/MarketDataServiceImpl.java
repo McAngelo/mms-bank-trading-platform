@@ -21,36 +21,39 @@ import java.util.*;
 public class MarketDataServiceImpl implements MarketDataService {
     private final RedisService redisService;
     private final ExchangeRepository exchangeRepository;
+    private final ObjectMapper objectMapper;
 
     @Override
-    public ProductMarketData getProductData(String exchangeSlug, String product) throws MarketDataException {
-        var productJsonString = redisService.getValue(String.format("%s:%s" ,exchangeSlug, product));
+    public ProductMarketData getProductData(String exchangeSlug, String productTicker) throws MarketDataException {
+        String key = String.format("products:%s", exchangeSlug);
 
-        ProductMarketData productMarketDataDto;
+        List<String> productJsonList = redisService.getListValues(key);
 
-        try {
-            productMarketDataDto = new ObjectMapper().readValue(productJsonString, ProductMarketData.class);
-        } catch (Exception e) {
-            throw new MarketDataException("Error deserializing product data from cache::", e);
+        for (String productJson : productJsonList) {
+            try {
+                ProductMarketData productData = objectMapper.readValue(productJson, ProductMarketData.class);
+                if (productData.ticker().equalsIgnoreCase(productTicker)) {
+                    return productData;
+                }
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
         }
 
-        return productMarketDataDto;
+        throw new MarketDataException("Product not found in cache for exchange: " + exchangeSlug);
     }
 
     @Override
-    public Map<String, ProductMarketData> getProductDataFromAllExchanges(String product) {
-        var exchangesSlugs = exchangeRepository.findAllSlugs();
+    public Map<String, ProductMarketData> getProductDataFromAllExchanges(String productTicker) {
+        List<String> exchangesSlugs = exchangeRepository.findAllSlugs();
         Map<String, ProductMarketData> productsData = new HashMap<>();
 
         exchangesSlugs.forEach(s -> {
-            var productJsonString = redisService.getValue(s + product);
-
             try {
-                var productData = new ObjectMapper().readValue(productJsonString, ProductMarketData.class);
-
+                ProductMarketData productData = getProductData(s, productTicker);
                 productsData.put(s, productData);
-            } catch (JsonProcessingException e) {
-                log.warn("Error deserializing product data from cache", e);
+            } catch (MarketDataException e) {
+                log.warn("Error retrieving product data for exchange {}: {}", s, e.getMessage());
             }
         });
 

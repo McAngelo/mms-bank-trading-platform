@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Data
 @Builder
@@ -27,7 +29,10 @@ public class OrderSplit {
     @JsonIgnore
     private Exchange exchange;
 
+    @Column(unique = true)
     private String exchangeOrderId;
+
+    private boolean isExecuted;
 
     private int quantity;
 }

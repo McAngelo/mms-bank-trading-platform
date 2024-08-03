@@ -62,10 +62,10 @@ public class Seeder implements ApplicationRunner {
                 .isActive(true)
                 .build();
 
-        roleRepository.save(role);
-        userRepository.save(user);
-        walletRepository.save(wallet);
-        portfolioRepository.save(portfolio);
-        exchangeRepository.save(exchange);
+//        roleRepository.save(role);
+//        userRepository.save(user);
+//        walletRepository.save(wallet);
+//        portfolioRepository.save(portfolio);
+//        exchangeRepository.save(exchange);
     }
 }

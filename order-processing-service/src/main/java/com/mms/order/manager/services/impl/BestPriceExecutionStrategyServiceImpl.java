@@ -7,9 +7,9 @@ import com.mms.order.manager.enums.OrderType;
 import com.mms.order.manager.exceptions.ExchangeException;
 import com.mms.order.manager.models.Exchange;
 import com.mms.order.manager.models.Order;
-import com.mms.order.manager.models.SplitOrder;
+import com.mms.order.manager.models.OrderSplit;
 import com.mms.order.manager.repositories.ExchangeRepository;
-import com.mms.order.manager.repositories.SplitOrderRepositories;
+import com.mms.order.manager.repositories.OrderSplitRepository;
 import com.mms.order.manager.services.interfaces.MarketDataService;
 import com.mms.order.manager.services.interfaces.OrderSplittingStrategyService;
 import com.mms.order.manager.utils.ExchangeExecutor;
@@ -24,7 +24,7 @@ import java.util.*;
 @Slf4j
 @RequiredArgsConstructor
 public class BestPriceExecutionStrategyServiceImpl implements OrderSplittingStrategyService {
-    private final SplitOrderRepositories splitOrderRepositories;
+    private final OrderSplitRepository splitOrderSplitRepository;
     private final NonSplitOrderExecutionService nonSplitOrderExecutionService;
     private final MarketDataService marketDataService;
     private final ExchangeExecutor exchangeExecutor;
@@ -54,7 +54,7 @@ public class BestPriceExecutionStrategyServiceImpl implements OrderSplittingStra
 
             String exchangeOrderId = exchangeExecutor.executeOrder(newExchangeOrder, exchange);
 
-            splitOrderRepositories.save(SplitOrder.builder()
+            splitOrderSplitRepository.save(OrderSplit.builder()
                     .order(order)
                     .exchange(exchange)
                     .quantity(newExchangeOrder.quantity())

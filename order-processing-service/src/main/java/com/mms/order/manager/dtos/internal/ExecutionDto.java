@@ -8,5 +8,5 @@ public record ExecutionDto (
         @JsonProperty("timestamp")
         LocalDateTime dateTime,
         double price,
-        int quantity
+        java.math.BigDecimal quantity
 ) { }

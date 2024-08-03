@@ -12,6 +12,12 @@ services:
       - REDIS_DATABASES=market-data
     healthcheck:
       test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:4.0-rc-alpine
+    ports:
+      - "5672:5672"
+      - "15672:15672"
 
 volumes:
   redis_data:

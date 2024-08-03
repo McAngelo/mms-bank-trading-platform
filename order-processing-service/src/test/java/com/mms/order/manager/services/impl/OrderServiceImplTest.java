@@ -10,7 +10,9 @@ import com.mms.order.manager.exceptions.ExchangeException;
 import com.mms.order.manager.exceptions.MarketDataException;
 import com.mms.order.manager.exceptions.OrderException;
 import com.mms.order.manager.models.Exchange;
+import com.mms.order.manager.repositories.ExecutionRepository;
 import com.mms.order.manager.repositories.OrderRepository;
+import com.mms.order.manager.repositories.OrderSplitRepository;
 import com.mms.order.manager.services.interfaces.MarketDataService;
 import com.mms.order.manager.services.interfaces.OrderService;
 import com.mms.order.manager.services.interfaces.WalletService;
@@ -40,14 +42,11 @@ import static org.mockito.Mockito.*;
 @MockitoSettings(strictness = Strictness.LENIENT)
 @RunWith(SpringRunner.class)
 class OrderServiceImplTest {
-    @InjectMocks
+    @Mock
     OrderValidator orderValidator;
 
-    @InjectMocks
+    @Mock
     OrderExecutionService orderExecutionService;
-
-    @InjectMocks
-    OrderConvertor orderConvertor;
 
     @Mock
     OrderRepository orderRepository;
@@ -61,12 +60,22 @@ class OrderServiceImplTest {
     @Mock
     MarketDataService marketDataService;
 
-    OrderService orderService;
+    @Mock
+    OrderSplitRepository orderSplitRepository;;
+
+    @Mock
+    ExecutionRepository executionRepository;
+
+    @InjectMocks
+    OrderConvertor orderConvertor;
+
+    @InjectMocks
+    OrderServiceImpl orderService;
 
     @BeforeEach
     void setUp() {
         orderValidator = new OrderValidator(walletService, orderRepository, marketDataService);
-        orderService = new OrderServiceImpl(orderRepository, orderValidator, orderExecutionService, orderConvertor);
+        orderService = new OrderServiceImpl(orderRepository, orderValidator, orderExecutionService, orderSplitRepository, executionRepository, orderConvertor);
     }
 
     @Test

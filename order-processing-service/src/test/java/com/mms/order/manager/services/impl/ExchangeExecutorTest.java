@@ -16,11 +16,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.Serializable;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -38,12 +40,15 @@ class ExchangeExecutorTest {
     @Mock
     RestTemplate restTemplate;
 
+    @Mock
+    RedisTemplate<String, Serializable> redisTemplate;
+
     @InjectMocks
     ExchangeExecutor exchangeExecutor;
 
     @BeforeEach
     void setUp() {
-        exchangeExecutor = new ExchangeExecutor(restTemplate);
+        exchangeExecutor = new ExchangeExecutor(restTemplate, redisTemplate);
     }
 
     @Test

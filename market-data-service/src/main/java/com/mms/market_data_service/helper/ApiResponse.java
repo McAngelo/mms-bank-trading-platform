@@ -6,8 +6,11 @@ import java.util.List;
 
 //@Getter
 @Builder
-public record ApiResponse<T>(String message, int status, T data, List<Error> errors) implements IApiResponse<T> {
-}
+public record ApiResponse<T>(
+        String message,
+        int status, T data,
+        List<Error> errors
+) implements IApiResponse<T> { }
 
 
 interface IApiResponse<T> {

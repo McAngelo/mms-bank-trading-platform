@@ -9,14 +9,14 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class OrderExecutionService {
-    private final NonSplitOrderExecutionService nonSplitOrderExecutionService;
-    private final BestPriceExecutionStrategyServiceImpl bestPriceSplitStrategyService;
-    private final HoldExecutionStrategyServiceImpl holdSplitExecutionStrategyService;
+public class ExecutionStrategyService {
+    private final SingleOrderStrategyService singleOrderStrategyService;
+    private final BestPriceStrategyServiceImpl bestPriceSplitStrategyService;
+    private final HoldStrategyServiceImpl holdSplitExecutionStrategyService;
 
     public void executeOrder(Order order, CreateOrderDto orderDto) throws ExchangeException {
         if (isSingleExchangeOrder(order.getExecutionMode())) {
-            nonSplitOrderExecutionService.executeOrder(order, orderDto.preferredExchangeSlug());
+            singleOrderStrategyService.executeOrder(order, orderDto.preferredExchangeSlug());
         }
 
         if (shouldHoldOrder()) {

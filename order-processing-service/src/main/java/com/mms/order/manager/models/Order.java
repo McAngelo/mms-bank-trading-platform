@@ -47,13 +47,6 @@ public class Order {
     private User user;
     private long userId;
 
-    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
-    private List<Execution> executions;
-
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "order_id")
-    private List<SplitOrder> orderSplits;
-
     @Enumerated(EnumType.STRING)
     private OrderSide side;
 

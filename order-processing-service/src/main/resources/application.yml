@@ -1,0 +1,47 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: order.manager
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: mms-test-local
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+  data:
+    redis:
+      host: redis
+      port: 6379
+      password: admin
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+
+openapi:
+  service:
+    title: order-service doc
+    version: 1.0.0
+    url: http://localhost:8222
+
+springdoc:
+  api-docs:
+    path: /order-service/v3/api-docs
+  swagger-ui:
+    path: /order-service/swagger-ui.html
+
+#logging:
+#  level:
+#    org.springframework: DEBUG

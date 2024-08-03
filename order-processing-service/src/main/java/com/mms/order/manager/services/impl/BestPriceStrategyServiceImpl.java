@@ -7,12 +7,11 @@ import com.mms.order.manager.enums.OrderType;
 import com.mms.order.manager.exceptions.ExchangeException;
 import com.mms.order.manager.models.Exchange;
 import com.mms.order.manager.models.Order;
-import com.mms.order.manager.models.SplitOrder;
+import com.mms.order.manager.models.OrderSplit;
 import com.mms.order.manager.repositories.ExchangeRepository;
-import com.mms.order.manager.repositories.SplitOrderRepositories;
+import com.mms.order.manager.repositories.OrderSplitRepository;
 import com.mms.order.manager.services.interfaces.MarketDataService;
 import com.mms.order.manager.services.interfaces.OrderSplittingStrategyService;
-import com.mms.order.manager.utils.ExchangeExecutor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
@@ -23,11 +22,11 @@ import java.util.*;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class BestPriceExecutionStrategyServiceImpl implements OrderSplittingStrategyService {
-    private final SplitOrderRepositories splitOrderRepositories;
-    private final NonSplitOrderExecutionService nonSplitOrderExecutionService;
+public class BestPriceStrategyServiceImpl implements OrderSplittingStrategyService {
+    private final ExchangeServiceImpl exchangeService;
+    private final OrderSplitRepository splitOrderSplitRepository;
+    private final SingleOrderStrategyService singleOrderStrategyService;
     private final MarketDataService marketDataService;
-    private final ExchangeExecutor exchangeExecutor;
     private final ExchangeRepository exchangeRepository;
 
     @Override
@@ -44,7 +43,7 @@ public class BestPriceExecutionStrategyServiceImpl implements OrderSplittingStra
         List<OpenOrderDto> openOrders = getOpenOrdersFromOrderBook(ticker);
 
         if (openOrders.isEmpty()) {
-            nonSplitOrderExecutionService.executeOrder(order, sortedProductDataPairs.getFirst().getLeft());
+            singleOrderStrategyService.executeOrder(order, sortedProductDataPairs.getFirst().getLeft());
         }
 
         for (Pair<String, ProductMarketData> exchangeProductDataPair : sortedProductDataPairs) {
@@ -52,9 +51,9 @@ public class BestPriceExecutionStrategyServiceImpl implements OrderSplittingStra
 
             Exchange exchange = getExchange(exchangeProductDataPair.getLeft());
 
-            String exchangeOrderId = exchangeExecutor.executeOrder(newExchangeOrder, exchange);
+            String exchangeOrderId = exchangeService.executeOrder(newExchangeOrder, exchange);
 
-            splitOrderRepositories.save(SplitOrder.builder()
+            splitOrderSplitRepository.save(OrderSplit.builder()
                     .order(order)
                     .exchange(exchange)
                     .quantity(newExchangeOrder.quantity())

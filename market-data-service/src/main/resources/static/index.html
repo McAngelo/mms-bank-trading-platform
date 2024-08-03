@@ -81,7 +81,14 @@
             console.log('Connected: ' + frame);
             stompClient.subscribe('/queue/market-data', function(message) {
                 const productData = JSON.parse(message.body);
+
                 updateProductData(productData);
+            });
+
+            stompClient.subscribe('/queue/new-order', function(message) {
+                const newOrder = JSON.parse(message.body);
+                console.log('Received a New order');
+                console.log('New order: ' + newOrder);
             });
         });
 

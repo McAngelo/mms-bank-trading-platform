@@ -100,7 +100,7 @@ public class MarketExchangeServiceImpl implements MarketExchangeService {
 
             // Save to Redis cache
             logger.info("Save to Redis cache");
-            Order response = marketFeedRepository.save(order);
+//            Order response = marketFeedRepository.save(order);
             return ApiResponseUtil.toOkApiResponse(order, "Successful");
         }catch(Exception exception){
             logger.error("call back process error response: {}", exception);

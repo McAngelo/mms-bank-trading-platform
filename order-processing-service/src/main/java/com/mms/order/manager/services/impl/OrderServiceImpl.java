@@ -40,6 +40,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderConvertor orderConvertor;
     private final ExchangeServiceImpl exchangeService;
     private final ExecutionConvertor executionConvertor;
+    private final RedisServiceImpl redisServiceImpl;
 
     @Override
     @Transactional
@@ -97,7 +98,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void updateOrderStatus(String exchangeOrderId) throws OrderException, ExchangeException {
         OrderSplit orderSplit = orderSplitRepository.findByExchangeOrderId(exchangeOrderId)
-                .orElseThrow(() -> new OrderException("Order split not found"));
+                .orElseThrow(() -> new OrderException("Order split not found" + exchangeOrderId));
 
         if (!orderSplit.isExecuted() && updateOrderSplitStatus(orderSplit)) {
             updateOrderStatusIfNeeded(orderSplit.getOrder().getId(), Optional.empty());
@@ -122,6 +123,16 @@ public class OrderServiceImpl implements OrderService {
         orderSplit.setExecuted(isFullyExecuted);
 
         orderSplitRepository.save(orderSplit);
+
+
+        if (isFullyExecuted) {
+            redisServiceImpl.removeFromSet(
+                    String.format("pending-orders:%s", orderSplit.getExchange().getSlug()),
+                    orderSplit.getExchangeOrderId()
+            );
+        }
+
+        executionRepository.deleteAll();
 
         executionRepository.saveAll(
                 updatedOrderDto.executions()

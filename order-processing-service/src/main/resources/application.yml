@@ -23,6 +23,14 @@ spring:
       port: 6379
       password: admin
 
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: root
+    password: admin
+    pending-orders-queue: pending-orders-queue
+    virtual-host: /
+
 eureka:
   client:
     service-url:

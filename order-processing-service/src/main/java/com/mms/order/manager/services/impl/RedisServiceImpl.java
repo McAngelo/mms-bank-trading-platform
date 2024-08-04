@@ -24,6 +24,16 @@ public class RedisServiceImpl implements RedisService {
         return redisTemplate.opsForList().range(key, 0, -1);
     }
 
+    @Override
+    public void addToSet(String key, String value) {
+        redisTemplate.opsForSet().add(key, value);
+    }
+
+    @Override
+    public void removeFromSet(String key, String value) {
+        redisTemplate.opsForSet().remove(key, value);
+    }
+
     public void setValue(String key, String value) {
         redisTemplate.opsForValue().set(key, value);
     }

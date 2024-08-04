@@ -4,5 +4,10 @@ import java.util.List;
 
 public interface RedisService {
     String getValue(String key);
+
     List<String> getListValues(String key);
+
+    void  removeFromSet(String key, String value);
+
+    void addToSet(String key, String value);
 }

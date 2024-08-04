@@ -2,8 +2,10 @@ package com.mms.market_data_service.controllers;
 
 import com.mms.market_data_service.helper.ApiResponse;
 import com.mms.market_data_service.models.Order;
+import com.mms.market_data_service.publishers.OrderPublisher;
 import com.mms.market_data_service.services.interfaces.MarketExchangeService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -11,14 +13,12 @@ import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("api/v1/exchange-connection")
 @RestController
+@RequiredArgsConstructor
 public class ExchangeController {
     private static final Logger logger = LoggerFactory.getLogger(ExchangeController.class);
-
     private final MarketExchangeService marketExchangeService;
+    private final OrderPublisher orderPublisher;
 
-    public ExchangeController(MarketExchangeService marketExchangeService) {
-        this.marketExchangeService = marketExchangeService;
-    }
 
     @PostMapping("subscribe/{exchangeId}")
     public ResponseEntity<ApiResponse<String>> subscribe(@PathVariable("exchangeId") String exchangeId, @Valid String callBackUrl) {
@@ -47,5 +47,13 @@ public class ExchangeController {
         var response = marketExchangeService.callbackUrl(order);
         logger.info("callbackUrl response: {}", response);
         return ResponseEntity.status(response.status()).body(response);
+    }
+
+    @PostMapping("callback-url/{exchangeSlug}")
+    public void handleCallbackFromExchange(
+            @PathVariable("exchangeSlug") String exchangeSlug,
+            @RequestBody @Valid Order order
+    ) {
+        orderPublisher.publishToOrderService(order.getOrderID().toString(), exchangeSlug);
     }
 }

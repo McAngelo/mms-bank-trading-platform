@@ -42,7 +42,7 @@ dependencies {
 	implementation 'org.glassfish.tyrus:tyrus-container-grizzly-client:1.17'
 	implementation group: 'io.github.cdimascio', name: 'dotenv-java', version: '3.0.0'
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
-//	implementation group: 'org.springframework.amqp', name: 'spring-rabbit', version: '2.4.11'
+	implementation group: 'org.springframework.amqp', name: 'spring-rabbit', version: '3.1.6'
 	compileOnly 'org.projectlombok:lombok'
 	compileOnly 'javax:javaee-api:8.0.1'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'

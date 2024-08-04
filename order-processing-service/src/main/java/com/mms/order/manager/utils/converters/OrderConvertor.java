@@ -45,6 +45,20 @@ public class OrderConvertor implements Converter<CreateOrderDto, Order> {
         return orderBuilder.build();
     }
 
+    public CreateExchangeOrderDto convert(OrderSplit orderSplit) {
+        CreateExchangeOrderDto.CreateExchangeOrderDtoBuilder exchangeOrderDtoBuilder = CreateExchangeOrderDto.builder()
+                .product(orderSplit.getOrder().getTicker())
+                .quantity(orderSplit.getQuantity())
+                .side(orderSplit.getOrder().getSide().toString())
+                .type(orderSplit.getOrder().getType().toString());
+
+        if (OrderType.LIMIT == orderSplit.getOrder().getType()) {
+            exchangeOrderDtoBuilder.price(orderSplit.getOrder().getPrice());
+        }
+
+        return exchangeOrderDtoBuilder.build();
+    }
+
     public CreateExchangeOrderDto convert(Order order) {
         CreateExchangeOrderDto.CreateExchangeOrderDtoBuilder exchangeOrderDtoBuilder = CreateExchangeOrderDto.builder()
                 .product(order.getTicker())

@@ -14,10 +14,10 @@ spring:
           predicates:
             - Path=/order-service/v3/api-docs
             - Method=GET
-        - id: user-service-route
-          uri: lb://user-service
+        - id: market-data-route
+          uri: lb://market.data.service
           predicates:
-            - Path=/user-service/v3/api-docs
+            - Path=/market-data-service/v3/api-docs
             - Method=GET
       discovery:
         locator:
@@ -41,8 +41,8 @@ springdoc:
     urls:
       - url: /order-service/v3/api-docs
         name: Order Service
-      - url: /user-service-/v3/api-docs
-        name: User Service
+      - url: /market-data-service-/v3/api-docs
+        name: Market Data Service
 
 jwt:
   secret: SECRET

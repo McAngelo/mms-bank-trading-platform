@@ -1,14 +1,7 @@
 package com.mms.user.service.model;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -54,9 +47,9 @@ public class User implements UserDetails, Principal {
     @ManyToMany(fetch = EAGER)
     private List<Role> roles;
     @OneToMany(mappedBy = "owner")
-    private List<Book> books;
-    @OneToMany(mappedBy = "user")
-    private List<BookTransactionHistory> histories;
+    private List<Portfolio> portfolios;
+    @OneToMany(mappedBy = "owner")
+    private List<Wallet> wallet;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

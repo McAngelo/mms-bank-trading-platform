@@ -1,4 +1,14 @@
 services:
+  postgres:
+    image: postgres
+    ports:
+      - "54323:5433"
+    restart: always
+    environment:
+      POSTGRES_USERNAME: postgres
+      POSTGRES_PASSWORD: mms-test-local
+      POSTGRES_DB: market-data-db
+
   redis:
     image: redis:latest
     ports:
@@ -12,12 +22,23 @@ services:
       - REDIS_DATABASES=market-data
     healthcheck:
       test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
+
   rabbitmq:
     container_name: rabbitmq
-    image: rabbitmq:4.0-rc-alpine
+    image: rabbitmq:3.13-management
     ports:
       - "5672:5672"
-      - "15672:15672"
+      -  "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: root
+      RABBITMQ_DEFAULT_PASS: admin
+  ngrok:
+    image: ngrok/ngrok:latest
+    env_file:
+      - .env
+    command: http --domain=jennet-genuine-sunbeam.ngrok-free.app host.docker.internal:8082
+    ports:
+      - "4040:4040" # For accessing ngrok web interface
 
 volumes:
   redis_data:

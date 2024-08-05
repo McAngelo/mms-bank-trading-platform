@@ -1,5 +1,6 @@
 package com.mms.user.service.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,13 +16,14 @@ import lombok.experimental.SuperBuilder;
 @Entity
 public class Portfolio extends BaseEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Getter
     private String portfolioName;
     private PortfolioType portfolioType;
     @ManyToOne
     @JoinColumn(name = "userId")
+    @JsonBackReference
     private User owner;
     private  Status status;
 

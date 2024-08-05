@@ -91,7 +91,7 @@ public class MarketDataWebSocketHandler extends TextWebSocketHandler {
             }
         };
 
-        scheduler.scheduleAtFixedRate(task, 0, 10, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(task, 0, 5, TimeUnit.SECONDS);
 
         log.info("Sent products data {} to WebSocket at {}", productsData, formatDateTime);
     }

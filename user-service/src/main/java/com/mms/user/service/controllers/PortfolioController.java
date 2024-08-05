@@ -1,21 +1,13 @@
 package com.mms.user.service.controllers;
 
-import com.mms.user.service.dtos.BookRequestDto;
-import com.mms.user.service.dtos.BookResponseDto;
-import com.mms.user.service.dtos.BorrowedBookResponseDto;
 import com.mms.user.service.dtos.PortfolioRequestDTO;
-import com.mms.user.service.helper.PageResponse;
-import com.mms.user.service.model.Portfolio;
-import com.mms.user.service.services.BookService;
 import com.mms.user.service.services.PortfolioService;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("api/v1/portfolio")

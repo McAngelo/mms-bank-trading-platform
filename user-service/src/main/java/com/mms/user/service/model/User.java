@@ -1,14 +1,9 @@
 package com.mms.user.service.model;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -48,15 +43,18 @@ public class User implements UserDetails, Principal {
     private String fullName;
     @Column(unique = true)
     private String email;
+    @JsonIgnore
     private String password;
     private boolean accountLocked;
     private boolean enabled;
     @ManyToMany(fetch = EAGER)
     private List<Role> roles;
-    @OneToMany(mappedBy = "owner")
-    private List<Book> books;
-    @OneToMany(mappedBy = "user")
-    private List<BookTransactionHistory> histories;
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<Portfolio> portfolios;
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<Wallet> wallet;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

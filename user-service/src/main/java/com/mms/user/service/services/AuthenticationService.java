@@ -5,6 +5,7 @@ import com.mms.user.service.helper.ApiResponseUtil;
 import com.mms.user.service.helper.EmailTemplateName;
 import com.mms.user.service.helper.IApiResponse;
 import com.mms.user.service.model.*;
+import com.mms.user.service.model.mappers.UserMapper;
 import com.mms.user.service.repositories.*;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +36,7 @@ public class AuthenticationService {
     private final EmailService emailService;
     private final TokenRepository tokenRepository;
     private final WalletRepository walletRepository;
+    private final UserMapper userMapper;
 
     @Value("${application.mailing.frontend.activation-url}")
     private String activationUrl;
@@ -67,8 +69,19 @@ public class AuthenticationService {
         claims.put("fullName", user.getFullName());
 
         RegistrationResponseDto authUser = new RegistrationResponseDto();
-        authUser.name = user.getFullName();
+        authUser.userId = user.getId();
+        authUser.fullName = user.getFullName();
         authUser.email = user.getEmail();
+        authUser.accountLocked = user.isAccountLocked();
+        authUser.enabled = user.isEnabled();
+        authUser.authorities = user.getAuthorities().toString();
+        authUser.roles = user.getRoles();
+        authUser.portfolios = user.getPortfolios();
+        authUser.wallet = user.getWallet();
+        authUser.createdDate = user.getCreatedDate();
+        authUser.lastModifiedDate = user.getLastModifiedDate();
+
+
 
         var jwtToken = jwtService.generateToken(claims, (User) auth.getPrincipal());
         var response = AuthenticationResponseDto.builder()

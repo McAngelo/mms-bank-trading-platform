@@ -1,19 +1,11 @@
 package com.mms.user.service.services;
 
-import com.mms.user.service.dtos.AuthenticationRequestDto;
-import com.mms.user.service.dtos.AuthenticationResponseDto;
-import com.mms.user.service.dtos.RegistrationRequestDto;
-import com.mms.user.service.dtos.RegistrationResponseDto;
+import com.mms.user.service.dtos.*;
 import com.mms.user.service.helper.ApiResponseUtil;
 import com.mms.user.service.helper.EmailTemplateName;
 import com.mms.user.service.helper.IApiResponse;
-import com.mms.user.service.model.Portfolio;
-import com.mms.user.service.model.Token;
-import com.mms.user.service.model.User;
-import com.mms.user.service.repositories.PortfolioRepository;
-import com.mms.user.service.repositories.RoleRepository;
-import com.mms.user.service.repositories.TokenRepository;
-import com.mms.user.service.repositories.UserRepository;
+import com.mms.user.service.model.*;
+import com.mms.user.service.repositories.*;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.sound.sampled.Port;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -41,27 +34,24 @@ public class AuthenticationService {
     private final RoleRepository roleRepository;
     private final EmailService emailService;
     private final TokenRepository tokenRepository;
+    private final WalletRepository walletRepository;
 
     @Value("${application.mailing.frontend.activation-url}")
     private String activationUrl;
 
     public IApiResponse<?> register(RegistrationRequestDto request) throws MessagingException {
-        var userRole = roleRepository.findByName("USER")
-                .orElseThrow(() -> new IllegalStateException("ROLE USER was not initiated"));
-        var user = User.builder()
-                .fullName(request.getFullName())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .accountLocked(false)
-                .enabled(true)
-                .createdDate(LocalDateTime.now())
-                .roles(List.of(userRole))
-                .build();
-        var responseRaw = userRepository.save(user);
 
-        //TODO: pass the user id to both the portfolio and wallet srevices to create accounts for the user
+        Role userRole = findRole("TRADER");
+        Wallet wallet = createWallet();
+        Portfolio portfolio = createPortfolio();
 
-        return ApiResponseUtil.toOkApiResponse(responseRaw, "Successful");
+        User user = buildUser(request, userRole, wallet, portfolio);
+        User savedUser = saveUser(user);
+
+        updateWalletOwner(wallet, savedUser);
+        updatePortfolioOwner(portfolio, savedUser);
+
+        return ApiResponseUtil.toOkApiResponse(savedUser, "Successful");
     }
 
     public IApiResponse<?> authenticate(AuthenticationRequestDto request) {
@@ -146,5 +136,58 @@ public class AuthenticationService {
         }
 
         return codeBuilder.toString();
+    }
+
+    private Role findRole(String roleName) {
+        return roleRepository.findByName(roleName)
+                .orElseThrow(() -> new IllegalStateException("ROLE " + roleName + " was not initiated"));
+    }
+
+    private Wallet createWallet() {
+        Wallet wallet = new Wallet();
+        wallet.setBalance(0);
+        wallet.setStatus(Wallet.Status.ACTIVE);
+        wallet.setCreatedBy(1);
+        return walletRepository.save(wallet);
+    }
+
+    private Portfolio createPortfolio() {
+        Portfolio portfolio = new Portfolio();
+        portfolio.setPortfolioType(Portfolio.PortfolioType.DEFAULT);
+        portfolio.setPortfolioName("Basic Portfolio");
+        portfolio.setStatus(Portfolio.Status.ACTIVE);
+        portfolio.setCreatedBy(1);
+        return portfolioRepository.save(portfolio);
+    }
+
+    private User buildUser(RegistrationRequestDto request, Role userRole, Wallet wallet, Portfolio portfolio) {
+        User user = User.builder()
+                .fullName(request.getFullName())
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .accountLocked(false)
+                .enabled(true)
+                .createdDate(LocalDateTime.now())
+                .roles(List.of(userRole))
+                .portfolios(List.of(portfolio))
+                .wallet(List.of(wallet))
+                .build();
+        return user;
+    }
+
+    private User saveUser(User user) {
+        return userRepository.save(user);
+    }
+
+    private void updateWalletOwner(Wallet wallet, User user) {
+        wallet.setOwner(user);
+        wallet.setCreatedBy(user.getId());
+        walletRepository.saveAndFlush(wallet);
+    }
+
+    private void updatePortfolioOwner(Portfolio portfolio, User user) {
+        portfolio.setOwner(user);
+        portfolio.setCreatedBy(user.getId());
+        portfolioRepository.saveAndFlush(portfolio);
     }
 }

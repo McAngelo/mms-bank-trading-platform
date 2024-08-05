@@ -1,6 +1,8 @@
 package com.mms.user.service.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -41,14 +43,17 @@ public class User implements UserDetails, Principal {
     private String fullName;
     @Column(unique = true)
     private String email;
+    @JsonIgnore
     private String password;
     private boolean accountLocked;
     private boolean enabled;
     @ManyToMany(fetch = EAGER)
     private List<Role> roles;
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Portfolio> portfolios;
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Wallet> wallet;
 
     @CreatedDate

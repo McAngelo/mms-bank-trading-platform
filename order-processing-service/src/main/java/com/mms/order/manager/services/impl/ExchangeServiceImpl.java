@@ -12,12 +12,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class ExchangeServiceImpl {
     private final RestTemplate restTemplate;
+    private final RedisServiceImpl redisService;
     private final RedisTemplate<String, Serializable> redisTemplate;
 
     public String executeOrder(CreateExchangeOrderDto exchangeOrderDto, Exchange exchange) throws ExchangeException {
@@ -31,7 +33,8 @@ public class ExchangeServiceImpl {
 
         log.info("Successfully place order on exchange");
 
-        String exchangeOrderId = response.getBody();
+        String exchangeOrderId = Objects.requireNonNull(response.getBody()).replaceAll("^\"|\"$", "");
+
         storeOrderInCache(exchangeOrderId, exchange.getSlug());
 
         return exchangeOrderId;
@@ -59,10 +62,8 @@ public class ExchangeServiceImpl {
     }
 
     private void storeOrderInCache(String exchangeOrderId, String exchangeSlug) {
-        redisTemplate.opsForList().rightPush(
-                String.format("pending-orders:%s", exchangeSlug),
-                exchangeOrderId
-        );
+        redisService.addToSet(String.format("pending-orders:%s", exchangeSlug), exchangeOrderId);
+        log.info("Added pending order to redis cache");
     }
 
     private String buildExchangeUrl(Exchange exchange) {

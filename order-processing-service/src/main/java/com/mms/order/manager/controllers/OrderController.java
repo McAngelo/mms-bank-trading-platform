@@ -31,7 +31,7 @@ public class OrderController {
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<ApiResponse> getOrderById(@PathVariable("orderId") long orderId) throws ExchangeException, OrderException, MarketDataException {
+    public ResponseEntity<ApiResponse> getOrderById(@PathVariable("orderId") long orderId) throws OrderException {
         GetOrderDto order = orderService.getOrder(orderId);
 
         return ResponseEntity.ok(ApiResponse.builder()
@@ -44,6 +44,16 @@ public class OrderController {
     @PatchMapping("/{orderId}")
     public ResponseEntity<ApiResponse> updateOrderById(@PathVariable("orderId") long orderId) throws OrderException, ExchangeException {
         orderService.updateOrderStatus(orderId);
+
+        return ResponseEntity.ok(ApiResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message("Successfully updated order")
+                .build());
+    }
+
+    @PatchMapping("/eoi/{exchangeOrderId}")
+    public ResponseEntity<ApiResponse> updateOrderByexchangeOrderId(@PathVariable("exchangeOrderId") String exchangeOrderId) throws OrderException, ExchangeException {
+        orderService.updateOrderStatus(exchangeOrderId);
 
         return ResponseEntity.ok(ApiResponse.builder()
                 .status(HttpStatus.OK.value())

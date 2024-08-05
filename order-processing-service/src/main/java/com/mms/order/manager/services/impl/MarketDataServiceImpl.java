@@ -61,7 +61,7 @@ public class MarketDataServiceImpl implements MarketDataService {
     }
 
     @Override
-    public List<OpenOrderDto> getOpenOrdersFromOrderBook() {
+    public List<OpenOrderDto> getOpenOrdersFromOrderBook(String exchangeSlug, String productTicker) {
         return List.of();
     }
 }

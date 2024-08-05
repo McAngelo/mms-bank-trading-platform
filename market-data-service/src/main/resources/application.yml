@@ -1,3 +1,6 @@
+server:
+  port: 8082
+
 spring:
   application:
     name: market.data.service
@@ -15,28 +18,38 @@ spring:
       - AAPL
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration,org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+
   data:
     redis:
       host: redis
       port: 6379
       password: admin
+
   rabbitmq:
     host: localhost
     port: 5672
-    username: admin
-    password: secret
+    username: root
+    password: admin
+    queue: pending-orders-queue
+    exchange: main-exchange
+    routing-key: order.routing.key
     virtual-host: /
     template:
       retry:
         enabled: true
         initial-interval: "2s"
 
-server:
-  port: 8082
+openapi:
+  service:
+    title: market-data-service doc
+    version: 1.0.0
+    url: http://localhost:8222
 
 springdoc:
+  api-docs:
+    path: /market-data-service/v3/api-docs
   swagger-ui:
-    path: /doc
+    path: /market-data-service/swagger-ui.html
 
 external:
   exchange1:

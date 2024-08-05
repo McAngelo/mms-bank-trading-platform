@@ -14,6 +14,6 @@ public interface MarketDataService {
 
     Map<String, ProductMarketData> getProductDataFromAllExchanges(String product);
 
-    List<OpenOrderDto>  getOpenOrdersFromOrderBook();
+    List<OpenOrderDto>  getOpenOrdersFromOrderBook(String exchangeSlug, String productTicker);
 }
 

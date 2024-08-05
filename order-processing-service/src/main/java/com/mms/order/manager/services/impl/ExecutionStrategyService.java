@@ -12,27 +12,12 @@ import org.springframework.stereotype.Component;
 public class ExecutionStrategyService {
     private final SingleOrderStrategyService singleOrderStrategyService;
     private final BestPriceStrategyServiceImpl bestPriceSplitStrategyService;
-    private final HoldStrategyServiceImpl holdSplitExecutionStrategyService;
 
     public void executeOrder(Order order, CreateOrderDto orderDto) throws ExchangeException {
-        if (isSingleExchangeOrder(order.getExecutionMode())) {
+        if (ExecutionMode.SINGLE_EXCHANGE == order.getExecutionMode()) {
             singleOrderStrategyService.executeOrder(order, orderDto.preferredExchangeSlug());
-        }
-
-        if (shouldHoldOrder()) {
-            bestPriceSplitStrategyService.executeOrder(order);
         } else {
-            holdSplitExecutionStrategyService.executeOrder(order);
+            bestPriceSplitStrategyService.executeOrder(order);
         }
-
     }
-
-    private boolean shouldHoldOrder() {
-        return false;
-    }
-
-    private boolean isSingleExchangeOrder(ExecutionMode executionMode) {
-        return ExecutionMode.SINGLE_EXCHANGE == executionMode;
-    }
-
 }

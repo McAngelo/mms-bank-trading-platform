@@ -19,6 +19,11 @@ spring:
           predicates:
             - Path=/market-data-service/v3/api-docs
             - Method=GET
+        - id: reporting-service
+          uri: lb://reporting.service
+          predicates:
+            - Path=/reporting-service/v3/api-docs
+            - Method=GET
         - id: user-service-route
           uri: lb://user.service
           predicates:
@@ -53,6 +58,8 @@ springdoc:
         name: Order Service
       - url: /market-data-service/v3/api-docs
         name: Market Data Service
+      - url: /reporting-service/v3/api-docs
+        name: Reporting Service
       - url: /user-service/v3/api-docs
         name: User Service
       - url: /reporting-service/v3/api-docs

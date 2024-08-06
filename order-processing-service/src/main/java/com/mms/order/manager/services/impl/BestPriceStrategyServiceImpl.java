@@ -1,11 +1,17 @@
 package com.mms.order.manager.services.impl;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mms.order.manager.dtos.cache.OrderBookSummary;
 import com.mms.order.manager.dtos.internal.CreateExchangeOrderDto;
 import com.mms.order.manager.dtos.internal.OpenOrderDto;
 import com.mms.order.manager.dtos.internal.ProductMarketData;
 import com.mms.order.manager.enums.OrderSide;
 import com.mms.order.manager.enums.OrderType;
 import com.mms.order.manager.exceptions.ExchangeException;
+import com.mms.order.manager.helpers.JsonHelper;
 import com.mms.order.manager.models.Exchange;
 import com.mms.order.manager.models.Order;
 import com.mms.order.manager.models.OrderSplit;
@@ -13,12 +19,14 @@ import com.mms.order.manager.repositories.ExchangeRepository;
 import com.mms.order.manager.repositories.OrderSplitRepository;
 import com.mms.order.manager.services.interfaces.MarketDataService;
 import com.mms.order.manager.services.interfaces.OrderSplittingStrategyService;
+import com.mms.order.manager.services.interfaces.RedisService;
 import com.mms.order.manager.utils.converters.OrderConvertor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -31,6 +39,7 @@ public class BestPriceStrategyServiceImpl implements OrderSplittingStrategyServi
     private final MarketDataService marketDataService;
     private final ExchangeRepository exchangeRepository;
     private final OrderConvertor orderConvertor;
+    private final RedisService redisService;
 
     @Override
     public void executeOrder(Order order) throws ExchangeException {
@@ -51,60 +60,85 @@ public class BestPriceStrategyServiceImpl implements OrderSplittingStrategyServi
         String bestExchangeSlug = sortedProductDataPairs.getFirst().getLeft();
         String secondBestExchangeSlug = sortedProductDataPairs.get(1).getKey();
 
-        List<OpenOrderDto> bestExchangeOpenOrders = marketDataService.getOpenOrdersFromOrderBook(bestExchangeSlug, ticker)
-                .stream()
-                .filter(openOrder -> !orderSide.toString().equalsIgnoreCase(openOrder.side()))
-                .toList();
+        try {
+            OrderBookSummary primaryExchangeOrderBookSummary = JsonHelper.fromJson(
+                    (String) redisService.getFromHash(String.format("orderbook:%s", bestExchangeSlug), ticker),
+                    OrderBookSummary.class
+            );
 
-        List<OpenOrderDto> secondBestExchangeOpenOrders = marketDataService.getOpenOrdersFromOrderBook(secondBestExchangeSlug, ticker)
-                .stream()
-                .filter(openOrder -> !orderSide.toString().equalsIgnoreCase(openOrder.side()))
-                .toList();
+            OrderBookSummary secondaryExchangeOrderBookSummary = JsonHelper.fromJson(
+                    (String) redisService.getFromHash(String.format("orderbook:%s", secondBestExchangeSlug), ticker),
+                    OrderBookSummary.class
+            );
 
-        if (bestExchangeOpenOrders.isEmpty() && secondBestExchangeOpenOrders.isEmpty()) {
-            singleOrderStrategyService.executeOrder(order, bestExchangeSlug);
-            return;
-        } else if (secondBestExchangeOpenOrders.isEmpty()) {
-            singleOrderStrategyService.executeOrder(order, bestExchangeSlug);
-            return;
+            processOrderExecution(order, orderSide, primaryExchangeOrderBookSummary, secondaryExchangeOrderBookSummary, sortedProductDataPairs, bestExchangeSlug);
+        } catch (JsonProcessingException e) {
+            log.error(e.toString());
         }
+    }
 
-        splitOrdersBasedOnOpenOrders(order, bestExchangeOpenOrders, sortedProductDataPairs);
+    private void processOrderExecution(
+            Order order, OrderSide orderSide,
+            OrderBookSummary primarySummary, OrderBookSummary secondarySummary,
+            List<Pair<String, ProductMarketData>> sortedProductDataPairs,
+            String bestExchangeSlug) throws ExchangeException {
+
+        long primaryOppositeQuantity = getOppositeOrderQuantity(orderSide, primarySummary);
+        long secondaryOppositeQuantity = getOppositeOrderQuantity(orderSide, secondarySummary);
+
+        if (primaryOppositeQuantity == 0 && secondaryOppositeQuantity == 0) {
+            singleOrderStrategyService.executeOrder(order, bestExchangeSlug);
+        } else if (primaryOppositeQuantity > 0 && secondaryOppositeQuantity == 0) {
+            singleOrderStrategyService.executeOrder(order, bestExchangeSlug);
+        } else if (primaryOppositeQuantity == 0 && secondaryOppositeQuantity > 0) {
+            splitOrdersBasedOnOpenOrders(order, secondarySummary, sortedProductDataPairs);
+        } else {
+            splitOrdersBasedOnOpenOrders(order, primarySummary, sortedProductDataPairs);
+        }
+    }
+    private long getOppositeOrderQuantity(OrderSide orderSide, OrderBookSummary orderBookSummary) {
+        if (OrderSide.BUY == orderSide) {
+            return orderBookSummary.getTotalSellQuantity();
+        } else {
+            return orderBookSummary.getTotalBuyQuantity();
+        }
     }
 
     private void splitOrdersBasedOnOpenOrders(
             Order order,
-            List<OpenOrderDto> bestExchangeOpenOrders,
+            OrderBookSummary orderBookSummary,
             List<Pair<String, ProductMarketData>> sortedProductDataPairs
     ) throws ExchangeException {
 
-        int remainingQuantity = order.getQuantity();
-        int availableQuantity = calculateAvailableQuantity(bestExchangeOpenOrders, order.getTicker(), order.getSide());
-
+        int originalQuantity = order.getQuantity();
+        int remainingQuantity = originalQuantity;
+        int availableQuantity = (int) getOppositeOrderQuantity(order.getSide(), orderBookSummary);
 
         for (Pair<String, ProductMarketData> exchangePair : sortedProductDataPairs) {
+            if (remainingQuantity <= 0) break;
+
             Exchange exchange = getExchange(exchangePair.getLeft());
+
+            int orderSplitQuantity = (remainingQuantity == originalQuantity)
+                    ? (int) Math.round(originalQuantity * 0.80)
+                    : remainingQuantity;
+
+            int quantityToOrder = Math.min(orderSplitQuantity, availableQuantity);
 
             OrderSplit orderSplit = OrderSplit.builder()
                     .order(order)
-                    .quantity(remainingQuantity)
+                    .quantity(quantityToOrder)
                     .isExecuted(false)
                     .exchange(exchange)
                     .build();
 
-            exchangeService.executeOrder(orderConvertor.convert(orderSplit), exchange);
+            String exchangeOrderId = exchangeService.executeOrder(orderConvertor.convert(orderSplit), exchange);
+            orderSplit.setExchangeOrderId(exchangeOrderId);
+
             orderSplitRepository.save(orderSplit);
-            remainingQuantity -= orderSplit.getQuantity();
+            remainingQuantity -= quantityToOrder;
+            availableQuantity -= quantityToOrder;
         }
-    }
-
-
-    private int calculateAvailableQuantity(List<OpenOrderDto> openOrders, String ticker, OrderSide orderSide) {
-        return openOrders.stream()
-                .filter(openOrder -> !orderSide.toString().equalsIgnoreCase(openOrder.side())
-                        && openOrder.product().equalsIgnoreCase(ticker))
-                .mapToInt(OpenOrderDto::quantity)
-                .sum();
     }
 
     private Exchange getExchange(String exchangeSlug) throws ExchangeException {

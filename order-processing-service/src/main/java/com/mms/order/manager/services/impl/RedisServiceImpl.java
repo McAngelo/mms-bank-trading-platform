@@ -1,12 +1,12 @@
 package com.mms.order.manager.services.impl;
 
+import com.fasterxml.jackson.core.JsonParser;
 import com.mms.order.manager.services.interfaces.RedisService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -32,6 +32,10 @@ public class RedisServiceImpl implements RedisService {
     @Override
     public void removeFromSet(String key, String value) {
         redisTemplate.opsForSet().remove(key, value);
+    }
+
+    public Object getFromHash(String key, String hashKey) {
+        return redisTemplate.opsForHash().get(key, hashKey);
     }
 
     public void setValue(String key, String value) {

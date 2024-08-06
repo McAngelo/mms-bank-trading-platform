@@ -25,7 +25,7 @@ public class Portfolio {
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
+    private User owner;
 
     //private boolean isDefault;
     private Portfolio.Status status;

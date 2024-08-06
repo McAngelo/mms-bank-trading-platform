@@ -54,7 +54,7 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public Optional<BigDecimal> getBalanceByUserId(long userId) {
+    public Optional<BigDecimal> getBalanceByOwnerId(long userId) {
         Optional<Wallet> optionalWallet =  walletRepository.findByOwnerId(userId);
 
         if (optionalWallet.isEmpty()) {

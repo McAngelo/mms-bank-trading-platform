@@ -35,7 +35,7 @@ public class OrderValidator {
     }
 
     private void validateFunds(CreateOrderDto orderDto) throws OrderException, MarketDataException {
-        BigDecimal walletBalance = walletService.getBalanceByUserId(orderDto.userId())
+        BigDecimal walletBalance = walletService.getBalanceByOwnerId(orderDto.userId())
                 .orElseThrow(() -> new OrderException("User wallet not found"));
 
         ProductMarketData productData = marketDataService.getProductData(orderDto.preferredExchangeSlug(), orderDto.ticker());

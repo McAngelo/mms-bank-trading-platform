@@ -19,7 +19,8 @@ public class Wallet extends BaseEntity {
     private Integer id;
 
     @JsonIgnore
-    @OneToOne
+    //@OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User owner;
 

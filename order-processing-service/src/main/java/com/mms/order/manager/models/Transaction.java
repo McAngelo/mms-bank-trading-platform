@@ -23,6 +23,7 @@ public class Transaction {
     @ManyToOne
     @JoinColumn(name = "walletId", insertable = false, updatable = false)
     private Wallet wallet;
+    private long walletId;
 
     private BigDecimal amount;
 

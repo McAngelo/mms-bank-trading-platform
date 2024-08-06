@@ -1,12 +1,6 @@
 server:
   port: 8222
 
-#  spring.cloud.gateway.globalcors.add-to-simple-url-handler-mapping = true
-#  spring.cloud.gateway.globalcors.cors-configurations.[/**].allowedOrigins=*
-#  spring.cloud.gateway.globalcors.cors-configurations.[/**].allowedMethods=GET,POST,PUT,PATCH,DELETE
-#  spring.cloud.gateway.globalcors.cors-configurations.[/**].allowedHeaders=*
-#  spring.cloud.gateway.globalcors.cors-configurations.'[/**]'.allow-credentials=true
-
 spring:
   application:
     name: api-gateway

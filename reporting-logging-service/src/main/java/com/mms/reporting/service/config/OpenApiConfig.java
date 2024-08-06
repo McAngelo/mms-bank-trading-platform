@@ -1,4 +1,4 @@
-package com.mms.user.service.config;
+package com.mms.reporting.service.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
@@ -18,7 +18,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
                         url = "https://mms.com"
                 ),
                 description = "OpenApi documentation for MMS Trading Platform",
-                title = "MMS User Service API Docs",
+                title = "MMS Reporting Service API Docs",
                 version = "1.0",
                 license = @License(
                         name = "Licence name",
@@ -29,7 +29,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
         servers = {
                 @Server(
                         description = "Local ENV",
-                        url = "http://localhost:8083/"
+                        url = "http://localhost:8085/"
                 ),
                 @Server(
                         description = "PROD ENV",

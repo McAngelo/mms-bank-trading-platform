@@ -25,14 +25,14 @@ public class PortfolioServiceImpl implements PortfolioService {
 
     @Override
     public void createPortfolio(CreatePortfolioDto portfolioDto) throws PortfolioException {
-        Optional<User> userOptional = userRepository.findById(portfolioDto.userId());
+        Optional<User> userOptional = userRepository.findById(portfolioDto.ownerId());
 
         if (userOptional.isEmpty()) {
             throw new PortfolioException("User does not exist, could not create portfolio");
         }
 
         var portfolio = Portfolio.builder()
-                .user(userOptional.get())
+                .owner(userOptional.get())
                 .portfolioName(portfolioDto.name())
                 .createdAt(LocalDateTime.now())
                 .build();
@@ -46,7 +46,7 @@ public class PortfolioServiceImpl implements PortfolioService {
     }
 
     public List<PortfolioDto> getPortfolios(Long userId) {
-        var portfolios = portfolioRepository.findByUserId(userId);
+        var portfolios = portfolioRepository.findByOwnerId(userId);
 
         return portfolios.stream()
                 .map(p -> new PortfolioDto(p.getId(), p.getPortfolioName()))

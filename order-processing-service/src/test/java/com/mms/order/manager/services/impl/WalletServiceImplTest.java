@@ -131,7 +131,7 @@ class WalletServiceImplTest {
 
         // WHEN
         when(walletRepository.findByOwnerId(anyLong())).thenReturn(Optional.of(wallet));
-        var optionalBalance = walletService.getBalanceByUserId(1L);
+        var optionalBalance = walletService.getBalanceByOwnerId(1L);
 
         // THEN
         assertTrue(optionalBalance.isPresent(), "The balance should be present");
@@ -146,7 +146,7 @@ class WalletServiceImplTest {
         // WHEN
         when(walletRepository.findByOwnerId(anyLong())).thenReturn(Optional.empty());
 
-        var optionalBalance = walletService.getBalanceByUserId(1L);
+        var optionalBalance = walletService.getBalanceByOwnerId(1L);
 
         // THEN
         assertTrue(optionalBalance.isEmpty(), "The balance should be empty");
@@ -164,7 +164,7 @@ class WalletServiceImplTest {
 
         // WHEN
         when(walletRepository.findByOwnerId(anyLong())).thenReturn(Optional.of(wallet));
-        var optionalBalance = walletService.getBalanceByUserId(1L);
+        var optionalBalance = walletService.getBalanceByOwnerId(1L);
 
         // THEN
         assertTrue(optionalBalance.isEmpty(), "The balance should be empty");

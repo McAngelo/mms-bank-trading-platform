@@ -1,3 +1,4 @@
+/*
 package com.mms.order.manager.helpers;
 
 import com.mms.order.manager.models.*;
@@ -79,3 +80,4 @@ public class Seeder implements ApplicationRunner {
 //        exchangeRepository.save(exchange2);
     }
 }
+*/

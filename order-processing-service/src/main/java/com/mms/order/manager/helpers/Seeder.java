@@ -62,10 +62,18 @@ public class Seeder implements ApplicationRunner {
                 .isActive(true)
                 .build();
 
+        var exchange2 = Exchange.builder()
+                .name("mallon exchange 2")
+                .slug("EXCHANGE2")
+                .baseUrl("https://exchange2.matraining.com")
+                .privateKey("2f458160-39ab-439f-bf77-ad7858e9c290")
+                .isActive(true)
+                .build();
+
 //        roleRepository.save(role);
 //        userRepository.save(user);
 //        walletRepository.save(wallet);
 //        portfolioRepository.save(portfolio);
-//        exchangeRepository.save(exchange);
+//        exchangeRepository.save(exchange2);
     }
 }

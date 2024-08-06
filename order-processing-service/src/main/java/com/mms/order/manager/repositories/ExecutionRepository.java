@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface ExecutionRepository extends JpaRepository<Execution, Long> {
     List<Execution> findAllByOrderSplitId(long id);
+
+    void deleteAllByOrderSplitId(long id);
 }

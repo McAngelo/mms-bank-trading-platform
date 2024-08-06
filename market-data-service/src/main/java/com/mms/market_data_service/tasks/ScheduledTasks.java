@@ -1,10 +1,10 @@
 package com.mms.market_data_service.tasks;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mms.market_data_service.dtos.cache.OrderBookSummary;
 import com.mms.market_data_service.dtos.responses.OrderBookDto;
 import com.mms.market_data_service.dtos.responses.ProductData;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mms.market_data_service.enums.OrderSide;
 import com.mms.market_data_service.enums.OrderType;
 import com.mms.market_data_service.exceptions.ExchangeException;
@@ -13,7 +13,6 @@ import com.mms.market_data_service.services.interfaces.RedisService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 

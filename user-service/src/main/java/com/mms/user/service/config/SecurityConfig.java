@@ -87,7 +87,6 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .securityMatcher("/api/**")
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req ->
@@ -131,6 +130,6 @@ public class SecurityConfig {
 
         source.registerCorsConfiguration("/**",configuration);
 
-        return new UrlBasedCorsConfigurationSource();
+        return source;
     }
 }

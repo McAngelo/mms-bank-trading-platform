@@ -17,6 +17,9 @@ bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
 
+## mms frontend
+mms-frontend/node_modules/*
+
 ### IntelliJ IDEA ###
 .idea
 *.iws

@@ -1,0 +1,133 @@
+<div class="card mb-5 mb-xl-10">
+  <!-- <div
+      class="card-header border-0 cursor-pointer"
+      role="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#kt_account_signin_method"
+    >
+    </div> -->
+  <div id="kt_account_signin_method" class="collapse show">
+    <div class="card-body border-top p-9">
+      <ng-container>
+        <div class="d-flex flex-wrap align-items-center mb-10">
+          <div id="kt_signin_password_edit" class="flex-row-fluid false">
+            <form id="kt_signin_change_password" class="form" novalidate="">
+              <div class="row mb-1">
+                <div class="col-lg-2">
+                  <div class="fv-row mb-0">
+                    <label for="currentpassword" class="form-label fs-6 fw-bolder mb-3">From date</label><input
+                      type="date" class="form-control form-control-lg form-control-solid" id="currentpassword"
+                      name="currentPassword" value="20/03/2024" />
+                  </div>
+                </div>
+                <div class="col-lg-2">
+                  <div class="fv-row mb-0">
+                    <label for="currentpassword" class="form-label fs-6 fw-bolder mb-3">To date</label><input
+                      type="date" class="form-control form-control-lg form-control-solid" id="currentpassword"
+                      name="currentPassword" value="20/03/2024" />
+                  </div>
+                </div>
+                <div class="col-lg-2">
+                  <div class="fv-row mb-0">
+                    <label for="confirmpassword" class="form-label fs-6 fw-bolder mb-3">Portfolio</label><select
+                      class="form-select form-select-solid" data-kt-select2="true" data-placeholder="Select option"
+                      data-allow-clear="true">
+                      <option selected ngValue="values">Select portfolio</option>
+                      <option *ngFor="let portfolio of portfolios" value="{{ portfolio.id}}">{{portfolio.name}}</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-lg-2">
+                  <div class="fv-row mb-0">
+                    <label for="confirmpassword" class="form-label fs-6 fw-bolder mb-3">Stock</label><select
+                      class="form-select form-select-solid" data-kt-select2="true" data-placeholder="Select option"
+                      data-allow-clear="true">
+                      <option selected ngValue="values">Select stock</option>
+                      <option *ngFor="let stock of stocks" value="{{ stock.symbol}}">{{stock.name}}</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-lg-2">
+                  <div class="fv-row mb-0">
+                    <label for="confirmpassword" class="form-label fs-6 fw-bolder mb-3">Order Type</label><select
+                      class="form-select form-select-solid" data-kt-select2="true" data-placeholder="Select option"
+                      data-allow-clear="true">
+                      <option selected ngValue="values">Select order type</option>
+                      <option *ngFor="let orderType of orderTypes" value="{{ orderType.id}}">{{orderType.name}}</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-lg-2">
+                  <div class="fv-row mb-0">
+                    <label for="confirmpassword" class="form-label fs-6 fw-bolder mb-3">Trade type</label><select
+                      class="form-select form-select-solid" data-kt-select2="true" data-placeholder="Select option"
+                      data-allow-clear="true">
+                      <option selected ngValue="values">Select trade type</option>
+                      <option *ngFor="let tradeType of tradeTypes" value="{{ tradeType.id}}">{{tradeType.name}}</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-lg-2">
+                  <div class="fv-row mb-0">
+                    <label for="confirmpassword" class="form-label fs-6 fw-bolder mb-3">Status</label><select
+                      class="form-select form-select-solid" data-kt-select2="true" data-placeholder="Select option"
+                      data-allow-clear="true">
+                      <option selected ngValue="values">Select status</option>
+                      <option *ngFor="let orderStatus of orderStatuses" value="{{ orderStatus.id}}">{{orderStatus.name}}</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-lg-2">
+                  <div class="fv-row mb-0">
+                    <label for="confirmpassword" class="form-label fs-6 fw-bolder mb-3">Qauntity</label><input
+                      type="text" class="form-control form-control-lg form-control-solid" id="confirmpassword"
+                      name="passwordConfirmation" />
+                  </div>
+                </div>
+                <div class="col-lg-2">
+                  <div class="fv-row mb-0">
+                    <label for="confirmpassword" class="form-label fs-6 fw-bolder mb-3">Price</label>
+                    <input type="text"
+                      class="form-control form-control-lg form-control-solid" id="confirmpassword"
+                      name="passwordConfirmation" />
+                  </div>
+                </div>
+                <div class="col-lg-2">
+                  <div class="fv-row mb-0">
+                    <label for="confirmpassword" class="form-label fs-6 fw-bolder mt-13">&nbsp;</label>
+                    <!-- <app-keenicon name="filter-square" class="cursor-pointer fs-2"></app-keenicon> &nbsp; -->
+                    <button id="kt_password_submit" type="button" class="btn btn-primary me-2 px-6"
+                      (click)="savePassword()">
+                      <ng-container *ngIf="!isLoading">
+                        <!-- <app-keenicon name="magnifier" class="fs-2 color-white"></app-keenicon>  -->
+                        search</ng-container>
+                      <ng-container *ngIf="isLoading">
+                        <span class="indicator-progress" [style.display]="'block'">
+                          Please wait...{{ " " }}
+                          <span class="
+                            spinner-border spinner-border-sm
+                            align-middle
+                            ms-2
+                          "></span>
+                        </span>
+                      </ng-container></button>
+                      <button id="kt_password_cancel" type="button"
+                      class="btn btn-color-gray-500 btn-active-light-primary px-6" (click)="togglePasswordForm(false)">
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div id="kt_signin_password_button" class="ms-auto d-none">
+            <button class="btn btn-light btn-active-light-primary">
+              Reset Password
+            </button>
+          </div>
+        </div>
+      </ng-container>
+
+    </div>
+  </div>
+</div>

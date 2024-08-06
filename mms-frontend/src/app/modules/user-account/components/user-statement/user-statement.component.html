@@ -1,0 +1,170 @@
+<!-- Orders Search -->
+<!-- <app-order-search></app-order-search> -->
+<div class="card mb-5 mb-xl-8">
+  <!-- begin::Header -->
+  <div class="card-header border-0 pt-5">
+    <h3 class="card-title align-items-start flex-column">
+      <span class="card-label fw-bolder fs-3 mb-1">Account Statements</span>
+      <!-- <span class="text-muted mt-1 fw-bold fs-7">Over 500 orders</span> -->
+    </h3>
+    <div class="card-toolbar">
+      <!-- begin::Menu -->
+      <!-- <button
+        type="button"
+        class="btn btn-sm btn-icon btn-color-primary btn-active-light-primary"
+        data-kt-menu-trigger="click"
+        data-kt-menu-placement="bottom-end"
+        data-kt-menu-flip="top-end"
+      >
+        <app-keenicon name="category" class="fs-2"></app-keenicon>
+      </button> -->
+      <!-- begin::Menu 2 -->
+      <!-- <app-dropdown-menu2></app-dropdown-menu2> -->
+      <!-- end::Menu 2 -->
+      <!-- end::Menu -->
+    </div>
+  </div>
+  <!-- end::Header -->
+  <!-- begin::Body -->
+  <div class="card-body py-3">
+    <!-- begin::Table container -->
+    <div class="table-responsive">
+      <!-- begin::Table -->
+      <table
+        class="table table-row-bordered table-row-gray-100 align-middle gs-0 gy-3"
+      >
+        <!-- begin::Table head -->
+        <thead>
+          <tr class="fw-bolder text-muted">
+            <th class="min-w-120px">Date</th>
+            <th class="min-w-150px">Transaction</th>
+            <th class="min-w-140px">Currency</th>
+            <th class="min-w-120px">Deposit</th>
+            <th class="min-w-120px">Withdrawal</th>
+            <th class="min-w-120px">Closing Balance</th>
+            <!-- <th class="min-w-100px text-end">Actions</th> -->
+          </tr>
+        </thead>
+        <!-- end::Table head -->
+        <!-- begin::Table body -->
+        <tbody>
+          <tr *ngFor="let statement of accountStatements">
+            <td>
+                {{statement.date | date:"medium"}}
+            </td>
+            <td>
+              {{ statement.transaction }}
+            </td>
+            <td>
+              {{ statement.currency }}
+            </td>
+            <td>
+              <ng-container *ngIf="statement.deposit">
+                $  {{ statement.deposit }}
+              </ng-container>
+
+              <ng-container *ngIf="!statement.deposit">
+                -
+              </ng-container>
+            </td>
+            <td>
+              <ng-container *ngIf="statement.withdrawal">
+                $  {{ statement.withdrawal }}
+              </ng-container>
+
+              <ng-container *ngIf="!statement.withdrawal">
+                -
+              </ng-container>
+            </td>
+            <td>
+              {{ statement.closingBalance }}
+            </td>
+            <!-- <td class="text-gray-900 fw-bolder text-hover-primary fs-6">
+                {{ statement.unitPrice | currency}}
+            </td>
+            <td class="text-gray-900 fw-bolder text-hover-primary fs-6">
+              {{ statement.totalPrice | currency}}
+            </td>
+            <td>
+              
+              <span class="badge badge-light-primary" *ngIf="statement.status.id === 1">{{statement.status.name}}</span>
+              <span class="badge badge-light-info" *ngIf="statement.status.id === 2">{{statement.status.name}}</span>
+              <span class="badge badge-light-success" *ngIf="statement.status.id === 3">{{statement.status.name}}</span>
+              <span class="badge badge-light-danger" *ngIf="statement.status.id === 4">{{statement.status.name}}</span>
+            </td>
+            <td class="text-gray-900 fw-bolder text-hover-primary fs-6">
+             {{statement.date | date:'medium'}}
+            </td> --
+            <td class="text-end">
+              <a
+                href="#"
+                class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
+              >
+                <app-keenicon name="switch" class="fs-3"></app-keenicon>
+              </a>
+              <a
+                href="#"
+                class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
+              >
+                <app-keenicon name="pencil" class="fs-3"></app-keenicon>
+              </a>
+              <a
+                href="#"
+                class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm"
+              >
+                <app-keenicon name="trash" class="fs-3"></app-keenicon>
+              </a>
+            </td> -->
+          </tr>
+        </tbody>
+        <!-- end::Table body -->
+      </table>
+      <!-- end::Table -->
+    </div>
+    <!-- end::Table container -->
+  </div>
+  <!-- begin::Body -->
+</div>
+
+<div class="d-flex flex-stack flex-wrap pt-10">
+    <div class="fs-6 fw-bold text-gray-700">Showing 1 to 10 of 50 entries</div>
+  
+    <ul class="pagination">
+      <li class="page-item previous">
+        <a class="page-link cursor-pointer">
+          <i class="previous"></i>
+        </a>
+      </li>
+  
+      <li class="page-item active">
+        <a class="page-link cursor-pointer"> 1 </a>
+      </li>
+  
+      <li class="page-item">
+        <a class="page-link cursor-pointer"> 2 </a>
+      </li>
+  
+      <li class="page-item">
+        <a class="page-link cursor-pointer"> 3 </a>
+      </li>
+  
+      <li class="page-item">
+        <a class="page-link cursor-pointer"> 4 </a>
+      </li>
+  
+      <li class="page-item">
+        <a class="page-link cursor-pointer"> 5 </a>
+      </li>
+  
+      <li class="page-item">
+        <a class="page-link cursor-pointer"> 6 </a>
+      </li>
+  
+      <li class="page-item next">
+        <a class="page-link cursor-pointer">
+          <i class="next"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+  

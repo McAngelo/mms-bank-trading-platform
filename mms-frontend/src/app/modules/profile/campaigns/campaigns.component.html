@@ -1,0 +1,88 @@
+<div class="d-flex flex-wrap flex-stack mb-6">
+  <h3 class="fw-bolder my-2">
+    My Portfolios
+    <!-- <span class="fs-6 text-gray-500 fw-bold ms-1">30 Days</span> -->
+  </h3>
+
+  <div class="d-flex align-items-center my-2">
+    <button
+      class="btn btn-primary btn-sm"
+      data-bs-toggle="tooltip"
+      title="Coming soon"
+    >
+      Add Portfolio
+    </button>
+  </div>
+</div>
+
+<div class="row g-6 g-xl-9">
+  <div class="col-sm-6 col-xl-4">
+    <app-card5
+      image="./assets/media/svg/brand-logos/twitch.svg"
+      title="Basic Portfolio"
+      description="$500.00"
+      status="down"
+      [statusValue]="40.5"
+      statusDesc="stock performance"
+      [progress]="0.5"
+      progressType="MRR"
+      [stocks]="stocks"
+    ></app-card5>
+  </div>
+
+  <div class="col-sm-6 col-xl-4">
+    <app-card5
+      image="./assets/media/svg/brand-logos/twitter.svg"
+      title="TurnTabl Trades"
+      description="$ 807,000.00"
+      status="up"
+      [statusValue]="17.62"
+      statusDesc="Followers growth"
+      [progress]="5"
+      progressType="stock performance"
+      [stocks]="stocks2"
+    ></app-card5>
+  </div>
+</div>
+
+<div class="d-flex flex-stack flex-wrap pt-10">
+  <div class="fs-6 fw-bold text-gray-700">Showing 1 to 3 of 3 entries</div>
+
+  <ul class="pagination">
+    <li class="page-item previous">
+      <a class="page-link cursor-pointer">
+        <i class="previous"></i>
+      </a>
+    </li>
+
+    <li class="page-item active">
+      <a class="page-link cursor-pointer"> 1 </a>
+    </li>
+
+    <!-- <li class="page-item">
+      <a class="page-link cursor-pointer"> 2 </a>
+    </li>
+
+    <li class="page-item">
+      <a class="page-link cursor-pointer"> 3 </a>
+    </li>
+
+    <li class="page-item">
+      <a class="page-link cursor-pointer"> 4 </a>
+    </li>
+
+    <li class="page-item">
+      <a class="page-link cursor-pointer"> 5 </a>
+    </li>
+
+    <li class="page-item">
+      <a class="page-link cursor-pointer"> 6 </a>
+    </li> -->
+
+    <li class="page-item next">
+      <a class="page-link cursor-pointer">
+        <i class="next"></i>
+      </a>
+    </li>
+  </ul>
+</div>

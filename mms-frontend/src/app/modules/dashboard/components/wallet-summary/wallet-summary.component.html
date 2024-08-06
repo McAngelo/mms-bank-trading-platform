@@ -1,0 +1,141 @@
+<div class="card-body p-0">
+    <!-- begin::Header -->
+    <div class="px-9 pt-7 card-rounded h-275px w-100" [ngClass]="'bg-' + color">
+      <!-- begin::Heading -->
+      <div class="d-flex flex-stack">
+        <h3 class="m-0 text-white fw-bolder fs-3">Wallet Summary</h3>
+        <!-- <div class="ms-1"> -->
+          <!-- begin::Menu -->
+          <!-- <button
+            type="button"
+            class="
+              btn btn-sm btn-icon btn-color-white btn-active-white
+              border-0
+              me-n3
+            "
+            [ngClass]="'btn-active-color-' + color"
+            data-kt-menu-trigger="click"
+            data-kt-menu-placement="bottom-end"
+            data-kt-menu-flip="top-end"
+          >
+            <app-keenicon name="category" class="fs-2"></app-keenicon>
+          </button>
+          <app-dropdown-menu1></app-dropdown-menu1> -->
+          <!-- end::Menu -->
+        <!-- </div> -->
+      </div>
+      <!-- end::Heading -->
+      <!-- begin::Balance -->
+      <div class="d-flex text-center flex-column text-white pt-8">
+        <span class="fw-bold fs-7">Your Balance</span>
+        <span class="fw-bolder fs-2x pt-1">$37,562.00</span>
+      </div>
+      <!-- end::Balance -->
+    </div>
+    <!-- end::Header -->
+    <!-- begin::Items -->
+    <div
+      class="
+        shadow-xs
+        card-rounded
+        mx-9
+        mb-9
+        px-6
+        py-9
+        position-relative
+        z-index-1
+        bg-body
+      "
+      [style.margin-top]="'-100px'"
+    >
+      <!-- begin::Item -->
+      <div class="d-flex align-items-center mb-6">
+        <!-- begin::Symbol -->
+        <div class="symbol symbol-45px w-40px me-5">
+          <span class="symbol-label bg-lighten">
+            <app-keenicon name="category" class="fs-1"></app-keenicon>
+          </span>
+        </div>
+        <!-- end::Symbol -->
+        <!-- begin::Description -->
+        <div class="d-flex align-items-center flex-wrap w-100">
+          <!-- begin::Title -->
+          <div class="mb-1 pe-3 flex-grow-1">
+            <!-- <a href="#" class="fs-5 text-gray-800 text-hover-primary fw-bolder">
+              Available Stocks
+            </a> -->
+            <div class="text-gray-500 fw-bold fs-7">Available Stocks</div>
+          </div>
+          <!-- end::Title -->
+          <!-- begin::Label -->
+          <div class="d-flex align-items-center">
+            <div class="fw-bolder fs-5 text-gray-800 pe-1">1,200</div>
+            <!-- <app-keenicon name="category" class="fs-5 text-danger ms-1"></app-keenicon> -->
+          </div>
+          <!-- end::Label -->
+        </div>
+        <!-- end::Description -->
+      </div>
+      <!-- end::Item -->
+      <!-- begin::Item -->
+      <div class="d-flex align-items-center mb-6">
+        <!-- begin::Symbol -->
+        <div class="symbol symbol-45px w-40px me-5">
+          <span class="symbol-label bg-lighten">
+            <app-keenicon name="briefcase" class="fs-1"></app-keenicon>
+          </span>
+        </div>
+        <!-- end::Symbol -->
+        <!-- begin::Description -->
+        <div class="d-flex align-items-center flex-wrap w-100">
+          <!-- begin::Title -->
+          <div class="mb-1 pe-3 flex-grow-1">
+            <!-- <a href="#" class="fs-5 text-gray-800 text-hover-primary fw-bolder">
+              Portfolios
+            </a> -->
+            <div class="text-gray-500 fw-bold fs-7">Portfolios</div>
+          </div>
+          <!-- end::Title -->
+          <!-- begin::Label -->
+          <div class="d-flex align-items-center">
+            <div class="fw-bolder fs-5 text-gray-800 pe-1">2</div>
+            <!-- <app-keenicon name="arrow-up" class="fs-5 text-success ms-1"></app-keenicon> -->
+          </div>
+          <!-- end::Label -->
+        </div>
+        <!-- end::Description -->
+      </div>
+      <!-- end::Item -->
+      <!-- begin::Item -->
+      <div class="d-flex align-items-center">
+        <!-- begin::Symbol -->
+        <div class="symbol symbol-45px w-40px me-5">
+          <span class="symbol-label bg-lighten">
+            <app-keenicon name="document" class="fs-1"></app-keenicon>
+          </span>
+        </div>
+        <!-- end::Symbol -->
+        <!-- begin::Description -->
+        <div class="d-flex align-items-center flex-wrap w-100">
+          <!-- begin::Title -->
+          <div class="mb-1 pe-3 flex-grow-1">
+            <!-- <a href="#" class="fs-5 text-gray-800 text-hover-primary fw-bolder">
+              Total Orders
+            </a> -->
+            <div class="text-gray-500 fw-bold fs-7">Total Orders</div>
+          </div>
+          <!-- end::Title -->
+          <!-- begin::Label -->
+          <div class="d-flex align-items-center">
+            <div class="fw-bolder fs-5 text-gray-800 pe-1">27</div>
+            <!-- <app-keenicon name="arrow-down" class="fs-5 text-danger ms-1"></app-keenicon> -->
+          </div>
+          <!-- end::Label -->
+        </div>
+        <!-- end::Description -->
+      </div>
+      <!-- end::Item -->
+    </div>
+    <!-- end::Items -->
+  </div>
+  

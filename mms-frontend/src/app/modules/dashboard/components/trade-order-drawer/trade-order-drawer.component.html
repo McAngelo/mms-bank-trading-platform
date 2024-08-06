@@ -1,0 +1,187 @@
+<div class="app-navbar-item" [ngClass]="itemClass">
+    <div [ngClass]="btnClass" class="position-relative" id="kt_drawer_trade_order_toggle">
+      <app-keenicon name="purchase" class="fs-2"></app-keenicon>
+      <!-- <span
+        class="bullet bullet-dot bg-danger h-6px w-6px position-absolute translate-middle top-0 start-50 animation-blink">
+      </span> -->
+    </div>
+  </div>
+  
+<div
+  id="kt_drawer_trade_order"
+  class="bg-body"
+  data-kt-drawer="true"
+  data-kt-drawer-name="trade_order"
+  data-kt-drawer-activate="true"
+  data-kt-drawer-overlay="true"
+  data-kt-drawer-width="{default:'300px', 'md': '500px'}"
+  data-kt-drawer-direction="end"
+  data-kt-drawer-toggle="#kt_drawer_trade_order_toggle"
+  data-kt-drawer-close="#kt_drawer_trade_order_close"
+>
+  <div class="card w-100 rounded-0" id="kt_drawer_trade_order_messenger">
+    <div class="card-header pe-5" id="kt_drawer_trade_order_messenger_header">
+      <div class="card-title">
+        <div class="px-5 py-5 d-flex align-items-sm-center">
+            <div class="symbol symbol-50px me-5">
+              <span class="symbol-label">
+                <img src="{{ tradeOrder.icon }}" class="h-50 align-self-center" alt="" />
+              </span>
+            </div>
+            <div class="fs-5 text-gray-900 fw-bolder"> {{ tradeOrder.name }} Stock Options</div>
+          </div>
+      </div>
+      <div class="card-toolbar">
+        <!-- <div class="me-2">
+          <button
+            class="btn btn-sm btn-icon btn-active-light-primary"
+            data-kt-menu-trigger="click"
+            data-kt-menu-placement="bottom-end"
+            data-kt-menu-flip="top-end"
+          >
+            <i class="bi bi-three-dots fs-3"></i>
+          </button>
+        </div> -->
+        <div
+          class="btn btn-sm btn-icon btn-active-light-primary"
+          id="kt_drawer_trade_order_close"
+        >
+          <span class="svg-icon fs-2"></span>
+          <app-keenicon name="cross" class="fs-2"></app-keenicon>
+        </div>
+      </div>
+    </div>
+    <!-- Calculations -->
+    <div class="px-7 py-5">
+        <div class="mb-10">
+          <label class="form-label fw-bold">Market Brief:</label>
+          <!-- begin::Table -->
+          <table class="table align-middle gs-0 gy-4">
+            <!-- begin::Table head -->
+            <thead>
+              <tr class="fw-bolder text-muted bg-light">
+                <th class="min-w-25px">Price</th>
+                <th class="min-w-25px">Ask </th>
+                <th class="min-w-25px">Bid </th>
+                <th class="min-w-25px">Last Traded </th>
+              </tr>
+            </thead>
+            <!-- end::Table head -->
+            <!-- begin::Table body -->
+            <tbody>
+              <tr>
+                <td>
+                  <span class="form-check-label">EX 1</span>
+                </td>
+                <td>
+                  <span class="form-check-label">$2.70</span>
+                </td>
+                <td>
+                  <span class="form-check-label">$5.20</span>
+                </td>
+                <td>
+                  <span class="form-check-label">$5.20</span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <span class="form-check-label">EX 2</span>
+                </td>
+                <td>
+                  <span class="form-check-label">$2.0</span>
+                </td>
+                <td>
+                  <span class="form-check-label">$1.00</span>
+                </td>
+                <td>
+                  <span class="form-check-label">$3.0</span>
+                </td>
+              </tr>
+            </tbody>
+            <!-- end::Table body -->
+          </table>
+          <!-- end::Table -->
+        </div>
+        <div class="mb-10">
+          <label class="form-label fw-bold">Portfolio:</label>
+      
+          <div>
+            <select class="form-select form-select-solid" data-kt-select2="true" data-placeholder="Select option"
+              data-allow-clear="true">
+              <option selected ngValue="values">Select portfolio</option>
+              <option value="1">Basic Portfolio</option>
+              <option value="2">TurnTabl Trades Portfolio</option>
+            </select>
+          </div>
+        </div>
+      
+        <div class="mb-10">
+          <label class="form-label fw-bold">Trade Type:</label>
+      
+          <div class="d-flex">
+            <label class="form-check form-check-sm form-check-custom form-check-solid me-5">
+              <input class="form-check-input" type="checkbox" value="1" />
+              <span class="form-check-label">Market</span>
+            </label>
+      
+            <label class="form-check form-check-sm form-check-custom form-check-solid">
+              <input class="form-check-input" type="checkbox" value="2" defaultChecked="{true}" />
+              <span class="form-check-label">Limit</span>
+            </label>
+          </div>
+        </div>
+      
+        <div class="mb-10">
+          <label class="form-label fw-bold">Quantity:</label>
+          <div>
+            <input class="form-control form-control-solid" type="number" placeholder="3" />
+          </div>
+        </div>
+      
+        <div class="mb-10">
+          <label class="form-label fw-bold">Amount:</label>
+          <div>
+            <input class="form-control form-control-solid" type="number" placeholder="1.30" />
+          </div>
+        </div>
+      
+        <div class="mb-10">
+          <label class="form-label fw-bold">Order Type:</label>
+      
+          <div class="
+              form-check form-switch form-switch-sm form-check-custom form-check-solid
+            ">
+            <input class="form-check-input" type="checkbox" value="" name="notifications" defaultChecked="{true}" />
+            <label class="form-check-label">Split Enabled</label>
+          </div>
+        </div>
+      
+        <div class="mb-10">
+          <label class="form-label fw-bold">Exchange:</label>
+      
+          <div>
+            <select class="form-select form-select-solid" data-kt-select2="true" data-placeholder="Select option"
+              data-allow-clear="true">
+              <option></option>
+              <option selected ngValue="values">Select Exchange</option>
+              <option value="1">Exchange 1</option>
+              <option value="2">Exchange 2</option>
+            </select>
+          </div>
+        </div>
+      
+        <div class="d-flex justify-content-end">
+          <button type="reset" class="btn btn-sm btn-light btn-active-light-primary me-2" id="kt_drawer_trade_order_close" data-kt-menu-dismiss="true">
+            Discard
+          </button>
+      
+          <button type="submit" class="btn btn-sm btn-light-primary me-2" data-kt-menu-dismiss="true">
+            Buy
+          </button>
+          <button type="submit" class="btn btn-sm btn-light-primary" data-kt-menu-dismiss="true">
+            Sell
+          </button>
+        </div>
+      </div>
+  </div>
+</div>

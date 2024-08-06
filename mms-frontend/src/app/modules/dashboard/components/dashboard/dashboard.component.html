@@ -1,0 +1,46 @@
+<app-wallet></app-wallet>
+
+<div class="row g-5 g-xl-8">
+  <!-- begin::Col -->
+  <div class="col-xl-4">
+    <app-wallet-summary class="card card-xl-stretch mb-xl-8" color="success"></app-wallet-summary>
+  </div>
+  <!-- end::Col -->
+
+  <!-- begin::Col -->
+  <div class="col-xl-4">
+    <app-exchange-summary class="card card-xl-stretch mb-xl-8" color="primary" exchangeName="Exchange 1"
+      [stocks]=exchangeOneStocks></app-exchange-summary>
+  </div>
+  <!-- end::Col -->
+
+  <!-- begin::Col -->
+  <div class="col-xl-4">
+    <app-exchange-summary class="card card-xl-stretch mb-5 mb-xl-8" color="info" exchangeName="Exchange 2"
+      [stocks]=exchangeTwoStocks></app-exchange-summary>
+  </div>
+  <!-- end::Col -->
+</div>
+<!-- end::Row -->
+<!-- begin::Row -->
+<div class="row gy-5 g-xl-8">
+  <div class="col-xl-4">
+    <app-stocks class="card card-xl-stretch mb-5 mb-xl-8" [stocks]=stocks></app-stocks>
+  </div>
+  <!--begin::Col-->
+  <div class="col-xl-8 mb-5 mb-xl-10">
+    <app-candle-stick-charts></app-candle-stick-charts>
+  </div>
+</div>
+<!-- end::Row -->
+
+<!--begin::Row-->
+<div class="row">
+  <div class="col-md-6">
+    <app-exchange-market-brief class="card mb-5 mb-xl-8" exchangeName="EXCHANGE 1" />
+  </div>
+  <div class="col-md-6">
+    <app-exchange-market-brief class="card mb-5 mb-xl-8" exchangeName="EXCHANGE 2" />
+  </div>
+</div>
+<!-- end::Row -->

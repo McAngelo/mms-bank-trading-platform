@@ -3,6 +3,7 @@ package com.mms.market_data_service.models;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
 
@@ -13,6 +14,7 @@ import java.util.UUID;
 @Getter
 @Builder
 @RedisHash
+@ToString
 public class Order {
     private String id;
     private String orderType;

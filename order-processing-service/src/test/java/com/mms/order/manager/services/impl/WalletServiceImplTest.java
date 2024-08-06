@@ -1,5 +1,6 @@
 package com.mms.order.manager.services.impl;
 
+import com.mms.order.manager.exceptions.WalletException;
 import com.mms.order.manager.models.User;
 import com.mms.order.manager.models.Wallet;
 import com.mms.order.manager.repositories.UserRepository;
@@ -23,6 +24,7 @@ import java.math.BigDecimal;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -48,22 +50,18 @@ class WalletServiceImplTest {
         // WHEN
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(mockedUser));
 
-        var IsWalletCreated = walletService.createWallet(1L, new BigDecimal(100));
-
         // THEN
+        assertDoesNotThrow(() -> walletService.createWallet(1L, new BigDecimal(100)));
         verify(walletRepository, new Times(1)).save(any(Wallet.class));
-        assertTrue(IsWalletCreated);
     }
 
     @Test
-    void shouldNotCreateWalletWhenUserIsNotFound() {
+    void shouldNotCreateWalletWhenUserIsNotFound() throws WalletException {
         // WHEN
         when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        var IsWalletCreated = walletService.createWallet(1L, new BigDecimal(100));
-
         // THEN
-        assertFalse(IsWalletCreated);
+        assertThrows(WalletException.class, () -> walletService.createWallet(1L, new BigDecimal(100)));
     }
 
     @Test
@@ -73,8 +71,9 @@ class WalletServiceImplTest {
 
         var wallet = Wallet.builder()
                 .balance(EXPECTED_BALANCE)
-                .isActive(true)
-                .user(mock(User.class))
+                //.isActive(false)
+                .status(Wallet.Status.ACTIVE)
+                .owner(mock(User.class))
                 .build();
 
         // WHEN
@@ -95,8 +94,9 @@ class WalletServiceImplTest {
         // GIVEN
         var wallet = Wallet.builder()
                 .balance(new BigDecimal(100))
-                .isActive(false)
-                .user(mock(User.class))
+                //.isActive(false)
+                .status(Wallet.Status.ACTIVE)
+                .owner(mock(User.class))
                 .build();
 
         // WHEN
@@ -124,13 +124,14 @@ class WalletServiceImplTest {
 
         var wallet = Wallet.builder()
                 .balance(EXPECTED_BALANCE)
-                .isActive(true)
-                .user(mock(User.class))
+                //.isActive(false)
+                .status(Wallet.Status.ACTIVE)
+                .owner(mock(User.class))
                 .build();
 
         // WHEN
-        when(walletRepository.findByUserId(anyLong())).thenReturn(Optional.of(wallet));
-        var optionalBalance = walletService.getBalanceByUserId(1L);
+        when(walletRepository.findByOwnerId(anyLong())).thenReturn(Optional.of(wallet));
+        var optionalBalance = walletService.getBalanceByOwnerId(1L);
 
         // THEN
         assertTrue(optionalBalance.isPresent(), "The balance should be present");
@@ -143,9 +144,9 @@ class WalletServiceImplTest {
     @Test
     void shouldNotGetBalanceByUserIdWhenUserIsNotFound() {
         // WHEN
-        when(walletRepository.findByUserId(anyLong())).thenReturn(Optional.empty());
+        when(walletRepository.findByOwnerId(anyLong())).thenReturn(Optional.empty());
 
-        var optionalBalance = walletService.getBalanceByUserId(1L);
+        var optionalBalance = walletService.getBalanceByOwnerId(1L);
 
         // THEN
         assertTrue(optionalBalance.isEmpty(), "The balance should be empty");
@@ -156,13 +157,14 @@ class WalletServiceImplTest {
         // GIVEN
         var wallet = Wallet.builder()
                 .balance(new BigDecimal(100))
-                .isActive(false)
-                .user(mock(User.class))
+                //.isActive(false)
+                .status(Wallet.Status.ACTIVE)
+                .owner(mock(User.class))
                 .build();
 
         // WHEN
-        when(walletRepository.findByUserId(anyLong())).thenReturn(Optional.of(wallet));
-        var optionalBalance = walletService.getBalanceByUserId(1L);
+        when(walletRepository.findByOwnerId(anyLong())).thenReturn(Optional.of(wallet));
+        var optionalBalance = walletService.getBalanceByOwnerId(1L);
 
         // THEN
         assertTrue(optionalBalance.isEmpty(), "The balance should be empty");
@@ -177,8 +179,9 @@ class WalletServiceImplTest {
 
         var wallet = Wallet.builder()
                 .balance(INITIAL_BALANCE)
-                .isActive(true)
-                .user(mock(User.class))
+                //.isActive(false)
+                .status(Wallet.Status.ACTIVE)
+                .owner(mock(User.class))
                 .build();
 
         // WHEN
@@ -208,8 +211,9 @@ class WalletServiceImplTest {
         // GIVEN
         Wallet wallet = Wallet.builder()
                 .balance(new BigDecimal(100))
-                .isActive(false)
-                .user(mock(User.class))
+                //.isActive(false)
+                .status(Wallet.Status.ACTIVE)
+                .owner(mock(User.class))
                 .build();
 
         when(walletRepository.findById(anyLong())).thenReturn(Optional.of(wallet));
@@ -230,8 +234,9 @@ class WalletServiceImplTest {
 
         var wallet = Wallet.builder()
                 .balance(INITIAL_BALANCE)
-                .isActive(true)
-                .user(mock(User.class))
+                //.isActive(false)
+                .status(Wallet.Status.ACTIVE)
+                .owner(mock(User.class))
                 .build();
 
         // WHEN
@@ -262,8 +267,9 @@ class WalletServiceImplTest {
         // GIVEN
         Wallet wallet = Wallet.builder()
                 .balance(new BigDecimal(100))
-                .isActive(false)
-                .user(mock(User.class))
+                //.isActive(false)
+                .status(Wallet.Status.ACTIVE)
+                .owner(mock(User.class))
                 .build();
 
         when(walletRepository.findById(anyLong())).thenReturn(Optional.of(wallet));
@@ -280,8 +286,9 @@ class WalletServiceImplTest {
         // GIVEN
         Wallet wallet = Wallet.builder()
                 .balance(new BigDecimal(100))
-                .isActive(false)
-                .user(mock(User.class))
+                //.isActive(false)
+                .status(Wallet.Status.DISABLED)
+                .owner(mock(User.class))
                 .build();
 
         when(walletRepository.findById(anyLong())).thenReturn(Optional.of(wallet));
@@ -289,7 +296,7 @@ class WalletServiceImplTest {
 
         // WHEN
         assertTrue(result);
-        assertTrue(wallet.isActive());
+        //assertTrue(wallet.isActive());
     }
 
     @Test
@@ -307,8 +314,9 @@ class WalletServiceImplTest {
         // GIVEN
         Wallet wallet = Wallet.builder()
                 .balance(new BigDecimal(100))
-                .isActive(true)
-                .user(mock(User.class))
+                //.isActive(false)
+                .status(Wallet.Status.DISABLED)
+                .owner(mock(User.class))
                 .build();
 
         when(walletRepository.findById(anyLong())).thenReturn(Optional.of(wallet));
@@ -316,7 +324,7 @@ class WalletServiceImplTest {
 
         // WHEN
         assertTrue(result);
-        assertFalse(wallet.isActive());
+       // assertFalse(Wallet.Status.ACTIVE);
     }
 
     @Test

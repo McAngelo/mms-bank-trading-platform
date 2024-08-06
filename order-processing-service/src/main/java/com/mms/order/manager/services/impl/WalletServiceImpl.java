@@ -1,5 +1,6 @@
 package com.mms.order.manager.services.impl;
 
+import com.mms.order.manager.exceptions.WalletException;
 import com.mms.order.manager.models.User;
 import com.mms.order.manager.models.Wallet;
 import com.mms.order.manager.repositories.UserRepository;
@@ -18,21 +19,21 @@ public class WalletServiceImpl implements WalletService {
     private final UserRepository userRepository;
 
     @Override
-    public boolean createWallet(long userId, BigDecimal balance) {
+    public void createWallet(long userId, BigDecimal balance) throws WalletException {
         Optional<User> userOptional = userRepository.findById(userId);
 
         if (userOptional.isEmpty()) {
-            return false;
+            throw new WalletException("User does not exist, could not create wallet");
         }
 
         var wallet = Wallet.builder()
-                .user(userOptional.get())
+                .owner(userOptional.get())
                 .balance(balance)
-                .isActive(true)
+                //.isActive(true)
+                .status(Wallet.Status.ACTIVE)
                 .build();
 
         walletRepository.save(wallet);
-        return true;
     }
 
     @Override
@@ -45,7 +46,7 @@ public class WalletServiceImpl implements WalletService {
 
         var wallet = optionalWallet.get();
 
-        if (!wallet.isActive()) {
+        if (wallet.getStatus() != Wallet.Status.ACTIVE) {
             return Optional.empty();
         }
 
@@ -53,8 +54,8 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public Optional<BigDecimal> getBalanceByUserId(long userId) {
-        Optional<Wallet> optionalWallet =  walletRepository.findByUserId(userId);
+    public Optional<BigDecimal> getBalanceByOwnerId(long userId) {
+        Optional<Wallet> optionalWallet =  walletRepository.findByOwnerId(userId);
 
         if (optionalWallet.isEmpty()) {
             return Optional.empty();
@@ -62,7 +63,7 @@ public class WalletServiceImpl implements WalletService {
 
         var wallet = optionalWallet.get();
 
-        if (!wallet.isActive()) {
+        if (wallet.getStatus() != Wallet.Status.ACTIVE) {
             return Optional.empty();
         }
 
@@ -79,7 +80,7 @@ public class WalletServiceImpl implements WalletService {
 
         var wallet = optionalWallet.get();
 
-        if (!wallet.isActive()) {
+        if (wallet.getStatus() != Wallet.Status.ACTIVE) {
             return false;
         }
 
@@ -99,7 +100,7 @@ public class WalletServiceImpl implements WalletService {
 
         var wallet = optionalWallet.get();
 
-        if (!wallet.isActive()) {
+        if (wallet.getStatus() != Wallet.Status.ACTIVE) {
             return false;
         }
 
@@ -119,11 +120,12 @@ public class WalletServiceImpl implements WalletService {
 
         var wallet = optionalWallet.get();
 
-        if (wallet.isActive()) {
+        if (wallet.getStatus() != Wallet.Status.ACTIVE) {
             return true;
         }
 
-        wallet.setActive(true);
+        wallet.setStatus(Wallet.Status.ACTIVE);
+        //wallet.setActive(true);
         walletRepository.save(wallet);
 
         return true;
@@ -139,11 +141,12 @@ public class WalletServiceImpl implements WalletService {
 
         var wallet = optionalWallet.get();
 
-        if (!wallet.isActive()) {
+        if (wallet.getStatus() != Wallet.Status.ACTIVE) {
             return true;
         }
 
-        wallet.setActive(false);
+        wallet.setStatus(Wallet.Status.DISABLED);
+        //wallet.setActive(false);
         walletRepository.save(wallet);
 
         return true;

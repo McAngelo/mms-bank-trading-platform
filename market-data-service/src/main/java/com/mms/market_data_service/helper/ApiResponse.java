@@ -1,45 +1,21 @@
 package com.mms.market_data_service.helper;
 
+import lombok.Builder;
+
 import java.util.List;
 
-public class ApiResponse<T> implements IApiResponse<T> {
-    private final String message;
-    private final int status;
-    private final T data;
-    private final List<Error> errors;
-
-    public ApiResponse(String message, int status, T data, List<Error> errors) {
-        this.message = message;
-        this.status = status;
-        this.data = data;
-        this.errors = errors;
-    }
-
-    @Override
-    public String getMessage() {
-        return message;
-    }
-
-    @Override
-    public int getStatus() {
-        return status;
-    }
-
-    @Override
-    public T getData() {
-        return data;
-    }
-
-    @Override
-    public List<Error> getErrors() {
-        return errors;
-    }
-}
+//@Getter
+@Builder
+public record ApiResponse<T>(
+        String message,
+        int status, T data,
+        List<Error> errors
+) implements IApiResponse<T> { }
 
 
 interface IApiResponse<T> {
-    String getMessage();
-    int getStatus();
-    T getData();
-    List<Error> getErrors();
+    String message();
+    int status();
+    T data();
+    List<Error> errors();
 }

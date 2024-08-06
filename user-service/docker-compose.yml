@@ -1,0 +1,10 @@
+#services:
+#  postgres:
+#    image: postgres
+#    ports:
+#      - "5434:5434"
+#    restart: always
+#    environment:
+#      POSTGRES_USERNAME: root
+#      POSTGRES_PASSWORD: admin
+#      POSTGRES_DB: user-service-db

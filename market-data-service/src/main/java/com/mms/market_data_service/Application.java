@@ -1,15 +1,15 @@
 package com.mms.market_data_service;
 
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
-@EnableAutoConfiguration
+@EnableDiscoveryClient
+@EnableScheduling
+@EnableCaching
 public class Application {
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);

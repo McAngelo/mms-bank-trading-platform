@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 
 @Component
@@ -13,4 +14,11 @@ import java.util.List;
 @Setter
 public class AppProperties {
     private List<String> exchanges;
+    private List<String> stocks;
+
+    @PostConstruct
+    void onStartup() {
+        System.out.println("Exchanges: " + exchanges);
+        System.out.println("Stocks: " + stocks);
+    }
 }

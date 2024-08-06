@@ -13,7 +13,6 @@ import java.time.LocalDate;
 @Entity
 @Data
 @Builder
-@Table(name="Transaction")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Transaction {
@@ -24,6 +23,7 @@ public class Transaction {
     @ManyToOne
     @JoinColumn(name = "walletId", insertable = false, updatable = false)
     private Wallet wallet;
+    private long walletId;
 
     private BigDecimal amount;
 

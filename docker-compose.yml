@@ -1,0 +1,96 @@
+services:
+  market-data-db:
+    image: postgres
+    ports:
+      - "54323:5433"
+    restart: always
+    environment:
+      POSTGRES_USERNAME: postgres
+      POSTGRES_PASSWORD: mms-test-local
+      POSTGRES_DB: market-data-db
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 1s
+      timeout: 5s
+      retries: 10
+
+  users-n-orders-db:
+    image: postgres
+    ports:
+      - "5432:5432"
+    restart: always
+    environment:
+      POSTGRES_USERNAME: postgres
+      POSTGRES_PASSWORD: mms-test-local
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 1s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    restart: always
+    volumes:
+      - redis_data:/data
+    environment:
+      - REDIS_PASSWORD=admin
+      - REDIS_PORT=6379
+      - REDIS_DATABASES=market-data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
+
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3.13-management
+    ports:
+      - "5672:5672"
+      -  "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: root
+      RABBITMQ_DEFAULT_PASS: admin
+  ngrok:
+    image: ngrok/ngrok:latest
+    env_file:
+      - .env
+    command: http --domain=jennet-genuine-sunbeam.ngrok-free.app host.docker.internal:8082
+    ports:
+      - "4040:4040" # For accessing ngrok web interface
+
+  mongodb:
+    image: mongo
+    container_name: mongo_db
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo:/data
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=password
+#    mongo-express:
+#      image: mongo-express
+#      container_name: mongo_express
+#      restart: always
+#      ports:
+#        - 8081:8081
+#      environment:
+#        - ME_CONFIG_MONGODB_ADMINUSERNAME=root
+#        - ME_CONFIG_MONGODB_ADMINPASSWORD=password
+#        - ME_CONFIG_MONGODB_SERVER=mongodb
+
+  market-data-microservice:
+    build: ./market-data-service/Dockerfile
+    ports:
+      - "8082:8082"
+#    networks:
+#      - my-network
+
+#  networks:
+#    my-network:
+#      driver: bridge
+
+volumes:
+  redis_data:
+  mongo: { }

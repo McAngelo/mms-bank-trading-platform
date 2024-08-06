@@ -7,31 +7,36 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Data
 @Builder
-@Table(name="Portfolio")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Portfolio {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Integer id;
 
-    private String name;
+    private String portfolioName;
+    private Portfolio.PortfolioType portfolioType;
 
     @ManyToOne
-    @JoinColumn(name = "userId", insertable = false, updatable = false)
-    private User user;
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User owner;
 
-    @OneToMany(mappedBy = "portfolio" , cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Order> orders;
+    //private boolean isDefault;
+    private Portfolio.Status status;
 
-    @OneToMany(mappedBy = "portfolio", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Product> products;
+    public enum PortfolioType {
+        DEFAULT, CUSTOM
+    }
 
-    private LocalDate createdAt;
-    private LocalDate updatedAt;
+    public enum Status {
+        ACTIVE, DISABLED
+    }
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

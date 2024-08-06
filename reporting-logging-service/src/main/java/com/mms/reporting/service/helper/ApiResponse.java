@@ -3,10 +3,10 @@ package com.mms.reporting.service.helper;
 import java.util.List;
 
 public class ApiResponse<T> implements IApiResponse<T> {
-    private String message;
     private final int status;
     private final T data;
     private final List<ErrorDetails> errors;
+    private String message;
 
     public ApiResponse(T data, String message, int status, List<ErrorDetails> errors) {
         this.message = message;

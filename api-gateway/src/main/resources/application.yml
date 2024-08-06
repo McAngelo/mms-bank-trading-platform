@@ -1,0 +1,88 @@
+server:
+  port: 8222
+
+spring:
+  application:
+    name: api-gateway
+  main:
+    web-application-type: reactive
+  cloud:
+    gateway:
+      globalcors:
+        add-to-simple-url-handler-mapping: true
+        cors-configurations:
+          '[/**]':
+            - allowed-origins: '*'
+            - allowed-methods:
+              - GET
+              - POST
+              - PUT
+              - PATCH
+              - DELETE
+              - OPTIONS
+            - allow-credentials: true
+            - allowed-headers: '*'
+      routes:
+        - id: order-manager-route
+          uri: lb://order.manager
+          predicates:
+            - Path=/order-service/v3/api-docs
+            - Method=GET
+        - id: market-data-route
+          uri: lb://market.data.service
+          predicates:
+            - Path=/market-data-service/v3/api-docs
+            - Method=GET
+        - id: reporting-service
+          uri: lb://reporting.service
+          predicates:
+            - Path=/reporting-service/v3/api-docs
+            - Method=GET
+        - id: user-service-route
+          uri: lb://user.service
+          predicates:
+            - Path=/user-service/v3/api-docs
+            - Method=GET
+        - id: order-reporting-route
+          uri: lb://order.reporting.service
+          predicates:
+            - Path=/reporting-service/v3/api-docs
+            - Method=GET
+      discovery:
+        locator:
+          enable: true
+          lower-case-service-id: true
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    config-url: /v3/api-docs/swagger-config
+    urls:
+      - url: /order-service/v3/api-docs
+        name: Order Service
+      - url: /market-data-service/v3/api-docs
+        name: Market Data Service
+      - url: /reporting-service/v3/api-docs
+        name: Reporting Service
+      - url: /user-service/v3/api-docs
+        name: User Service
+      - url: /reporting-service/v3/api-docs
+        name: Reporting Service
+
+jwt:
+  secret: SECRET
+
+
+logging:
+  level:
+    org.springframework: DEBUG

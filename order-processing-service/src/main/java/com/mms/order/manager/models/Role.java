@@ -6,12 +6,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Data
 @Builder
-@Table(name="Role")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Role {
@@ -21,7 +21,6 @@ public class Role {
 
     private String name;
     private boolean isActive;
-
-    @OneToMany(mappedBy = "role")
-    private List<User> users;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

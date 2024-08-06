@@ -1,64 +1,50 @@
 package com.mms.user.service.helper;
 
-public class ApiResponse<T> {
-    private T data;
-    private int status;
+
+import java.util.List;
+
+public class ApiResponse<T> implements IApiResponse<T> {
+    private final int status;
+    private final T data;
+    private final List<ErrorDetails> errors;
     private String message;
-    private ErrorDetails error;
 
-    // Getters and setters
-    public T getData() {
-        return data;
-    }
-
-    public void setData(T data) {
-        this.data = data;
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
+    public ApiResponse(T data, String message, int status, List<ErrorDetails> errors) {
+        this.message = message;
         this.status = status;
+        this.data = data;
+        this.errors = errors;
     }
 
+    /*public ApiResponse() {
+        this.message = null;
+        this.status = 0;
+        this.data = null;
+        this.errors = null;
+    }*/
+
+    @Override
     public String getMessage() {
         return message;
     }
 
+    @Override
     public void setMessage(String message) {
         this.message = message;
     }
 
-    public ErrorDetails getError() {
-        return error;
+    @Override
+    public int getStatus() {
+        return status;
     }
 
-    public void setError(ErrorDetails error) {
-        this.error = error;
+    @Override
+    public T getData() {
+        return data;
     }
 
-    // Inner class for error details
-    public static class ErrorDetails {
-        private String issue;
-        private String message;
-
-        // Getters and setters
-        public String getIssue() {
-            return issue;
-        }
-
-        public void setIssue(String issue) {
-            this.issue = issue;
-        }
-
-        public String getMessage() {
-            return message;
-        }
-
-        public void setMessage(String message) {
-            this.message = message;
-        }
+    @Override
+    public List<ErrorDetails> getErrors() {
+        return errors;
     }
 }

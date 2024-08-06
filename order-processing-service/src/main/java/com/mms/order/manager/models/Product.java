@@ -11,7 +11,6 @@ import java.util.List;
 @Entity
 @Data
 @Builder
-@Table(name="Product")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Product {
@@ -21,8 +20,8 @@ public class Product {
 
     private String symbol;
 
-    @OneToMany(mappedBy = "product")
-    private List<Order> orders;
+    private String slug;
 
-
+//    @OneToMany(mappedBy = "product")
+//    private List<Order> orders;
 }

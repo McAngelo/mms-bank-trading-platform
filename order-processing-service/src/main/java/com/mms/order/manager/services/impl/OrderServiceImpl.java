@@ -132,7 +132,7 @@ public class OrderServiceImpl implements OrderService {
             );
         }
 
-        executionRepository.deleteAll();
+        executionRepository.deleteAllByOrderSplitId(orderSplit.getId());
 
         executionRepository.saveAll(
                 updatedOrderDto.executions()

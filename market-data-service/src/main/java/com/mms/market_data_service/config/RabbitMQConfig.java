@@ -53,9 +53,9 @@ public class RabbitMQConfig {
         return rabbitTemplate;
     }
 
-//    @Bean
-//    public RabbitAdmin rabbitAdmin(ConnectionFactory connectionFactory) {
-//        return new RabbitAdmin(connectionFactory);
-//    }
+    @Bean
+    public RabbitAdmin rabbitAdmin(ConnectionFactory connectionFactory) {
+        return new RabbitAdmin(connectionFactory);
+    }
 
 }

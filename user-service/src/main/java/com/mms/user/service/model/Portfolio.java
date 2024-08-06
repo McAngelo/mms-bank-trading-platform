@@ -22,7 +22,7 @@ public class Portfolio extends BaseEntity {
     private String portfolioName;
     private PortfolioType portfolioType;
     @ManyToOne
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     @JsonBackReference
     private User owner;
     private  Status status;

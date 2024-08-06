@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sound.sampled.Port;
+import java.math.BigDecimal;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -158,7 +159,7 @@ public class AuthenticationService {
 
     private Wallet createWallet() {
         Wallet wallet = new Wallet();
-        wallet.setBalance(0);
+        wallet.setBalance(BigDecimal.ZERO);
         wallet.setStatus(Wallet.Status.ACTIVE);
         wallet.setCreatedBy(1);
         return walletRepository.save(wallet);

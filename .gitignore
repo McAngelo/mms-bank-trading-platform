@@ -45,3 +45,4 @@ build/
 **/build
 **/gradlew.bat
 **/gradlew
+.env

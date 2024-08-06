@@ -18,15 +18,25 @@ import java.util.List;
 public class Portfolio {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Integer id;
 
-    private String name;
+    private String portfolioName;
+    private Portfolio.PortfolioType portfolioType;
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    private boolean isDefault;
+    //private boolean isDefault;
+    private Portfolio.Status status;
+
+    public enum PortfolioType {
+        DEFAULT, CUSTOM
+    }
+
+    public enum Status {
+        ACTIVE, DISABLED
+    }
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

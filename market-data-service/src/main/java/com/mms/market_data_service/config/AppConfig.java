@@ -14,10 +14,11 @@ import org.springframework.web.client.RestTemplate;
 public class AppConfig {
 
     @Bean
-    public CommandLineRunner runAtStartup( ExchangeService exchangeService, RedisTemplate<String, String> redisTemplate, ObjectMapper objectMapper) {
+    public CommandLineRunner runAtStartup( RabbitAdmin rabbitAdmin, ExchangeService exchangeService, RedisTemplate<String, String> redisTemplate, ObjectMapper objectMapper) {
         return args -> {
             ScheduledTasks startupJob = new ScheduledTasks(exchangeService, redisTemplate, objectMapper);
             startupJob.onStartup();
+            rabbitAdmin.initialize();
         };
     }
 

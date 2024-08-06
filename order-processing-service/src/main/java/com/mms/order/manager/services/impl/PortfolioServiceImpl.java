@@ -33,7 +33,7 @@ public class PortfolioServiceImpl implements PortfolioService {
 
         var portfolio = Portfolio.builder()
                 .user(userOptional.get())
-                .name(portfolioDto.name())
+                .portfolioName(portfolioDto.name())
                 .createdAt(LocalDateTime.now())
                 .build();
 
@@ -49,7 +49,7 @@ public class PortfolioServiceImpl implements PortfolioService {
         var portfolios = portfolioRepository.findByUserId(userId);
 
         return portfolios.stream()
-                .map(p -> new PortfolioDto(p.getId(), p.getName()))
+                .map(p -> new PortfolioDto(p.getId(), p.getPortfolioName()))
                 .toList();
     }
 

@@ -13,11 +13,11 @@ services:
       timeout: 5s
       retries: 10
 
-  app:
-    build: .
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: postgres
-    depends_on:
-      - db
+#  app:
+#    build: .
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432
+#      SPRING_DATASOURCE_USERNAME: postgres
+#      SPRING_DATASOURCE_PASSWORD: postgres
+#    depends_on:
+#      - db

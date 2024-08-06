@@ -41,15 +41,17 @@ public class Seeder implements ApplicationRunner {
                 .build();
 
         var wallet = Wallet.builder()
-                .user(user)
-                .isActive(true)
+                .owner(user)
+                //.isActive(true)
+                .status(Wallet.Status.ACTIVE)
                 .balance(new BigDecimal(1000))
                 .build();
 
         var portfolio = Portfolio.builder()
                 .user(user)
-                .name("Default Portfolio")
-                .isDefault(true)
+                .portfolioName("Default Portfolio")
+                //.isDefault(true)
+                .status(Portfolio.Status.ACTIVE)
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();

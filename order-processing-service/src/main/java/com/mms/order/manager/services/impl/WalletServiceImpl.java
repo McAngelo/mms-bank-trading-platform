@@ -27,9 +27,10 @@ public class WalletServiceImpl implements WalletService {
         }
 
         var wallet = Wallet.builder()
-                .user(userOptional.get())
+                .owner(userOptional.get())
                 .balance(balance)
-                .isActive(true)
+                //.isActive(true)
+                .status(Wallet.Status.ACTIVE)
                 .build();
 
         walletRepository.save(wallet);
@@ -45,7 +46,7 @@ public class WalletServiceImpl implements WalletService {
 
         var wallet = optionalWallet.get();
 
-        if (!wallet.isActive()) {
+        if (wallet.getStatus() != Wallet.Status.ACTIVE) {
             return Optional.empty();
         }
 
@@ -54,7 +55,7 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public Optional<BigDecimal> getBalanceByUserId(long userId) {
-        Optional<Wallet> optionalWallet =  walletRepository.findByUserId(userId);
+        Optional<Wallet> optionalWallet =  walletRepository.findByOwnerId(userId);
 
         if (optionalWallet.isEmpty()) {
             return Optional.empty();
@@ -62,7 +63,7 @@ public class WalletServiceImpl implements WalletService {
 
         var wallet = optionalWallet.get();
 
-        if (!wallet.isActive()) {
+        if (wallet.getStatus() != Wallet.Status.ACTIVE) {
             return Optional.empty();
         }
 
@@ -79,7 +80,7 @@ public class WalletServiceImpl implements WalletService {
 
         var wallet = optionalWallet.get();
 
-        if (!wallet.isActive()) {
+        if (wallet.getStatus() != Wallet.Status.ACTIVE) {
             return false;
         }
 
@@ -99,7 +100,7 @@ public class WalletServiceImpl implements WalletService {
 
         var wallet = optionalWallet.get();
 
-        if (!wallet.isActive()) {
+        if (wallet.getStatus() != Wallet.Status.ACTIVE) {
             return false;
         }
 
@@ -119,11 +120,12 @@ public class WalletServiceImpl implements WalletService {
 
         var wallet = optionalWallet.get();
 
-        if (wallet.isActive()) {
+        if (wallet.getStatus() != Wallet.Status.ACTIVE) {
             return true;
         }
 
-        wallet.setActive(true);
+        wallet.setStatus(Wallet.Status.ACTIVE);
+        //wallet.setActive(true);
         walletRepository.save(wallet);
 
         return true;
@@ -139,11 +141,12 @@ public class WalletServiceImpl implements WalletService {
 
         var wallet = optionalWallet.get();
 
-        if (!wallet.isActive()) {
+        if (wallet.getStatus() != Wallet.Status.ACTIVE) {
             return true;
         }
 
-        wallet.setActive(false);
+        wallet.setStatus(Wallet.Status.DISABLED);
+        //wallet.setActive(false);
         walletRepository.save(wallet);
 
         return true;

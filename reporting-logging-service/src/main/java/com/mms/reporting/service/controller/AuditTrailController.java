@@ -6,7 +6,7 @@ import com.mms.reporting.service.dtos.auditrail.CreateAuditDto;
 import com.mms.reporting.service.helper.BaseFilter;
 import com.mms.reporting.service.helper.IApiResponse;
 import com.mms.reporting.service.helper.PagedList;
-import com.mms.reporting.service.services.AuditTrailService;
+import com.mms.reporting.service.services.interfaces.IAuditTrailService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -23,10 +23,10 @@ import java.time.LocalDateTime;
 @RequestMapping("/api/audit-trail")
 public class AuditTrailController {
 
-    private final AuditTrailService auditTrailService;
+    private final IAuditTrailService auditTrailService;
 
     @Autowired
-    public AuditTrailController(AuditTrailService auditTrailService) {
+    public AuditTrailController(IAuditTrailService auditTrailService) {
         this.auditTrailService = auditTrailService;
     }
 
@@ -61,13 +61,4 @@ public class AuditTrailController {
         ResponseEntity.BodyBuilder bd = ResponseEntity.status(result.getStatus());
         return bd.body(result);
     }
-
-//    @Operation(summary = "Search for audit trails", description = "Get paginated list of audit trails", tags = {"Audit Trail"})
-//    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Successfully retrieves paginated list of audit trails", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = com.mms.reporting.service.helper.ApiResponse.class))})})
-//    @GetMapping(value = "all", produces = "application/json", headers = {"X-API-VERSION=1"})
-//    public ResponseEntity<IApiResponse<PagedList<AuditResponseDto>>> getOrderReports(@ParameterObject BaseFilter filter) {
-//        var result = auditTrailService.getAuditTrails(filter);
-//        ResponseEntity.BodyBuilder bd = ResponseEntity.status(result.getStatus());
-//        return bd.body(result);
-//    }
 }

@@ -6,7 +6,7 @@ import com.mms.reporting.service.enums.SearchFieldDataType;
 import com.mms.reporting.service.helper.BaseFilter;
 import com.mms.reporting.service.helper.IApiResponse;
 import com.mms.reporting.service.helper.PagedList;
-import com.mms.reporting.service.services.OrderReportService;
+import com.mms.reporting.service.services.interfaces.IOrderReportService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -26,10 +26,10 @@ import java.util.List;
 @ApiResponses(value = {@ApiResponse(responseCode = "424", description = "Failure maybe due to incomplete request payload/params causing internal exceptions", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = com.mms.reporting.service.helper.ApiResponse.class))}), @ApiResponse(responseCode = "500", description = "Server may be down", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = com.mms.reporting.service.helper.ApiResponse.class))})})
 public class OrderReportController {
 
-    private final OrderReportService orderReportService;
+    private final IOrderReportService orderReportService;
 
     @Autowired
-    public OrderReportController(OrderReportService orderReportService) {
+    public OrderReportController(IOrderReportService orderReportService) {
         this.orderReportService = orderReportService;
     }
 

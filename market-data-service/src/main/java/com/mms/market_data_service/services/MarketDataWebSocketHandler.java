@@ -3,16 +3,12 @@ package com.mms.market_data_service.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mms.market_data_service.config.AppProperties;
-import com.mms.market_data_service.config.Stock;
 import com.mms.market_data_service.dtos.responses.ProductData;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -98,23 +94,33 @@ public class MarketDataWebSocketHandler extends TextWebSocketHandler {
 
     private List<ProductData> getCachedProductsData(String exchange, String formatDateTime) {
         List<ProductData> products = new ArrayList<>();
-        appProperties.getStocks().forEach(stock -> {
-            var cachedJsonProduct = redisTemplate.opsForValue().get(exchange + ":" + stock);
 
-            if (cachedJsonProduct != null && !cachedJsonProduct.isEmpty()) {
-                log.info("Retrieved cached product JSON: {}", cachedJsonProduct);
+        var key = String.format("products:%s", exchange);
 
-                ObjectMapper objectMapper = new ObjectMapper();
-                try {
-                    ProductData productData = objectMapper.readValue(cachedJsonProduct, ProductData.class);
-                    products.add(productData);
-                } catch (JsonProcessingException e) {
-                    log.error("Failed to deserialize JSON: {}", cachedJsonProduct, e);
-                }
-            } else {
-                log.warn("No cached product data found for key {}:{} at {}", exchange, stock, formatDateTime);
+        Long count = redisTemplate.opsForList().size(key);
+
+        var cachedJsonProduct = redisTemplate.opsForList().range(key, 0,count);
+
+        if(cachedJsonProduct == null || cachedJsonProduct.isEmpty()){
+            log.warn("No cached product data found for key {} at {}", key, formatDateTime);
+            return products;
+        }
+
+        cachedJsonProduct.forEach(product -> {
+            log.info("Retrieved cached product JSON: {}", product);
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                ProductData productData = objectMapper.readValue(product, ProductData.class);
+                products.add(productData);
+            } catch (JsonProcessingException e) {
+                log.error("Failed to deserialize JSON: {}", product, e);
             }
         });
+
+        // log the total number of products
+        log.info("Total number of products: {}", products.size());
+
         return products;
     }
 }

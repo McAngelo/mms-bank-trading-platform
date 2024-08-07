@@ -1,4 +1,4 @@
-package com.mms.reporting.service.services;
+package com.mms.reporting.service.services.providers;
 
 
 import com.mms.reporting.service.dtos.orderreport.*;
@@ -8,6 +8,7 @@ import com.mms.reporting.service.models.Execution;
 import com.mms.reporting.service.models.OrderActivity;
 import com.mms.reporting.service.models.OrderReport;
 import com.mms.reporting.service.repositories.OrderReportRepository;
+import com.mms.reporting.service.services.interfaces.IOrderReportService;
 import com.mms.reporting.service.utils.ApiResponseUtil;
 import com.mms.reporting.service.utils.DtosUtil;
 import org.springframework.dao.DuplicateKeyException;
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
-public class OrderReportService {
+public class OrderReportService implements IOrderReportService {
 
     private final OrderReportRepository orderReportRepository;
 
@@ -26,6 +27,7 @@ public class OrderReportService {
         this.orderReportRepository = orderReportRepository;
     }
 
+    @Override
     public IApiResponse<OrderReportResponseDto> createOrderReport(CreateOrderReportDto request) {
         try {
             OrderReport orderReport = DtosUtil.createOrderReportDtoToOrderReport(request);
@@ -46,6 +48,7 @@ public class OrderReportService {
         }
     }
 
+    @Override
     public IApiResponse<OrderReportResponseDto> getOrderReport(long orderId) {
         try {
             OrderReport orderReport = orderReportRepository.findByOrderId(orderId);
@@ -62,29 +65,7 @@ public class OrderReportService {
         }
     }
 
-    /*
-    public IApiResponse<PagedList<OrderReportResponseDto>> getOrderReports(BaseFilter filter) {
-        try {
-            // Create Pageable instance
-            Sort sort = Sort.by(Sort.Direction.ASC/*.fromString(filter.sortOrder())//, "createdAt"); // Adjust sorting field as necessary
-            Pageable pageable = (Pageable) PageRequest.of(filter.page() - 1, filter.pageSize(), sort);
-
-            // Query repository with Pageable
-            Page<OrderReport> page = orderReportRepository.findByDateBetween(filter.fromDate(), filter.toDate(), pageable);
-
-            // Convert to PagedList and DTOs as needed
-            List<OrderReportResponseDto> dtos = page.getContent().stream()
-                    .map(DtosUtil::orderReportToOrderReportResponseDto)
-                    .collect(Collectors.toList());
-            PagedList<OrderReportResponseDto> pagedList = new PagedList<>(dtos, filter.page(), filter.pageSize(), (int) page.getTotalElements());
-
-            return ApiResponseUtil.toOkApiResponse(pagedList);
-        } catch (Exception ex) {
-            return ApiResponseUtil.toInternalServerErrorApiResponse(null);
-        }
-    }
-    */
-
+    @Override
     public IApiResponse<PagedList<OrderReportResponseDto>> getOrderReports(BaseFilter filter) {
         try {
 
@@ -129,6 +110,7 @@ public class OrderReportService {
         }
     }
 
+    @Override
     public IApiResponse<OrderReportResponseDto> updateOrderExecutions(long orderId, ExecutionDto request) {
         try {
 
@@ -148,6 +130,7 @@ public class OrderReportService {
         }
     }
 
+    @Override
     public IApiResponse<OrderReportResponseDto> updateOrderOrderActivities(long orderId, OrderActivityDto request) {
         try {
 
@@ -167,6 +150,7 @@ public class OrderReportService {
         }
     }
 
+    @Override
     public IApiResponse<List<OrderReportResponseDto>> orderReportSearch(String field, Object value, SearchFieldDataType type) {
         try {
 
@@ -182,6 +166,7 @@ public class OrderReportService {
         }
     }
 
+    @Override
     public IApiResponse<PagedList<OrderReportResponseDto>> orderReportSearch(List<SearchRequest> searchRequests, BaseFilter filter) {
         try {
 
@@ -202,6 +187,7 @@ public class OrderReportService {
         }
     }
 
+    @Override
     public IApiResponse<PagedList<OrderReportResponseDto>> orderReportSearch(SearchQueryDto filter) {
         try {
 

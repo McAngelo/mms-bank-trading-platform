@@ -1,4 +1,4 @@
-package com.mms.reporting.service.services;
+package com.mms.reporting.service.services.providers;
 
 
 import com.mms.reporting.service.dtos.auditrail.AuditResponseDto;
@@ -8,6 +8,7 @@ import com.mms.reporting.service.helper.IApiResponse;
 import com.mms.reporting.service.helper.PagedList;
 import com.mms.reporting.service.models.AuditTrail;
 import com.mms.reporting.service.repositories.AuditTrailRepository;
+import com.mms.reporting.service.services.interfaces.IAuditTrailService;
 import com.mms.reporting.service.utils.ApiResponseUtil;
 import com.mms.reporting.service.utils.DtosUtil;
 import org.slf4j.Logger;
@@ -18,7 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class AuditTrailService {
+public class AuditTrailService implements IAuditTrailService {
 
     private final AuditTrailRepository auditTrailRepository;
     private static final Logger LOGGER = LoggerFactory.getLogger(AuditTrailService.class);
@@ -29,6 +30,7 @@ public class AuditTrailService {
     }
 
 
+    @Override
     public IApiResponse<AuditResponseDto> createAuditTrail(CreateAuditDto request) {
         LOGGER.info("Creating audit trail for action: {}", request);
         AuditTrail audit  = DtosUtil.createAuditTDtoToAuditTrail(request);
@@ -39,6 +41,7 @@ public class AuditTrailService {
         return ApiResponseUtil.toCreatedApiResponse(response);
     }
 
+    @Override
     public IApiResponse<AuditResponseDto> getAuditTrailById(Long id) {
         LOGGER.info("Getting audit trail by id: {}", id);
         var audit = auditTrailRepository.findById(id);
@@ -51,6 +54,7 @@ public class AuditTrailService {
         return ApiResponseUtil.toOkApiResponse(response);
     }
 
+    @Override
     public IApiResponse<PagedList<AuditResponseDto>> getAuditTrails(BaseFilter filter) {
         LOGGER.info("Getting audit trails with filter: {}", filter);
         var result = auditTrailRepository.findAllPaged(filter);

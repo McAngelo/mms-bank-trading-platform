@@ -13,6 +13,8 @@ import java.util.List;
 public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findByPortfolioIdAndStatus(long portfolioId, OrderStatus status);
 
+    Page<Order> findByUserId(Long userId, Pageable pageable);
+
     Page<Order> findByPortfolioId(Long portfolioId, Pageable pageable);
 
     boolean existsByPortfolioIdAndUserIdAndTickerAndQuantityGreaterThanEqual(

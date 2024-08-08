@@ -1,19 +1,21 @@
 package com.mms.order.manager.controllers;
 
 import com.mms.order.manager.dtos.requests.CreateWalletDto;
+import com.mms.order.manager.dtos.responses.PortfolioDto;
 import com.mms.order.manager.exceptions.WalletException;
 import com.mms.order.manager.helpers.ApiResponse;
 import com.mms.order.manager.services.interfaces.WalletService;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("api/v1/wallet")
+@RequestMapping("/api/v1/wallet/")
 @RequiredArgsConstructor
 public class WalletController {
     private final WalletService walletService;
@@ -28,5 +30,17 @@ public class WalletController {
                 .build();
 
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<ApiResponse> getUserPortfolios(@PathVariable("userId") long userId) throws WalletException {
+        BigDecimal wallet = walletService.getBalanceByUserId(userId)
+                .orElseThrow(() -> new WalletException("Wallet not found"));
+
+        return ResponseEntity.ok(ApiResponse.builder()
+                .status(HttpStatus.OK.value())
+                .data(wallet)
+                .build()
+        );
     }
 }

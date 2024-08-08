@@ -1,4 +1,3 @@
-/*
 package com.mms.order.manager.helpers;
 
 import com.mms.order.manager.models.*;
@@ -8,54 +7,14 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Configuration;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Configuration
 @RequiredArgsConstructor
 public class Seeder implements ApplicationRunner {
-    private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
-    private final WalletRepository walletRepository;
-    private final PortfolioRepository portfolioRepository;
     private final ExchangeRepository exchangeRepository;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        var role = Role.builder()
-                .name("user")
-                .isActive(true)
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
-                .build();
-
-        var user = User.builder()
-                .fullName("John Doe")
-                .dob(LocalDate.now())
-                .email("steven@mail.com")
-                .password("password")
-                .role(role)
-                .isActive(true)
-                .createdAt(LocalDateTime.now())
-                .updateAt(LocalDateTime.now())
-                .build();
-
-        var wallet = Wallet.builder()
-                .owner(user)
-                //.isActive(true)
-                .status(Wallet.Status.ACTIVE)
-                .balance(new BigDecimal(1000))
-                .build();
-
-        var portfolio = Portfolio.builder()
-                .user(user)
-                .portfolioName("Default Portfolio")
-                //.isDefault(true)
-                .status(Portfolio.Status.ACTIVE)
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
-                .build();
 
         var exchange = Exchange.builder()
                 .name("mallon exchange 1")
@@ -73,11 +32,7 @@ public class Seeder implements ApplicationRunner {
                 .isActive(true)
                 .build();
 
-//        roleRepository.save(role);
-//        userRepository.save(user);
-//        walletRepository.save(wallet);
-//        portfolioRepository.save(portfolio);
-//        exchangeRepository.save(exchange2);
+        exchangeRepository.save(exchange);
+        exchangeRepository.save(exchange2);
     }
 }
-*/

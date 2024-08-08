@@ -11,8 +11,10 @@ import com.mms.order.manager.dtos.requests.CreateOrderDto;
 import com.mms.order.manager.exceptions.MarketDataException;
 import com.mms.order.manager.exceptions.OrderException;
 import com.mms.order.manager.models.OrderSplit;
+import com.mms.order.manager.models.Wallet;
 import com.mms.order.manager.repositories.ExecutionRepository;
 import com.mms.order.manager.repositories.OrderSplitRepository;
+import com.mms.order.manager.repositories.WalletRepository;
 import com.mms.order.manager.utils.converters.ExecutionConvertor;
 import com.mms.order.manager.utils.converters.OrderConvertor;
 import com.mms.order.manager.models.Order;
@@ -25,6 +27,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,6 +38,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final OrderValidator orderValidator;
     private final ExecutionStrategyService executionStrategyService;
+    private final WalletService walletService;
     private final OrderSplitRepository orderSplitRepository;
     private final ExecutionRepository executionRepository;
     private final OrderConvertor orderConvertor;
@@ -68,14 +72,23 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<GetOrdersDto> getOrders(long portfolioId, int page, int size) {
+    public List<GetOrdersDto> getOrdersByUserId(long userId, int page, int size) {
+        Page<Order> orderPage = orderRepository.findByUserId(
+                userId,
+                PageRequest.of(page, size)
+        );
+
+        return orderPage.stream().map(orderConvertor::convertToGetOrdersDto).toList();
+    }
+
+    @Override
+    public List<GetOrdersDto> getOrdersByPortfolioId(long portfolioId, int page, int size) {
         Page<Order> orderPage = orderRepository.findByPortfolioId(
                 portfolioId,
                 PageRequest.of(page, size)
         );
 
         return orderPage.stream().map(orderConvertor::convertToGetOrdersDto).toList();
-
     }
 
     @Override
@@ -130,6 +143,13 @@ public class OrderServiceImpl implements OrderService {
                     String.format("pending-orders:%s", orderSplit.getExchange().getSlug()),
                     orderSplit.getExchangeOrderId()
             );
+
+            BigDecimal debitAmount = updatedOrderDto.executions()
+                    .stream()
+                    .map(execution -> BigDecimal.valueOf(execution.price()).multiply(BigDecimal.valueOf(execution.quantity())))
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+            walletService.debitWalletByUsedId(orderSplit.getOrder().getUserId(), debitAmount);
         }
 
         executionRepository.deleteAllByOrderSplitId(orderSplit.getId());

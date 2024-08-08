@@ -9,7 +9,7 @@ import java.util.List;
 
 @Value
 public class PortfolioDto {
-    public Integer id;
+    public long id;
     public String name;
 }
 

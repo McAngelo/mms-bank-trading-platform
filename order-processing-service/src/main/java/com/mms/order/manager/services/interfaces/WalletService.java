@@ -14,11 +14,13 @@ public interface WalletService {
 
     Optional<BigDecimal> getBalanceByWalletId(long walletId);
 
-    Optional<BigDecimal> getBalanceByOwnerId(long ownerId);
+    Optional<BigDecimal> getBalanceByUserId(long userId);
 
     boolean creditWallet(long walletId, BigDecimal amount);
 
     boolean debitWallet(long walletId, BigDecimal amount);
+
+    boolean debitWalletByUsedId(long userId, BigDecimal amount);
 
     boolean enableWallet(long walletId);
 

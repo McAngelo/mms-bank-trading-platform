@@ -13,21 +13,14 @@ import java.math.BigDecimal;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Wallet extends BaseEntity {
+public class Wallet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @JsonIgnore
-    //@OneToOne
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User owner;
+    private long userId;
 
     private BigDecimal balance;
-    private Status status;
-
-    public enum Status {
-        ACTIVE, DISABLED
-    }
+    private boolean isActive;
 }

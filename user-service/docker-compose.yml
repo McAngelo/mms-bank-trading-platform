@@ -1,10 +1,11 @@
-#services:
-#  postgres:
-#    image: postgres
-#    ports:
-#      - "5434:5434"
-#    restart: always
-#    environment:
-#      POSTGRES_USERNAME: root
-#      POSTGRES_PASSWORD: admin
-#      POSTGRES_DB: user-service-db
+services:
+  db:
+    image: postgres
+    container_name: user-primary-db
+    ports:
+      - "5433:5433"
+    restart: always
+    environment:
+      POSTGRES_USERNAME: postgres
+      POSTGRES_PASSWORD: mms-test-local
+      PGPORT: 5433

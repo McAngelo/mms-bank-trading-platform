@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -27,12 +28,6 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-//    @JsonIgnore
-//    @ManyToOne
-//    @JoinColumn(name = "productId", insertable = false, updatable = false)
-//    private Product product;
-//    private long productId;
-
     private String ticker;
 
     @JsonIgnore
@@ -41,10 +36,6 @@ public class Order {
     private Portfolio portfolio;
     private long portfolioId;
 
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "userId", insertable = false, updatable = false)
-    private User user;
     private long userId;
 
     @Enumerated(EnumType.STRING)
@@ -61,4 +52,5 @@ public class Order {
 
     private int quantity;
     private BigDecimal price;
+    private LocalDateTime createdAt;
 }

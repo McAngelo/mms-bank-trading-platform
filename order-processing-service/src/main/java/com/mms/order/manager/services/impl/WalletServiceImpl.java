@@ -1,9 +1,7 @@
 package com.mms.order.manager.services.impl;
 
 import com.mms.order.manager.exceptions.WalletException;
-import com.mms.order.manager.models.User;
 import com.mms.order.manager.models.Wallet;
-import com.mms.order.manager.repositories.UserRepository;
 import com.mms.order.manager.repositories.WalletRepository;
 import com.mms.order.manager.services.interfaces.WalletService;
 import lombok.RequiredArgsConstructor;
@@ -16,21 +14,19 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class WalletServiceImpl implements WalletService {
     private final WalletRepository walletRepository;
-    private final UserRepository userRepository;
 
     @Override
     public void createWallet(long userId, BigDecimal balance) throws WalletException {
-        Optional<User> userOptional = userRepository.findById(userId);
+        Optional<Wallet> optionalWallet = walletRepository.findByUserId(userId);
 
-        if (userOptional.isEmpty()) {
-            throw new WalletException("User does not exist, could not create wallet");
+        if (optionalWallet.isPresent()) {
+            throw new WalletException("Wallet already exists");
         }
 
         var wallet = Wallet.builder()
-                .owner(userOptional.get())
+                .userId(userId)
                 .balance(balance)
-                //.isActive(true)
-                .status(Wallet.Status.ACTIVE)
+                .isActive(true)
                 .build();
 
         walletRepository.save(wallet);
@@ -46,7 +42,7 @@ public class WalletServiceImpl implements WalletService {
 
         var wallet = optionalWallet.get();
 
-        if (wallet.getStatus() != Wallet.Status.ACTIVE) {
+        if (!wallet.isActive()) {
             return Optional.empty();
         }
 
@@ -54,8 +50,8 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public Optional<BigDecimal> getBalanceByOwnerId(long userId) {
-        Optional<Wallet> optionalWallet =  walletRepository.findByOwnerId(userId);
+    public Optional<BigDecimal> getBalanceByUserId(long userId) {
+        Optional<Wallet> optionalWallet =  walletRepository.findByUserId(userId);
 
         if (optionalWallet.isEmpty()) {
             return Optional.empty();
@@ -63,7 +59,7 @@ public class WalletServiceImpl implements WalletService {
 
         var wallet = optionalWallet.get();
 
-        if (wallet.getStatus() != Wallet.Status.ACTIVE) {
+        if (!wallet.isActive()) {
             return Optional.empty();
         }
 
@@ -80,7 +76,7 @@ public class WalletServiceImpl implements WalletService {
 
         var wallet = optionalWallet.get();
 
-        if (wallet.getStatus() != Wallet.Status.ACTIVE) {
+        if (!wallet.isActive()) {
             return false;
         }
 
@@ -100,7 +96,27 @@ public class WalletServiceImpl implements WalletService {
 
         var wallet = optionalWallet.get();
 
-        if (wallet.getStatus() != Wallet.Status.ACTIVE) {
+        if (!wallet.isActive()) {
+            return false;
+        }
+
+        wallet.setBalance(wallet.getBalance().subtract(amount));
+        walletRepository.save(wallet);
+
+        return true;
+    }
+
+    @Override
+    public boolean debitWalletByUsedId(long userId, BigDecimal amount) {
+        Optional<Wallet> optionalWallet = walletRepository.findByUserId(userId);
+
+        if (optionalWallet.isEmpty()) {
+            return false;
+        }
+
+        var wallet = optionalWallet.get();
+
+        if (!wallet.isActive()) {
             return false;
         }
 
@@ -120,12 +136,11 @@ public class WalletServiceImpl implements WalletService {
 
         var wallet = optionalWallet.get();
 
-        if (wallet.getStatus() != Wallet.Status.ACTIVE) {
+        if (wallet.isActive()) {
             return true;
         }
 
-        wallet.setStatus(Wallet.Status.ACTIVE);
-        //wallet.setActive(true);
+        wallet.setActive(true);
         walletRepository.save(wallet);
 
         return true;
@@ -141,12 +156,11 @@ public class WalletServiceImpl implements WalletService {
 
         var wallet = optionalWallet.get();
 
-        if (wallet.getStatus() != Wallet.Status.ACTIVE) {
+        if (!wallet.isActive()) {
             return true;
         }
 
-        wallet.setStatus(Wallet.Status.DISABLED);
-        //wallet.setActive(false);
+        wallet.setActive(false);
         walletRepository.save(wallet);
 
         return true;

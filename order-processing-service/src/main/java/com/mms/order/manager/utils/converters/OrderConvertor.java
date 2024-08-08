@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,7 +36,7 @@ public class OrderConvertor implements Converter<CreateOrderDto, Order> {
                 .side(orderDto.side())
                 .type(orderDto.type())
                 .status(OrderStatus.PENDING)
-                .executionMode(orderDto.executionMode())
+                .createdAt(LocalDateTime.now())
                 .executionMode(orderDto.executionMode());
 
         if (OrderType.LIMIT == orderDto.type()) {
@@ -97,11 +98,14 @@ public class OrderConvertor implements Converter<CreateOrderDto, Order> {
 
     public GetOrdersDto convertToGetOrdersDto(Order order) {
         return GetOrdersDto.builder()
+                .id(order.getId())
                 .quantity(order.getQuantity())
                 .side(order.getSide())
                 .orderType(order.getType())
                 .price(order.getPrice())
                 .ticker(order.getTicker())
+                .status(order.getStatus().toString())
+                .dateCreated(order.getCreatedAt().toString())
                 .build();
     }
 }

@@ -2,6 +2,7 @@ package com.mms.order.manager.controllers;
 
 import com.mms.order.manager.dtos.requests.CreateOrderDto;
 import com.mms.order.manager.dtos.responses.GetOrderDto;
+import com.mms.order.manager.dtos.responses.GetOrdersDto;
 import com.mms.order.manager.exceptions.ExchangeException;
 import com.mms.order.manager.exceptions.MarketDataException;
 import com.mms.order.manager.exceptions.OrderException;
@@ -11,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -39,6 +42,17 @@ public class OrderController {
                 .data(order)
                 .message("Successfully retrieved order")
                 .build());
+    }
+
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<ApiResponse> getAllOrders(@PathVariable("userId") long userId, @RequestParam int page, @RequestParam int size)  {
+        List<GetOrdersDto> orders = orderService.getOrdersByUserId(userId, page, size);
+
+        return ResponseEntity.ok(ApiResponse.builder()
+                .status(HttpStatus.OK.value())
+                .data(orders)
+                .build()
+        );
     }
 
     @PatchMapping("/{orderId}")

@@ -1,5 +1,7 @@
 package com.mms.order.manager.models;
 
+import com.mms.order.manager.enums.PortfolioStatus;
+import com.mms.order.manager.enums.PortfolioType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,22 +23,11 @@ public class Portfolio {
     private Integer id;
 
     private String portfolioName;
-    private Portfolio.PortfolioType portfolioType;
+    private PortfolioType portfolioType;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User owner;
+    private long userId;
+    private boolean isActive;
 
-    //private boolean isDefault;
-    private Portfolio.Status status;
-
-    public enum PortfolioType {
-        DEFAULT, CUSTOM
-    }
-
-    public enum Status {
-        ACTIVE, DISABLED
-    }
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

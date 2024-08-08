@@ -3,6 +3,7 @@ package com.mms.order.manager.controllers;
 import com.mms.order.manager.dtos.requests.CreatePortfolioDto;
 import com.mms.order.manager.dtos.responses.GetOrderDto;
 import com.mms.order.manager.dtos.responses.GetOrdersDto;
+import com.mms.order.manager.dtos.responses.PortfolioDto;
 import com.mms.order.manager.exceptions.PortfolioException;
 import com.mms.order.manager.helpers.ApiResponse;
 import com.mms.order.manager.services.interfaces.OrderService;
@@ -32,9 +33,20 @@ public class PortfolioController {
         );
     }
 
+    @GetMapping("/{userId}")
+    public ResponseEntity<ApiResponse> getUserPortfolios(@PathVariable("userId") long userId)  {
+        List<PortfolioDto> orders = portfolioService.getPortfoliosByUserId(userId);
+
+        return ResponseEntity.ok(ApiResponse.builder()
+                .status(HttpStatus.OK.value())
+                .data(orders)
+                .build()
+        );
+    }
+
     @GetMapping("/{portfolioId}/orders")
     public ResponseEntity<ApiResponse> getAllOrders(@PathVariable("portfolioId") long portfolioId, @RequestParam int page, @RequestParam int size)  {
-        List<GetOrdersDto> orders = orderService.getOrders(portfolioId, page, size);
+        List<GetOrdersDto> orders = orderService.getOrdersByPortfolioId(portfolioId, page, size);
 
         return ResponseEntity.ok(ApiResponse.builder()
                 .status(HttpStatus.OK.value())

@@ -14,7 +14,8 @@ public interface OrderService {
 
     GetOrderDto getOrder(long orderId) throws OrderException;
 
-    List<GetOrdersDto> getOrders(long portfolioId, int page, int siz);
+    List<GetOrdersDto> getOrdersByPortfolioId(long portfolioId, int page, int siz);
+    List<GetOrdersDto> getOrdersByUserId(long userId, int page, int siz);
 
     void updateOrderStatus(long orderId) throws OrderException, ExchangeException;
 

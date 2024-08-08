@@ -26,8 +26,8 @@ spring:
         - id: order-manager-route
           uri: lb://order.manager
           predicates:
-            - Path=/order-service/v3/api-docs
-            - Method=GET
+            - Path=/order-service/**
+            - Method=GET, POST, PUT, DELETE
         - id: market-data-route
           uri: lb://market.data.service
           predicates:

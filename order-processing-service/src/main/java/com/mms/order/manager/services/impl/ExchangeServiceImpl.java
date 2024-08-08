@@ -20,7 +20,6 @@ import java.util.Objects;
 public class ExchangeServiceImpl {
     private final RestTemplate restTemplate;
     private final RedisServiceImpl redisService;
-    private final RedisTemplate<String, Serializable> redisTemplate;
 
     public String executeOrder(CreateExchangeOrderDto exchangeOrderDto, Exchange exchange) throws ExchangeException {
         String url = buildExchangeUrl(exchange);
@@ -36,7 +35,6 @@ public class ExchangeServiceImpl {
         String exchangeOrderId = Objects.requireNonNull(response.getBody()).replaceAll("^\"|\"$", "");
 
         storeOrderInCache(exchangeOrderId, exchange.getSlug());
-
         return exchangeOrderId;
     }
 

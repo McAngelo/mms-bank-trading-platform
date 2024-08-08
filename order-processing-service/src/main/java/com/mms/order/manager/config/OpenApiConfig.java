@@ -1,4 +1,3 @@
-/*
 package com.mms.order.manager.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
@@ -53,4 +52,3 @@ import io.swagger.v3.oas.annotations.servers.Server;
 )
 public class OpenApiConfig {
 }
-*/

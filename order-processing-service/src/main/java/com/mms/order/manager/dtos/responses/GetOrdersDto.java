@@ -6,13 +6,16 @@ import com.mms.order.manager.enums.OrderType;
 import lombok.Builder;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Builder
 public record GetOrdersDto(
+        long id,
         OrderSide side,
         int quantity,
         BigDecimal price,
-        OrderStatus orderStatus,
         String ticker,
-        OrderType orderType
+        OrderType orderType,
+        String status,
+        String dateCreated
 ) { }

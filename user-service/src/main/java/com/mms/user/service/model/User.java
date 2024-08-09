@@ -49,12 +49,6 @@ public class User implements UserDetails, Principal {
     private boolean enabled;
     @ManyToMany(fetch = EAGER)
     private List<Role> roles;
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
-    @JsonManagedReference
-    private List<Portfolio> portfolios;
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
-    @JsonManagedReference
-    private List<Wallet> wallet;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

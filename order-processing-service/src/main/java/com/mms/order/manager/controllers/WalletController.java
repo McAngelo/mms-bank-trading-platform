@@ -26,7 +26,7 @@ public class WalletController {
 
         var response = ApiResponse.builder()
                 .status(HttpStatus.OK.value())
-                .message("Successfully created order")
+                .message("Successfully created wallet")
                 .build();
 
         return ResponseEntity.ok(response);

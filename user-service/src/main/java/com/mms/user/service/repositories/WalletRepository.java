@@ -1,3 +1,4 @@
+/*
 package com.mms.user.service.repositories;
 
 import com.mms.user.service.model.Wallet;
@@ -11,3 +12,4 @@ import java.util.List;
 public interface WalletRepository  extends JpaRepository<Wallet, Integer>, JpaSpecificationExecutor<Wallet> {
     List<Wallet> findAllByOwnerId(Integer OwnerId);
 }
+*/

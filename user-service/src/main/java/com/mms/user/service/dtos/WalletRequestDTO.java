@@ -1,6 +1,5 @@
 package com.mms.user.service.dtos;
 
-import com.mms.user.service.model.Wallet;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -12,6 +11,5 @@ import java.math.BigDecimal;
 @Builder
 public class WalletRequestDTO {
     private BigDecimal balance;
-    private Wallet.Status status;
     private int userId;
 }

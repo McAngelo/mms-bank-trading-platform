@@ -1,3 +1,4 @@
+/*
 package com.mms.user.service.repositories;
 
 import com.mms.user.service.model.Portfolio;
@@ -11,3 +12,4 @@ import java.util.List;
 public interface PortfolioRepository extends JpaRepository<Portfolio, Integer>, JpaSpecificationExecutor<Portfolio> {
     List<Portfolio> findAllByOwnerId(Integer userId);
 }
+*/

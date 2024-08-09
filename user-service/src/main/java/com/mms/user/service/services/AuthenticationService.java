@@ -29,15 +29,13 @@ import java.util.List;
 public class AuthenticationService {
 
     private final UserRepository userRepository;
-    private final PortfolioRepository portfolioRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final RoleRepository roleRepository;
     private final EmailService emailService;
     private final TokenRepository tokenRepository;
-    private final WalletRepository walletRepository;
-    private final UserMapper userMapper;
+    private final OrderMicroServiceHttpClient orderMicroServiceHttpClient;
 
     @Value("${application.mailing.frontend.activation-url}")
     private String activationUrl;
@@ -45,14 +43,20 @@ public class AuthenticationService {
     public IApiResponse<?> register(RegistrationRequestDto request) throws MessagingException {
 
         Role userRole = findRole("TRADER");
-        Wallet wallet = createWallet();
-        Portfolio portfolio = createPortfolio();
 
-        User user = buildUser(request, userRole, wallet, portfolio);
+        User user = buildUser(request, userRole);
         User savedUser = saveUser(user);
 
-        updateWalletOwner(wallet, savedUser);
-        updatePortfolioOwner(portfolio, savedUser);
+        WalletRequestDTO createWalletRequest = new WalletRequestDTO();
+        createWalletRequest.setUserId(savedUser.getId());
+        createWalletRequest.setBalance(BigDecimal.ZERO);
+        createWallet(createWalletRequest);
+
+        PortfolioRequestDTO createPortofolioRequest = new PortfolioRequestDTO();
+        createPortofolioRequest.setName("Basic Portfolio");
+        createPortofolioRequest.setUserId(savedUser.getId());
+        createPortfolio(createPortofolioRequest);
+
 
         return ApiResponseUtil.toOkApiResponse(savedUser, "Successful");
     }
@@ -77,8 +81,6 @@ public class AuthenticationService {
         authUser.enabled = user.isEnabled();
         authUser.authorities = user.getAuthorities().toString();
         authUser.roles = user.getRoles();
-        authUser.portfolios = user.getPortfolios();
-        authUser.wallet = user.getWallet();
         authUser.createdDate = user.getCreatedDate();
         authUser.lastModifiedDate = user.getLastModifiedDate();
 
@@ -157,24 +159,17 @@ public class AuthenticationService {
                 .orElseThrow(() -> new IllegalStateException("ROLE " + roleName + " was not initiated"));
     }
 
-    private Wallet createWallet() {
-        Wallet wallet = new Wallet();
-        wallet.setBalance(BigDecimal.ZERO);
-        wallet.setStatus(Wallet.Status.ACTIVE);
-        wallet.setCreatedBy(1);
-        return walletRepository.save(wallet);
+    private boolean createWallet(WalletRequestDTO request) {
+        orderMicroServiceHttpClient.createWallet(request);
+        return true;
     }
 
-    private Portfolio createPortfolio() {
-        Portfolio portfolio = new Portfolio();
-        portfolio.setPortfolioType(Portfolio.PortfolioType.DEFAULT);
-        portfolio.setPortfolioName("Basic Portfolio");
-        portfolio.setStatus(Portfolio.Status.ACTIVE);
-        portfolio.setCreatedBy(1);
-        return portfolioRepository.save(portfolio);
+    private boolean createPortfolio(PortfolioRequestDTO request) {
+        orderMicroServiceHttpClient.createPortfolio(request);
+        return true;
     }
 
-    private User buildUser(RegistrationRequestDto request, Role userRole, Wallet wallet, Portfolio portfolio) {
+    private User buildUser(RegistrationRequestDto request, Role userRole) {
         User user = User.builder()
                 .fullName(request.getFullName())
                 .email(request.getEmail())
@@ -183,8 +178,6 @@ public class AuthenticationService {
                 .enabled(true)
                 .createdDate(LocalDateTime.now())
                 .roles(List.of(userRole))
-                .portfolios(List.of(portfolio))
-                .wallet(List.of(wallet))
                 .build();
         return user;
     }
@@ -193,15 +186,4 @@ public class AuthenticationService {
         return userRepository.save(user);
     }
 
-    private void updateWalletOwner(Wallet wallet, User user) {
-        wallet.setOwner(user);
-        wallet.setCreatedBy(user.getId());
-        walletRepository.saveAndFlush(wallet);
-    }
-
-    private void updatePortfolioOwner(Portfolio portfolio, User user) {
-        portfolio.setOwner(user);
-        portfolio.setCreatedBy(user.getId());
-        portfolioRepository.saveAndFlush(portfolio);
-    }
 }

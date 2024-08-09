@@ -6,7 +6,7 @@ spring:
     name: order.manager
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
+    url: jdbc:postgresql://localhost:5434/postgres
     username: postgres
     password: mms-test-local
     driver-class-name: org.postgresql.Driver
@@ -50,6 +50,7 @@ springdoc:
   swagger-ui:
     path: /order-service/swagger-ui.html
 
+eureka.instance.prefer-ip-address: true
 #logging:
 #  level:
 #    org.springframework: DEBUG

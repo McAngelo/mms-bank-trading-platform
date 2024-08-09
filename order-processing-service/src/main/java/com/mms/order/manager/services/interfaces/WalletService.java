@@ -18,6 +18,8 @@ public interface WalletService {
 
     boolean creditWallet(long walletId, BigDecimal amount);
 
+    boolean creditWalletByUserId(long userId, BigDecimal amount);
+
     boolean debitWallet(long walletId, BigDecimal amount);
 
     boolean debitWalletByUsedId(long userId, BigDecimal amount);

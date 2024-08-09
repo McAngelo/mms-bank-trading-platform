@@ -67,6 +67,26 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
+    public boolean creditWalletByUserId(long userId, BigDecimal amount){
+        Optional<Wallet> optionalWallet = walletRepository.findByUserId(userId);
+
+        if (optionalWallet.isEmpty()) {
+            return false;
+        }
+
+        var wallet = optionalWallet.get();
+
+        if (!wallet.isActive()) {
+            return false;
+        }
+
+        wallet.setBalance(wallet.getBalance().add(amount));
+        walletRepository.save(wallet);
+
+        return true;
+    }
+
+    @Override
     public boolean creditWallet(long walletId, BigDecimal amount) {
         Optional<Wallet> optionalWallet = walletRepository.findById(walletId);
 

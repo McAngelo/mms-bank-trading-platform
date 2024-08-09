@@ -43,4 +43,16 @@ public class WalletController {
                 .build()
         );
     }
+
+    @PostMapping("/credit/{userId}")
+    public ResponseEntity<ApiResponse> creditWallet(@PathVariable("userId") long userId, @RequestBody CreateWalletDto walletDto) throws WalletException {
+        walletService.creditWalletByUserId(userId, walletDto.balance());
+
+        var response = ApiResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message("Successfully credited wallet")
+                .build();
+
+        return ResponseEntity.ok(response);
+    }
 }
